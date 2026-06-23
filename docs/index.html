@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700&family=Playfair+Display:wght@700;900&family=Fredoka+One&family=Caveat:wght@700&family=Righteous&family=Satisfy&family=Oswald:wght@700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
@@ -16,43 +16,85 @@
     <button class="back-button" id="backButton">Back</button>
     <div class="page-shell">
       <div class="story-frame">
-        <div class="step active" data-bg="#e8f5f1">
+        <div class="step active" data-bg="#e8f5f1" data-transition="fade">
           <div class="hero-text">
-            <div class="hero-badge">For Zor 💚</div>
             <h1>Happy Birthday, Zor.</h1>
-            <p class="typed-text" data-text="A small wrapped experience made just for you. Press continue when you're ready to begin."></p>
+            <p class="typed-text" data-text="you are the youngest person ever"></p>
           </div>
           <button class="continue-button hidden" id="continueButton">Continue</button>
         </div>
 
-        <div class="step" data-bg="#fff0f2">
+        <div class="step" data-bg="#fff0f2" data-transition="zoom">
           <div class="story-copy">
-            <p class="typed-text" data-text="First: a memory. The moment we first connected over email, and everything began to feel brighter."></p>
+            <h2 class="page-title">Remember This</h2>
+            <p class="typed-text page-text" data-text="First: a memory. The moment we first connected over email, and everything began to feel brighter."></p>
             <div class="image-placeholder hidden" id="memoryImage">Photo placeholder</div>
           </div>
           <button class="continue-button hidden" id="revealMemory">Reveal memory</button>
-          <button class="continue-button hidden" id="continueButton1">Continue</button>
+          <button class="continue-button hidden" id="continueButton1">Keep going</button>
         </div>
 
-        <div class="step" data-bg="#f6f0ff">
-          <div class="story-copy">
-            <p class="typed-text" data-text="Now your letter: I still remember our first messages like they were yesterday. You make distance feel close."></p>
+        <div class="step" data-bg="#f6f0ff" data-transition="slide-left">
+          <div class="story-copy" id="letterCard">
+            <h2 class="page-title">A Letter for You</h2>
+            <p class="typed-text page-text" data-text="Now your letter: I still remember our first messages like they were yesterday. You make distance feel close."></p>
           </div>
-          <button class="continue-button hidden" id="continueButton2">Continue</button>
+          <button class="continue-button hidden" id="continueButton2">Keep reading</button>
         </div>
 
-        <div class="step" data-bg="#f0f7ff">
+        <div class="step" data-bg="#f0f7ff" data-transition="scale-up">
           <div class="story-copy">
-            <p class="typed-text" data-text="Your birthday soundtrack is ready. Open the playlist when you're ready and let it set the mood."></p>
-            <button class="continue-button hidden" id="showPlaylist">Show playlist</button>
-            <a class="playlist-link hidden" id="playlistLink" href="https://open.spotify.com/playlist/PLACEHOLDER" target="_blank" rel="noreferrer">Open Spotify playlist</a>
+            <h2 class="page-title">Soundtrack</h2>
+            <p class="typed-text page-text" data-text="Your birthday soundtrack is ready. Open the playlist when you're ready and let it set the mood."></p>
+            <button class="continue-button hidden" id="showPlaylist">Show the songs</button>
+            <div class="playlist-grid hidden" id="playlistGrid">
+              <div class="song-card">
+                  <div class="song-cover" style="background: linear-gradient(135deg, #845ec2, #d65db1);">
+                  <span>Cover</span>
+                </div>
+                <div class="song-copy">
+                  <h3>Our First Night</h3>
+                  <p>Every beat of this one reminds me of our first late-night talk and how close it made me feel to you.</p>
+                </div>
+              </div>
+              <div class="song-card">
+                <div class="song-cover" style="background: linear-gradient(135deg, #ff6f91, #ff9671);">
+                  <span>Cover</span>
+                </div>
+                <div class="song-copy">
+                  <h3>Distance Dance</h3>
+                  <p>This one became our little ritual on long journeys, keeping us dancing even when we were apart.</p>
+                </div>
+              </div>
+              <div class="song-card">
+                <div class="song-cover" style="background: linear-gradient(135deg, #0081cf, #00c9a7);">
+                  <span>Cover</span>
+                </div>
+                <div class="song-copy">
+                  <h3>Future Promise</h3>
+                  <p>A reminder of every plan, every trip, and every smile I want to share with you.</p>
+                </div>
+              </div>
+            </div>
+            <div class="playlist-embed hidden" id="playlistEmbed">
+              <iframe
+                src="https://open.spotify.com/embed/playlist/6RN9AdaH3em5vjgK4bihIo?utm_source=generator"
+                width="100%"
+                height="380"
+                frameborder="0"
+                allow="encrypted-media; clipboard-write"
+                allowfullscreen
+              ></iframe>
+            </div>
+            <a class="playlist-link hidden" id="playlistLink" href="https://open.spotify.com/playlist/6RN9AdaH3em5vjgK4bihIo?si=893f35ead79f41dd&pt=68326f29e75f13c8fbfbf5460fc6f39e" target="_blank" rel="noreferrer">Open playlist in Spotify</a>
           </div>
-          <button class="continue-button hidden" id="continueButton3">Continue</button>
+          <button class="continue-button hidden" id="continueButton3">Next surprise</button>
         </div>
 
-        <div class="step" data-bg="#fff8e8">
+        <div class="step" data-bg="#fff8e8" data-transition="flip">
           <div class="story-copy">
-            <p class="typed-text" data-text="Time for a surprise. Reveal five reasons I love you when you're ready."></p>
+            <h2 class="page-title">Surprise</h2>
+            <p class="typed-text page-text" data-text="Time for a surprise. Reveal five reasons I love you when you're ready."></p>
             <button class="reveal-button hidden" id="surpriseReveal">Reveal the surprise</button>
             <div class="reveal-list hidden" id="surpriseList">
               <p>1. Your smile lights up the screen.</p>
@@ -62,12 +104,13 @@
               <p>5. Every message from you feels like a gift.</p>
             </div>
           </div>
-          <button class="continue-button hidden" id="continueButton4">Continue</button>
+          <button class="continue-button hidden" id="continueButton4">Ready for one last question</button>
         </div>
 
-        <div class="step" data-bg="#f3fff5">
+        <div class="step" data-bg="#f3fff5" data-transition="drift">
           <div class="story-copy">
-            <p class="typed-text" data-text="One last question: What did we first bond over? Choose the answer to continue."></p>
+            <h2 class="page-title">Guess What</h2>
+            <p class="typed-text page-text" data-text="One last question: What did we first bond over? Choose the answer to continue."></p>
             <div class="quiz-options hidden" id="quizOptions">
               <button>Music</button>
               <button>Gym goals</button>
@@ -75,16 +118,98 @@
             </div>
             <p class="quiz-answer hidden" id="quizAnswer">Yes! It was music and our late-night messages that made us click.</p>
           </div>
-          <button class="continue-button hidden" id="continueButton5">Continue</button>
+          <button class="continue-button hidden" id="continueButton5">Finish</button>
         </div>
 
-        <div class="step" data-bg="#ffeff6">
+        <div class="step" data-bg="#ffeff6" data-transition="fade">
           <div class="story-copy">
-            <p class="typed-text" data-text="That's the story so far. Happy Birthday, Zor — I love you, near or far."></p>
+            <h2 class="page-title">Happy Birthday</h2>
+            <p class="typed-text page-text" data-text="That's the story so far. Happy Birthday, Zor — I love you, near or far."></p>
           </div>
         </div>
       </div>
     </div>
     <script src="scripts.js"></script>
+              <div class="song-card" data-src="">
+                <div class="song-cover" style="background: linear-gradient(135deg, #845ec2, #d65db1);">
+                  <span>Cover</span>
+                </div>
+                <div class="song-copy">
+                  <h3>Our First Night</h3>
+                  <p>Every beat of this one reminds me of our first late-night talk and how close it made me feel to you.</p>
+                </div>
+              </div>
+              <div class="song-card" data-src="">
+                <div class="song-cover" style="background: linear-gradient(135deg, #ff6f91, #ff9671);">
+                  <span>Cover</span>
+                </div>
+                <div class="song-copy">
+                  <h3>Distance Dance</h3>
+                  <p>This one became our little ritual on long journeys, keeping us dancing even when we were apart.</p>
+                </div>
+              </div>
+              <div class="song-card" data-src="">
+                <div class="song-cover" style="background: linear-gradient(135deg, #0081cf, #00c9a7);">
+                  <span>Cover</span>
+                </div>
+                <div class="song-copy">
+                  <h3>Future Promise</h3>
+                  <p>A reminder of every plan, every trip, and every smile I want to share with you.</p>
+                </div>
+              </div>
+              <div class="song-card" data-src="">
+                <div class="song-cover" style="background: linear-gradient(135deg, #ff9f1c, #ff6b6b);">
+                  <span>Cover</span>
+                </div>
+                <div class="song-copy">
+                  <h3>Late Night Calls</h3>
+                  <p>Notes that made the distance feel smaller.</p>
+                </div>
+              </div>
+              <div class="song-card" data-src="">
+                <div class="song-cover" style="background: linear-gradient(135deg, #2ec4b6, #9ad3bc);">
+                  <span>Cover</span>
+                </div>
+                <div class="song-copy">
+                  <h3>City Lights</h3>
+                  <p>The soundtrack of our short walks and big dreams.</p>
+                </div>
+              </div>
+              <div class="song-card" data-src="">
+                <div class="song-cover" style="background: linear-gradient(135deg, #845ec2, #00b4d8);">
+                  <span>Cover</span>
+                </div>
+                <div class="song-copy">
+                  <h3>Quiet Mornings</h3>
+                  <p>A soft song for coffee and slow smiles.</p>
+                </div>
+              </div>
+              <div class="song-card" data-src="">
+                <div class="song-cover" style="background: linear-gradient(135deg, #ff6f91, #ffd166);">
+                  <span>Cover</span>
+                </div>
+                <div class="song-copy">
+                  <h3>Roadtrip</h3>
+                  <p>Windows down and us singing along—the best kind of noise.</p>
+                </div>
+              </div>
+              <div class="song-card" data-src="">
+                <div class="song-cover" style="background: linear-gradient(135deg, #8338ec, #3a86ff);">
+                  <span>Cover</span>
+                </div>
+                <div class="song-copy">
+                  <h3>Promise Land</h3>
+                  <p>For every plan we still have to make.</p>
+                </div>
+              </div>
+              <div class="song-card" data-src="">
+                <div class="song-cover" style="background: linear-gradient(135deg, #ff7eb6, #65d6ba);">
+                  <span>Cover</span>
+                </div>
+                <div class="song-copy">
+                  <h3>Always</h3>
+                  <p>The one I imagine us slow-dancing to at the end of everything.</p>
+                </div>
+              </div>
   </body>
 </html>
