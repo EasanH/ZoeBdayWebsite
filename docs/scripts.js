@@ -346,7 +346,24 @@ songFocusBackdrop.addEventListener('click', closeFlippedCard);
 
 function closeFlippedCard() {
   if (currentlyFlippedCard) {
+    const placeholder = currentlyFlippedCard._placeholderEl;
+    const originalParent = currentlyFlippedCard._originalParent;
+    const originalNextSibling = currentlyFlippedCard._originalNextSibling;
+
     currentlyFlippedCard.classList.remove('flipped', 'expanded');
+
+    if (originalParent) {
+      if (originalNextSibling && originalNextSibling.parentNode === originalParent) {
+        originalParent.insertBefore(currentlyFlippedCard, originalNextSibling);
+      } else {
+        originalParent.appendChild(currentlyFlippedCard);
+      }
+    }
+
+    if (placeholder) placeholder.remove();
+    currentlyFlippedCard._placeholderEl = null;
+    currentlyFlippedCard._originalParent = null;
+    currentlyFlippedCard._originalNextSibling = null;
     currentlyFlippedCard = null;
     pausePlayback();
   }
@@ -363,6 +380,12 @@ function handleCardClick(card, uri) {
 
   card.classList.add('flipped', 'expanded');
   currentlyFlippedCard = card;
+  card._originalParent = card.parentNode;
+  card._originalNextSibling = card.nextSibling;
+  card._placeholderEl = document.createElement('div');
+  card._placeholderEl.className = 'song-card-placeholder';
+  card._originalParent.insertBefore(card._placeholderEl, card);
+  document.body.appendChild(card);
   document.body.classList.add('song-modal-open');
   songFocusBackdrop.classList.add('visible');
   if (playlistGrid) playlistGrid.classList.add('has-expanded');
@@ -547,21 +570,21 @@ function playTypingClick(character) {
     const oscillator = typingAudioContext.createOscillator();
     const gain = typingAudioContext.createGain();
     const filter = typingAudioContext.createBiquadFilter();
-    const pitch = character.match(/[.,!?;:]/) ? 520 : 680 + Math.random() * 220;
+    const pitch = character.match(/[.,!?;:]/) ? 360 : 430 + Math.random() * 150;
 
     oscillator.type = 'triangle';
     oscillator.frequency.setValueAtTime(pitch, now);
     filter.type = 'highpass';
     filter.frequency.setValueAtTime(320, now);
     gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.exponentialRampToValueAtTime(0.035, now + 0.006);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.035 + Math.random() * 0.018);
+    gain.gain.exponentialRampToValueAtTime(0.075, now + 0.006);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.045 + Math.random() * 0.02);
 
     oscillator.connect(filter);
     filter.connect(gain);
     gain.connect(typingAudioContext.destination);
     oscillator.start(now);
-    oscillator.stop(now + 0.07);
+    oscillator.stop(now + 0.085);
   } catch (e) {
     typingSoundEnabled = false;
   }

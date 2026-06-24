@@ -609,10 +609,11 @@ body.music-page .back-button {
   position: fixed;
   inset: 0;
   z-index: 24;
-  background: rgba(0, 0, 0, 0.76);
+  background: rgba(0, 0, 0, 0.48);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.28s ease;
+  backdrop-filter: blur(8px) saturate(0.72);
 }
 
 .song-focus-backdrop.visible {
@@ -625,9 +626,14 @@ body.music-page .back-button {
   filter: blur(2px) saturate(0.72);
 }
 
+.song-card-placeholder {
+  height: 240px;
+  border-radius: 8px;
+}
+
 .flip-card.expanded {
   position: fixed;
-  z-index: 30;
+  z-index: 40;
   top: 50%;
   left: 50%;
   width: min(640px, calc(100vw - 36px));
@@ -782,6 +788,10 @@ body.music-page .back-button {
   }
 
   .flip-card {
+    height: 200px;
+  }
+
+  .song-card-placeholder {
     height: 200px;
   }
 
