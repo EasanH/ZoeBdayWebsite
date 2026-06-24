@@ -392,16 +392,23 @@ body.music-page .back-button {
 }
 
 .typed-text.typing::after {
-  content: '|';
+  content: '';
+  display: inline-block;
+  width: 0.16em;
+  height: 1.05em;
+  margin-left: 0.08em;
+  border-radius: 999px;
+  background: currentColor;
   opacity: 1;
-  animation: blinkCursor 0.8s steps(2, start) infinite;
+  transform: translateY(0.16em);
+  animation: blinkCursor 0.9s steps(2, start) infinite;
 }
 
 @keyframes blinkCursor {
-  0%, 40% {
+  0%, 55% {
     opacity: 1;
   }
-  41%, 100% {
+  56%, 100% {
     opacity: 0;
   }
 }
@@ -602,11 +609,10 @@ body.music-page .back-button {
   position: fixed;
   inset: 0;
   z-index: 24;
-  background: rgba(0, 0, 0, 0.72);
+  background: rgba(0, 0, 0, 0.76);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.28s ease;
-  backdrop-filter: blur(7px);
 }
 
 .song-focus-backdrop.visible {
@@ -616,6 +622,7 @@ body.music-page .back-button {
 
 .playlist-grid.has-expanded .flip-card:not(.expanded) {
   opacity: 0.28;
+  filter: blur(2px) saturate(0.72);
 }
 
 .flip-card.expanded {
@@ -627,6 +634,8 @@ body.music-page .back-button {
   height: min(680px, calc(100vh - 72px));
   transform: translate(-50%, -50%);
   cursor: default;
+  filter: none;
+  opacity: 1;
 }
 
 .flip-card.expanded .flip-card-inner {

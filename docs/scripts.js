@@ -22,6 +22,9 @@ const quizAnswer = document.getElementById('quizAnswer');
 const quizButtons = Array.from(document.querySelectorAll('.quiz-options button'));
 
 let currentStep = 0;
+let typingRunId = 0;
+let typingAudioContext = null;
+let typingSoundEnabled = false;
 
 const AUTH_RESUME_STEP_KEY = 'sp_auth_resume_step';
 const AUTH_RESUME_PLAYLIST_KEY = 'sp_auth_resume_playlist';
@@ -522,7 +525,65 @@ function goToStep(index) {
   window.scrollTo({ top: 0, behavior: 'auto' });
 }
 
+function enableTypingSound() {
+  if (typingSoundEnabled) return;
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) return;
+  typingAudioContext = typingAudioContext || new AudioContextClass();
+  if (typingAudioContext.state === 'suspended') {
+    typingAudioContext.resume().catch(() => {});
+  }
+  typingSoundEnabled = true;
+}
+
+document.addEventListener('pointerdown', enableTypingSound, { once: true });
+document.addEventListener('keydown', enableTypingSound, { once: true });
+
+function playTypingClick(character) {
+  if (!typingSoundEnabled || !typingAudioContext || character === ' ' || character === '\n') return;
+
+  try {
+    const now = typingAudioContext.currentTime;
+    const oscillator = typingAudioContext.createOscillator();
+    const gain = typingAudioContext.createGain();
+    const filter = typingAudioContext.createBiquadFilter();
+    const pitch = character.match(/[.,!?;:]/) ? 520 : 680 + Math.random() * 220;
+
+    oscillator.type = 'triangle';
+    oscillator.frequency.setValueAtTime(pitch, now);
+    filter.type = 'highpass';
+    filter.frequency.setValueAtTime(320, now);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.035, now + 0.006);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.035 + Math.random() * 0.018);
+
+    oscillator.connect(filter);
+    filter.connect(gain);
+    gain.connect(typingAudioContext.destination);
+    oscillator.start(now);
+    oscillator.stop(now + 0.07);
+  } catch (e) {
+    typingSoundEnabled = false;
+  }
+}
+
+function getTypingDelay(character, nextCharacter) {
+  let delay = 34 + Math.random() * 58;
+
+  if (character === ' ') delay += 18 + Math.random() * 38;
+  if (/[,.]/.test(character)) delay += 130 + Math.random() * 120;
+  if (/[!?]/.test(character)) delay += 210 + Math.random() * 180;
+  if (character === ':' || character === ';') delay += 160 + Math.random() * 130;
+  if (character === '\n') delay += 260;
+  if (nextCharacter && /[A-Z]/.test(nextCharacter) && character === ' ') delay += 24;
+  if (Math.random() < 0.035) delay += 160 + Math.random() * 260;
+
+  return delay;
+}
+
 function typeText(element, text) {
+  const runId = ++typingRunId;
+
   return new Promise((resolve) => {
     if (!element || !text) {
       resolve();
@@ -532,18 +593,32 @@ function typeText(element, text) {
     element.classList.add('typing');
     element.textContent = '';
     let position = 0;
-    const speed = 50;
 
-    const typeInterval = setInterval(() => {
-      if (position < text.length) {
-        element.textContent += text[position];
-        position += 1;
-      } else {
-        clearInterval(typeInterval);
+    const typeNext = () => {
+      if (runId !== typingRunId) {
         element.classList.remove('typing');
         resolve();
+        return;
       }
-    }, speed);
+
+      if (position >= text.length) {
+        window.setTimeout(() => {
+          if (runId === typingRunId) element.classList.remove('typing');
+          resolve();
+        }, 260);
+        return;
+      }
+
+      const character = text[position];
+      const nextCharacter = text[position + 1];
+      element.textContent += character;
+      position += 1;
+      playTypingClick(character);
+
+      window.setTimeout(typeNext, getTypingDelay(character, nextCharacter));
+    };
+
+    window.setTimeout(typeNext, 220 + Math.random() * 180);
   });
 }
 
