@@ -645,7 +645,7 @@ function getTypingDelay(character, nextCharacter, speedMultiplier) {
 function typeText(element, text, options = {}) {
   const runId = ++typingRunId;
   const speedMultiplier = options.speedMultiplier || 1;
-  const soundMinInterval = options.soundMinInterval || 58;
+  const soundMinInterval = options.soundMinInterval *1.3 || 58;
 
   return new Promise((resolve) => {
     if (!element || !text) {

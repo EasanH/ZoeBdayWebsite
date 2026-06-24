@@ -140,10 +140,6 @@ body.letter-page .back-button {
   transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
 }
 
-.next-button::after {
-  content: ' ->';
-}
-
 .next-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 22px 52px rgba(34, 34, 77, 0.18);
@@ -389,35 +385,163 @@ body.letter-page .next-button {
   align-items: center;
 }
 
-body.letter-page::before {
-  content: '';
+/* --- Fake Gmail inbox, rendered behind the compose card on the letter step.
+   Lives at the body level (not inside .step) so position:fixed anchors to
+   the real viewport — nested inside .step would anchor to it instead, since
+   the page-transition animations apply a CSS transform there. --- */
+.gmail-inbox-bg {
+  display: none;
   position: fixed;
   inset: 0;
   z-index: 0;
+  overflow: hidden;
+  background: #ffffff;
   pointer-events: none;
-  background:
-    linear-gradient(90deg, #eaf1fb 0 72px, #f6f8fc 72px 276px, transparent 276px),
-    repeating-linear-gradient(#ffffff 0 54px, #f8fafd 54px 55px, #ffffff 55px 108px);
 }
 
-body.letter-page::after {
-  content: '';
+body.letter-page .gmail-inbox-bg {
+  display: block;
+}
+
+.gmail-inbox-toolbar {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  padding: 0 28px;
+  border-bottom: 1px solid #e8eaed;
+  font: 500 0.86rem Arial, sans-serif;
+  color: #5f6368;
+}
+
+.gmail-inbox-tab {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  border-bottom: 3px solid transparent;
+  letter-spacing: 0.02em;
+}
+
+.gmail-inbox-tab.active {
+  color: #0b57d0;
+  border-bottom-color: #0b57d0;
+  font-weight: 700;
+}
+
+.gmail-inbox-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.gmail-inbox-row {
+  height: 42px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 24px;
+  border-bottom: 1px solid #f1f3f4;
+  font: 400 0.86rem Arial, sans-serif;
+  color: #5f6368;
+  white-space: nowrap;
+  background: #ffffff;
+}
+
+.gmail-inbox-row.unread {
+  font-weight: 700;
+  color: #202124;
+  background: #f2f6fc;
+}
+
+.gmail-row-check {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  border: 1.5px solid #c4c7c5;
+  border-radius: 3px;
+}
+
+.gmail-row-star {
+  flex: none;
+  width: 16px;
+  text-align: center;
+  color: #c4c7c5;
+  font-size: 0.92rem;
+}
+
+.gmail-row-sender {
+  flex: 0 0 168px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gmail-row-subject {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gmail-row-snippet {
+  font-weight: 400;
+  color: #80868b;
+}
+
+.gmail-row-time {
+  flex: none;
+  margin-left: auto;
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: #80868b;
+}
+
+.gmail-inbox-row.unread .gmail-row-time {
+  color: #202124;
+  font-weight: 700;
+}
+
+.gmail-inbox-rail {
+  display: none;
   position: fixed;
-  top: 86px;
-  left: 94px;
-  width: 252px;
-  height: min(620px, calc(100vh - 126px));
+  top: 96px;
+  right: 16px;
   z-index: 0;
-  pointer-events: none;
-  border-radius: 18px;
-  background:
-    linear-gradient(#c2e7ff 0 46px, transparent 46px),
-    linear-gradient(90deg, #d93025 0 18px, transparent 18px) 22px 78px / 18px 18px no-repeat,
-    linear-gradient(90deg, #fbbc04 0 18px, transparent 18px) 22px 126px / 18px 18px no-repeat,
-    linear-gradient(90deg, #34a853 0 18px, transparent 18px) 22px 174px / 18px 18px no-repeat,
-    repeating-linear-gradient(#ffffff 0 44px, #edf2fa 44px 45px, #ffffff 45px 88px);
-  box-shadow: 0 12px 34px rgba(60, 64, 67, 0.12);
-  opacity: 0.96;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+body.letter-page .gmail-inbox-rail {
+  display: flex;
+}
+
+.gmail-inbox-rail span {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  color: #ffffff;
+  font-size: 1.1rem;
+  box-shadow: 0 2px 6px rgba(60, 64, 67, 0.18);
+}
+
+.gmail-inbox-rail span:nth-child(1) {
+  background: #fbbc04;
+}
+
+.gmail-inbox-rail span:nth-child(2) {
+  background: #1a73e8;
+}
+
+.gmail-inbox-rail span:nth-child(3) {
+  background: #5f6368;
+}
+
+@media (max-width: 920px) {
+  .gmail-inbox-rail {
+    display: none;
+  }
 }
 
 .page-title {
