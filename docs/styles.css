@@ -58,16 +58,23 @@ body.music-page {
   color: #ffffff;
 }
 
+body.letter-page {
+  background: #f6f8fc !important;
+  color: #202124;
+}
+
 body.music-page .page-shell {
   align-items: flex-start;
   overflow: visible;
 }
 
-body.music-page .story-frame {
+body.music-page .story-frame,
+body.letter-page .story-frame {
   min-height: calc(100vh - 106px);
 }
 
-body.music-page .step.active {
+body.music-page .step.active,
+body.letter-page .step.active {
   position: relative;
   height: auto;
   min-height: calc(100vh - 106px);
@@ -80,6 +87,19 @@ body.music-page .back-button {
   border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
   backdrop-filter: blur(14px);
+}
+
+body.letter-page .page-shell {
+  max-width: 1120px;
+  align-items: flex-start;
+  overflow: visible;
+}
+
+body.letter-page .back-button {
+  background: rgba(255, 255, 255, 0.9);
+  color: #3c4043;
+  border: 1px solid #dadce0;
+  box-shadow: 0 8px 24px rgba(60, 64, 67, 0.16);
 }
 
 .back-button {
@@ -241,6 +261,12 @@ body.music-page .back-button {
   justify-content: flex-start;
 }
 
+.letter-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .page-title {
   margin: 0;
   font-size: clamp(4rem, 8vw, 9rem);
@@ -306,9 +332,10 @@ body.music-page .back-button {
 
 .step:nth-child(3) .page-title,
 .step:nth-child(3) .page-text {
-  font-family: 'Righteous', sans-serif;
-  font-size: clamp(1rem, 1.2vw, 1.5rem);
-  letter-spacing: 0.08em;
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0;
+  color: #202124;
 }
 
 .step:nth-child(4) .page-title {
@@ -404,6 +431,148 @@ body.music-page .back-button {
   animation: blinkCursor 0.9s steps(2, start) infinite;
 }
 
+.gmail-draft {
+  width: min(900px, 100%);
+  height: min(760px, calc(100vh - 146px));
+  min-height: 560px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #dadce0;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 8px 28px rgba(60, 64, 67, 0.24);
+  text-align: left;
+}
+
+.gmail-window-bar {
+  height: 42px;
+  padding: 0 14px 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f2f6fc;
+  color: #202124;
+  font: 500 0.88rem Arial, sans-serif;
+  border-bottom: 1px solid #e8eaed;
+}
+
+.gmail-window-actions {
+  display: inline-flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.gmail-window-actions span {
+  width: 12px;
+  height: 2px;
+  display: block;
+  border-radius: 999px;
+  background: #5f6368;
+  opacity: 0.75;
+}
+
+.gmail-window-actions span:nth-child(2) {
+  height: 10px;
+  border: 2px solid #5f6368;
+  background: transparent;
+}
+
+.gmail-window-actions span:nth-child(3) {
+  width: 11px;
+  height: 11px;
+  position: relative;
+  background: transparent;
+}
+
+.gmail-window-actions span:nth-child(3)::before,
+.gmail-window-actions span:nth-child(3)::after {
+  content: '';
+  position: absolute;
+  top: 5px;
+  left: 0;
+  width: 13px;
+  height: 2px;
+  border-radius: 999px;
+  background: #5f6368;
+}
+
+.gmail-window-actions span:nth-child(3)::before {
+  transform: rotate(45deg);
+}
+
+.gmail-window-actions span:nth-child(3)::after {
+  transform: rotate(-45deg);
+}
+
+.gmail-address-row,
+.gmail-subject {
+  min-height: 44px;
+  padding: 0 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-bottom: 1px solid #e8eaed;
+  font: 400 0.92rem Arial, sans-serif;
+  color: #5f6368;
+}
+
+.gmail-address-row strong {
+  color: #202124;
+  font-weight: 500;
+}
+
+.gmail-subject {
+  color: #202124;
+  font-size: 1rem;
+}
+
+.gmail-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 24px 28px 36px;
+  background:
+    linear-gradient(#ffffff 30%, rgba(255, 255, 255, 0)),
+    linear-gradient(rgba(255, 255, 255, 0), #ffffff 70%) bottom,
+    linear-gradient(rgba(60, 64, 67, 0.08), rgba(60, 64, 67, 0)),
+    linear-gradient(rgba(60, 64, 67, 0), rgba(60, 64, 67, 0.08)) bottom;
+  background-repeat: no-repeat;
+  background-size: 100% 28px, 100% 28px, 100% 10px, 100% 10px;
+  background-attachment: local, local, scroll, scroll;
+}
+
+.gmail-body .page-text {
+  max-width: none;
+  margin: 0;
+  color: #202124;
+  font: 400 1rem/1.72 Arial, sans-serif;
+  letter-spacing: 0;
+  text-align: left;
+}
+
+.gmail-compose-footer {
+  min-height: 52px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-top: 1px solid #e8eaed;
+  color: #5f6368;
+  font: 500 0.78rem Arial, sans-serif;
+}
+
+.gmail-compose-footer button {
+  min-width: 88px;
+  height: 36px;
+  border: none;
+  border-radius: 18px;
+  background: #0b57d0;
+  color: #ffffff;
+  font: 500 0.9rem Arial, sans-serif;
+}
+
 @keyframes blinkCursor {
   0%, 55% {
     opacity: 1;
@@ -470,7 +639,8 @@ body.music-page .back-button {
 
 .step:nth-child(3) .continue-button,
 .step:nth-child(3) .reveal-button {
-  background: #8b5fbf;
+  background: #0b57d0;
+  box-shadow: 0 16px 36px rgba(11, 87, 208, 0.24);
 }
 
 .step:nth-child(4) .continue-button,
@@ -503,10 +673,10 @@ body.music-page .back-button {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-.playlist-status,
-.playlist-hint {
+.story-copy .playlist-status,
+.story-copy .playlist-hint {
   margin-top: 24px;
-  color: rgba(255, 255, 255, 0.72);
+  color: rgba(229, 231, 235, 0.9);
   font-size: 0.95rem;
   letter-spacing: 0.02em;
 }
@@ -802,6 +972,20 @@ body.music-page .back-button {
 
   body.music-page .step.active {
     padding-inline: 0;
+  }
+
+  body.letter-page .step.active {
+    padding-inline: 0;
+  }
+
+  .gmail-draft {
+    height: calc(100vh - 118px);
+    min-height: 520px;
+    border-radius: 0;
+  }
+
+  .gmail-body {
+    padding: 20px 18px 32px;
   }
 
   .flip-card.expanded {

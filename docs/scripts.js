@@ -512,6 +512,7 @@ function setStep(stepIndex) {
     }
   });
   document.body.classList.toggle('music-page', steps[stepIndex]?.classList.contains('music-step'));
+  document.body.classList.toggle('letter-page', steps[stepIndex]?.classList.contains('letter-step'));
 }
 
 function showElement(element) {
@@ -651,7 +652,7 @@ async function activateStep(stepIndex) {
 
   const activeStep = steps[stepIndex];
   const textElement = activeStep.querySelector('.typed-text');
-  const text = textElement?.dataset.text || '';
+  const text = (textElement?.dataset.text || '').replace(/\\n/g, '\n');
 
   await typeText(textElement, text);
 
