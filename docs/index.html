@@ -42,43 +42,19 @@
           <button class="continue-button hidden" id="continueButton2">Keep reading</button>
         </div>
 
-        <div class="step" data-bg="#f0f7ff" data-transition="scale-up">
+        <div class="step music-step" data-bg="#121212" data-transition="scale-up">
           <div class="story-copy">
             <h2 class="page-title">Soundtrack</h2>
             <p class="typed-text page-text" data-text="Your birthday soundtrack is ready. Open the playlist when you're ready and let it set the mood."></p>
             <button class="continue-button hidden" id="showPlaylist">Show the songs</button>
+            <p class="playlist-status hidden" id="playlistStatus">Loading your songs…</p>
+            <p class="playlist-hint hidden" id="playlistHint">Tap a song to flip it over.</p>
             <div class="playlist-grid hidden" id="playlistGrid">
-              <div class="song-card">
-                  <div class="song-cover" style="background: linear-gradient(135deg, #845ec2, #d65db1);">
-                  <span>Cover</span>
-                </div>
-                <div class="song-copy">
-                  <h3>Our First Night</h3>
-                  <p>Every beat of this one reminds me of our first late-night talk and how close it made me feel to you.</p>
-                </div>
-              </div>
-              <div class="song-card">
-                <div class="song-cover" style="background: linear-gradient(135deg, #ff6f91, #ff9671);">
-                  <span>Cover</span>
-                </div>
-                <div class="song-copy">
-                  <h3>Distance Dance</h3>
-                  <p>This one became our little ritual on long journeys, keeping us dancing even when we were apart.</p>
-                </div>
-              </div>
-              <div class="song-card">
-                <div class="song-cover" style="background: linear-gradient(135deg, #0081cf, #00c9a7);">
-                  <span>Cover</span>
-                </div>
-                <div class="song-copy">
-                  <h3>Future Promise</h3>
-                  <p>A reminder of every plan, every trip, and every smile I want to share with you.</p>
-                </div>
-              </div>
+              <!-- Populated dynamically from Spotify API -->
             </div>
             <div class="playlist-embed hidden" id="playlistEmbed">
               <iframe
-                src="https://open.spotify.com/embed/playlist/6RN9AdaH3em5vjgK4bihIo?utm_source=generator"
+                src="https://open.spotify.com/embed/playlist/6PrcgmoTysAS2ldAmrUasV?si=fb780614e35a4f1e"
                 width="100%"
                 height="380"
                 frameborder="0"
@@ -86,7 +62,7 @@
                 allowfullscreen
               ></iframe>
             </div>
-            <a class="playlist-link hidden" id="playlistLink" href="https://open.spotify.com/playlist/6RN9AdaH3em5vjgK4bihIo?si=893f35ead79f41dd&pt=68326f29e75f13c8fbfbf5460fc6f39e" target="_blank" rel="noreferrer">Open playlist in Spotify</a>
+            <a class="playlist-link hidden" id="playlistLink" href="https://open.spotify.com/playlist/6PrcgmoTysAS2ldAmrUasV?si=2c928c2ca4c94ed9" target="_blank" rel="noreferrer">Open playlist in Spotify</a>
           </div>
           <button class="continue-button hidden" id="continueButton3">Next surprise</button>
         </div>
@@ -129,87 +105,7 @@
         </div>
       </div>
     </div>
+    <script src="https://sdk.scdn.co/spotify-player.js"></script>
     <script src="scripts.js"></script>
-              <div class="song-card" data-src="">
-                <div class="song-cover" style="background: linear-gradient(135deg, #845ec2, #d65db1);">
-                  <span>Cover</span>
-                </div>
-                <div class="song-copy">
-                  <h3>Our First Night</h3>
-                  <p>Every beat of this one reminds me of our first late-night talk and how close it made me feel to you.</p>
-                </div>
-              </div>
-              <div class="song-card" data-src="">
-                <div class="song-cover" style="background: linear-gradient(135deg, #ff6f91, #ff9671);">
-                  <span>Cover</span>
-                </div>
-                <div class="song-copy">
-                  <h3>Distance Dance</h3>
-                  <p>This one became our little ritual on long journeys, keeping us dancing even when we were apart.</p>
-                </div>
-              </div>
-              <div class="song-card" data-src="">
-                <div class="song-cover" style="background: linear-gradient(135deg, #0081cf, #00c9a7);">
-                  <span>Cover</span>
-                </div>
-                <div class="song-copy">
-                  <h3>Future Promise</h3>
-                  <p>A reminder of every plan, every trip, and every smile I want to share with you.</p>
-                </div>
-              </div>
-              <div class="song-card" data-src="">
-                <div class="song-cover" style="background: linear-gradient(135deg, #ff9f1c, #ff6b6b);">
-                  <span>Cover</span>
-                </div>
-                <div class="song-copy">
-                  <h3>Late Night Calls</h3>
-                  <p>Notes that made the distance feel smaller.</p>
-                </div>
-              </div>
-              <div class="song-card" data-src="">
-                <div class="song-cover" style="background: linear-gradient(135deg, #2ec4b6, #9ad3bc);">
-                  <span>Cover</span>
-                </div>
-                <div class="song-copy">
-                  <h3>City Lights</h3>
-                  <p>The soundtrack of our short walks and big dreams.</p>
-                </div>
-              </div>
-              <div class="song-card" data-src="">
-                <div class="song-cover" style="background: linear-gradient(135deg, #845ec2, #00b4d8);">
-                  <span>Cover</span>
-                </div>
-                <div class="song-copy">
-                  <h3>Quiet Mornings</h3>
-                  <p>A soft song for coffee and slow smiles.</p>
-                </div>
-              </div>
-              <div class="song-card" data-src="">
-                <div class="song-cover" style="background: linear-gradient(135deg, #ff6f91, #ffd166);">
-                  <span>Cover</span>
-                </div>
-                <div class="song-copy">
-                  <h3>Roadtrip</h3>
-                  <p>Windows down and us singing along—the best kind of noise.</p>
-                </div>
-              </div>
-              <div class="song-card" data-src="">
-                <div class="song-cover" style="background: linear-gradient(135deg, #8338ec, #3a86ff);">
-                  <span>Cover</span>
-                </div>
-                <div class="song-copy">
-                  <h3>Promise Land</h3>
-                  <p>For every plan we still have to make.</p>
-                </div>
-              </div>
-              <div class="song-card" data-src="">
-                <div class="song-cover" style="background: linear-gradient(135deg, #ff7eb6, #65d6ba);">
-                  <span>Cover</span>
-                </div>
-                <div class="song-copy">
-                  <h3>Always</h3>
-                  <p>The one I imagine us slow-dancing to at the end of everything.</p>
-                </div>
-              </div>
   </body>
 </html>
