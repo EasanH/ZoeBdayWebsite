@@ -20,11 +20,16 @@ const surpriseList = document.getElementById('surpriseList');
 const quizOptions = document.getElementById('quizOptions');
 const quizAnswer = document.getElementById('quizAnswer');
 const quizButtons = Array.from(document.querySelectorAll('.quiz-options button'));
+const nextButton = document.getElementById('nextButton');
 
 let currentStep = 0;
 let typingRunId = 0;
 let typingAudioContext = null;
 let typingSoundEnabled = false;
+let typingNoiseBuffer = null;
+let lastTypingSoundAt = 0;
+let isChangingStep = false;
+let activationRunId = 0;
 
 const AUTH_RESUME_STEP_KEY = 'sp_auth_resume_step';
 const AUTH_RESUME_PLAYLIST_KEY = 'sp_auth_resume_playlist';
@@ -513,6 +518,7 @@ function setStep(stepIndex) {
   });
   document.body.classList.toggle('music-page', steps[stepIndex]?.classList.contains('music-step'));
   document.body.classList.toggle('letter-page', steps[stepIndex]?.classList.contains('letter-step'));
+  if (nextButton) nextButton.classList.toggle('hidden', stepIndex >= steps.length - 1);
 }
 
 function showElement(element) {
@@ -549,11 +555,25 @@ function goToStep(index) {
   window.scrollTo({ top: 0, behavior: 'auto' });
 }
 
+function createTypingNoiseBuffer(context) {
+  const length = Math.max(1, Math.floor(context.sampleRate * 0.035));
+  const buffer = context.createBuffer(1, length, context.sampleRate);
+  const data = buffer.getChannelData(0);
+
+  for (let i = 0; i < length; i++) {
+    const fade = 1 - i / length;
+    data[i] = (Math.random() * 2 - 1) * fade;
+  }
+
+  return buffer;
+}
+
 function enableTypingSound() {
   if (typingSoundEnabled) return;
   const AudioContextClass = window.AudioContext || window.webkitAudioContext;
   if (!AudioContextClass) return;
   typingAudioContext = typingAudioContext || new AudioContextClass();
+  typingNoiseBuffer = typingNoiseBuffer || createTypingNoiseBuffer(typingAudioContext);
   if (typingAudioContext.state === 'suspended') {
     typingAudioContext.resume().catch(() => {});
   }
@@ -563,36 +583,53 @@ function enableTypingSound() {
 document.addEventListener('pointerdown', enableTypingSound, { once: true });
 document.addEventListener('keydown', enableTypingSound, { once: true });
 
-function playTypingClick(character) {
+function playTypingClick(character, minIntervalMs) {
   if (!typingSoundEnabled || !typingAudioContext || character === ' ' || character === '\n') return;
+  const nowMs = performance.now();
+  if (nowMs - lastTypingSoundAt < minIntervalMs) return;
+  lastTypingSoundAt = nowMs;
 
   try {
     const now = typingAudioContext.currentTime;
+    const source = typingAudioContext.createBufferSource();
+    const bodyGain = typingAudioContext.createGain();
+    const bodyFilter = typingAudioContext.createBiquadFilter();
     const oscillator = typingAudioContext.createOscillator();
-    const gain = typingAudioContext.createGain();
-    const filter = typingAudioContext.createBiquadFilter();
-    const pitch = character.match(/[.,!?;:]/) ? 360 : 430 + Math.random() * 150;
+    const tapGain = typingAudioContext.createGain();
+    const pitch = character.match(/[.,!?;:]/) ? 150 : 180 + Math.random() * 90;
 
-    oscillator.type = 'triangle';
+    source.buffer = typingNoiseBuffer || createTypingNoiseBuffer(typingAudioContext);
+    source.playbackRate.setValueAtTime(0.85 + Math.random() * 0.24, now);
+    bodyFilter.type = 'bandpass';
+    bodyFilter.frequency.setValueAtTime(1450 + Math.random() * 420, now);
+    bodyFilter.Q.setValueAtTime(0.9, now);
+    bodyGain.gain.setValueAtTime(0.0001, now);
+    bodyGain.gain.exponentialRampToValueAtTime(0.13, now + 0.004);
+    bodyGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.042 + Math.random() * 0.015);
+
+    oscillator.type = 'square';
     oscillator.frequency.setValueAtTime(pitch, now);
-    filter.type = 'highpass';
-    filter.frequency.setValueAtTime(320, now);
-    gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.exponentialRampToValueAtTime(0.075, now + 0.006);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.045 + Math.random() * 0.02);
+    tapGain.gain.setValueAtTime(0.0001, now);
+    tapGain.gain.exponentialRampToValueAtTime(0.04, now + 0.003);
+    tapGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.026);
 
-    oscillator.connect(filter);
-    filter.connect(gain);
-    gain.connect(typingAudioContext.destination);
+    source.connect(bodyFilter);
+    bodyFilter.connect(bodyGain);
+    bodyGain.connect(typingAudioContext.destination);
+
+    oscillator.connect(tapGain);
+    tapGain.connect(typingAudioContext.destination);
+    source.start(now);
+    source.stop(now + 0.06);
     oscillator.start(now);
-    oscillator.stop(now + 0.085);
+    oscillator.stop(now + 0.04);
   } catch (e) {
     typingSoundEnabled = false;
   }
 }
 
-function getTypingDelay(character, nextCharacter) {
-  let delay = 34 + Math.random() * 58;
+function getTypingDelay(character, nextCharacter, speedMultiplier) {
+  let delay = 28 + Math.random() * 52;
 
   if (character === ' ') delay += 18 + Math.random() * 38;
   if (/[,.]/.test(character)) delay += 130 + Math.random() * 120;
@@ -602,11 +639,13 @@ function getTypingDelay(character, nextCharacter) {
   if (nextCharacter && /[A-Z]/.test(nextCharacter) && character === ' ') delay += 24;
   if (Math.random() < 0.035) delay += 160 + Math.random() * 260;
 
-  return delay;
+  return Math.max(14, delay * speedMultiplier);
 }
 
-function typeText(element, text) {
+function typeText(element, text, options = {}) {
   const runId = ++typingRunId;
+  const speedMultiplier = options.speedMultiplier || 1;
+  const soundMinInterval = options.soundMinInterval || 58;
 
   return new Promise((resolve) => {
     if (!element || !text) {
@@ -637,16 +676,31 @@ function typeText(element, text) {
       const nextCharacter = text[position + 1];
       element.textContent += character;
       position += 1;
-      playTypingClick(character);
+      playTypingClick(character, soundMinInterval);
 
-      window.setTimeout(typeNext, getTypingDelay(character, nextCharacter));
+      window.setTimeout(typeNext, getTypingDelay(character, nextCharacter, speedMultiplier));
     };
 
     window.setTimeout(typeNext, 220 + Math.random() * 180);
   });
 }
 
+function getTypingOptions(step) {
+  if (step?.classList.contains('letter-step')) {
+    return {
+      speedMultiplier: 0.48,
+      soundMinInterval: 92,
+    };
+  }
+
+  return {
+    speedMultiplier: 1,
+    soundMinInterval: 58,
+  };
+}
+
 async function activateStep(stepIndex) {
+  const activationId = ++activationRunId;
   goToStep(stepIndex);
   resetInteractiveState();
 
@@ -654,7 +708,8 @@ async function activateStep(stepIndex) {
   const textElement = activeStep.querySelector('.typed-text');
   const text = (textElement?.dataset.text || '').replace(/\\n/g, '\n');
 
-  await typeText(textElement, text);
+  await typeText(textElement, text, getTypingOptions(activeStep));
+  if (activationId !== activationRunId) return;
 
   switch (stepIndex) {
     case 0:
@@ -680,8 +735,56 @@ async function activateStep(stepIndex) {
   }
 }
 
+function getExitClass(step, direction) {
+  if (direction === 'back') return 'exit-back';
+  if (step?.classList.contains('letter-step')) return 'exit-send';
+  if (step?.classList.contains('music-step')) return 'exit-record';
+  if (step?.dataset.transition === 'drift') return 'exit-spiral';
+  return 'exit-burst';
+}
+
+function animateStepExit(stepIndex, direction) {
+  const step = steps[stepIndex];
+  if (!step) return Promise.resolve();
+  const exitClass = getExitClass(step, direction);
+  step.classList.add(exitClass);
+
+  return new Promise((resolve) => {
+    window.setTimeout(() => {
+      step.classList.remove(exitClass);
+      resolve();
+    }, 620);
+  });
+}
+
+function navigateToStep(index, direction = 'forward') {
+  const validIndex = Math.max(0, Math.min(index, steps.length - 1));
+  if (isChangingStep || validIndex === currentStep) return;
+
+  isChangingStep = true;
+  activationRunId += 1;
+  typingRunId += 1;
+  closeFlippedCard();
+
+  animateStepExit(currentStep, direction).then(() => {
+    isChangingStep = false;
+    activateStep(validIndex);
+  });
+}
+
+async function navigateForward() {
+  if (currentStep >= steps.length - 1) return;
+  if (currentStep === 0) {
+    const token = await ensureSpotifyAuthWithResume(1, false);
+    if (token) navigateToStep(1);
+    return;
+  }
+
+  navigateToStep(currentStep + 1);
+}
+
 function advanceStep() {
-  activateStep(currentStep + 1);
+  navigateForward();
 }
 
 Object.entries(continueButtons).forEach(([step, button]) => {
@@ -709,15 +812,19 @@ async function ensureSpotifyAuthWithResume(resumeStep, shouldLoadPlaylist) {
 if (continueButtons[0]) {
   continueButtons[0].addEventListener('click', async () => {
     const token = await ensureSpotifyAuthWithResume(1, false);
-    if (token) activateStep(1);
+    if (token) navigateToStep(1);
   });
+}
+
+if (nextButton) {
+  nextButton.addEventListener('click', navigateForward);
 }
 
 const backButton = document.getElementById('backButton');
 if (backButton) {
   backButton.addEventListener('click', () => {
     if (currentStep > 0) {
-      activateStep(currentStep - 1);
+      navigateToStep(currentStep - 1, 'back');
       return;
     }
 

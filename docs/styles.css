@@ -93,6 +93,8 @@ body.letter-page .page-shell {
   max-width: 1120px;
   align-items: flex-start;
   overflow: visible;
+  position: relative;
+  z-index: 1;
 }
 
 body.letter-page .back-button {
@@ -117,6 +119,50 @@ body.letter-page .back-button {
   cursor: pointer;
   box-shadow: 0 18px 45px rgba(34, 34, 77, 0.12);
   transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.next-button {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 12;
+  min-width: 96px;
+  padding: 12px 18px;
+  border-radius: 999px;
+  border: none;
+  background: #ffffff;
+  color: #202124;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 18px 45px rgba(34, 34, 77, 0.12);
+  transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+}
+
+.next-button::after {
+  content: ' ->';
+}
+
+.next-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 22px 52px rgba(34, 34, 77, 0.18);
+}
+
+body.music-page .next-button {
+  background: #1db954;
+  color: #07120b;
+  box-shadow: 0 18px 42px rgba(29, 185, 84, 0.24);
+}
+
+body.letter-page .next-button {
+  background: #0b57d0;
+  color: #ffffff;
+  box-shadow: 0 14px 34px rgba(11, 87, 208, 0.26);
+}
+
+.next-button.hidden {
+  display: none;
 }
 
 .back-button:hover {
@@ -176,6 +222,30 @@ body.letter-page .back-button {
 
 .step[data-transition='drift'].active {
   animation: driftPage 0.95s ease both;
+}
+
+.step.exit-burst {
+  animation: exitBurst 0.62s ease both;
+}
+
+.step.exit-back {
+  animation: exitBack 0.55s ease both;
+}
+
+.step.exit-spiral {
+  animation: exitSpiral 0.62s cubic-bezier(0.7, -0.25, 0.28, 1.2) both;
+}
+
+.step.exit-record {
+  animation: exitRecord 0.62s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.step.exit-send .gmail-draft {
+  animation: gmailSendAway 0.62s cubic-bezier(0.7, -0.15, 0.2, 1) both;
+}
+
+.step.exit-send {
+  animation: exitFade 0.62s ease both;
 }
 
 @keyframes fadePage {
@@ -256,6 +326,58 @@ body.letter-page .back-button {
   text-align: center;
 }
 
+@keyframes exitBurst {
+  to {
+    opacity: 0;
+    transform: translateY(-36px) scale(1.08);
+    filter: blur(10px);
+  }
+}
+
+@keyframes exitBack {
+  to {
+    opacity: 0;
+    transform: translateX(-70px) scale(0.96);
+    filter: blur(6px);
+  }
+}
+
+@keyframes exitSpiral {
+  to {
+    opacity: 0;
+    transform: rotate(13deg) translateY(-90px) scale(0.62);
+    filter: blur(12px);
+  }
+}
+
+@keyframes exitRecord {
+  to {
+    opacity: 0;
+    transform: translateY(-18px) scale(1.24);
+    filter: blur(14px) saturate(1.4);
+  }
+}
+
+@keyframes exitFade {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes gmailSendAway {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  42% {
+    transform: translateY(8px) scale(0.96);
+  }
+  100% {
+    transform: translateX(46vw) translateY(-34vh) scale(0.24) rotate(7deg);
+    opacity: 0;
+  }
+}
+
 .music-step .story-copy {
   max-width: 1040px;
   justify-content: flex-start;
@@ -265,6 +387,37 @@ body.letter-page .back-button {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+body.letter-page::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, #eaf1fb 0 72px, #f6f8fc 72px 276px, transparent 276px),
+    repeating-linear-gradient(#ffffff 0 54px, #f8fafd 54px 55px, #ffffff 55px 108px);
+}
+
+body.letter-page::after {
+  content: '';
+  position: fixed;
+  top: 86px;
+  left: 94px;
+  width: 252px;
+  height: min(620px, calc(100vh - 126px));
+  z-index: 0;
+  pointer-events: none;
+  border-radius: 18px;
+  background:
+    linear-gradient(#c2e7ff 0 46px, transparent 46px),
+    linear-gradient(90deg, #d93025 0 18px, transparent 18px) 22px 78px / 18px 18px no-repeat,
+    linear-gradient(90deg, #fbbc04 0 18px, transparent 18px) 22px 126px / 18px 18px no-repeat,
+    linear-gradient(90deg, #34a853 0 18px, transparent 18px) 22px 174px / 18px 18px no-repeat,
+    repeating-linear-gradient(#ffffff 0 44px, #edf2fa 44px 45px, #ffffff 45px 88px);
+  box-shadow: 0 12px 34px rgba(60, 64, 67, 0.12);
+  opacity: 0.96;
 }
 
 .page-title {
@@ -617,6 +770,8 @@ body.letter-page .back-button {
   cursor: pointer;
   transition: transform 0.25s ease, opacity 0.25s ease, box-shadow 0.25s ease;
   text-decoration: none;
+  position: relative;
+  overflow: hidden;
 }
 
 .continue-button:hover,
@@ -625,6 +780,26 @@ body.letter-page .back-button {
 .text-cta-btn:hover {
   transform: translateY(-3px) scale(1.02);
   box-shadow: 0 26px 56px rgba(111, 75, 255, 0.32);
+}
+
+.continue-button::before,
+.reveal-button::before,
+.playlist-link::before,
+.text-cta-btn::before {
+  content: '';
+  position: absolute;
+  inset: -80% auto -80% -45%;
+  width: 38%;
+  transform: rotate(18deg);
+  background: rgba(255, 255, 255, 0.34);
+  transition: left 0.55s ease;
+}
+
+.continue-button:hover::before,
+.reveal-button:hover::before,
+.playlist-link:hover::before,
+.text-cta-btn:hover::before {
+  left: 120%;
 }
 
 .step:nth-child(1) .continue-button,
@@ -641,6 +816,13 @@ body.letter-page .back-button {
 .step:nth-child(3) .reveal-button {
   background: #0b57d0;
   box-shadow: 0 16px 36px rgba(11, 87, 208, 0.24);
+  border-radius: 18px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.step:nth-child(3) .continue-button::after {
+  content: '  Send';
 }
 
 .step:nth-child(4) .continue-button,
