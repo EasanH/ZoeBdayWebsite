@@ -47,12 +47,78 @@
     </div>
   
 
+    <div id="preloader">
+      <span class="preloader-heart">♡</span>
+      <span class="preloader-text">loading something good…</span>
+    </div>
+
+    <div id="heroRevealPrompt">
+      <span class="reveal-pill">Tap to open your birthday</span>
+    </div>
+
+    <div id="heroFloaters" aria-hidden="true">
+      <span class="floater" style="left:6%;font-size:1.1rem;animation-duration:14s;animation-delay:0s;--drift-x:24px;">♥</span>
+      <span class="floater" style="left:16%;font-size:0.85rem;animation-duration:11s;animation-delay:1.4s;--drift-x:-18px;">♪</span>
+      <span class="floater" style="left:27%;font-size:1.3rem;animation-duration:16s;animation-delay:3.1s;--drift-x:16px;">♥</span>
+      <span class="floater" style="left:38%;font-size:0.9rem;animation-duration:12.5s;animation-delay:0.6s;--drift-x:-22px;">♫</span>
+      <span class="floater" style="left:49%;font-size:1.05rem;animation-duration:15s;animation-delay:2.2s;--drift-x:20px;">♥</span>
+      <span class="floater" style="left:60%;font-size:0.95rem;animation-duration:13s;animation-delay:4s;--drift-x:-14px;">♪</span>
+      <span class="floater" style="left:70%;font-size:1.2rem;animation-duration:17s;animation-delay:0.9s;--drift-x:18px;">♥</span>
+      <span class="floater" style="left:80%;font-size:0.85rem;animation-duration:12s;animation-delay:2.8s;--drift-x:-20px;">♫</span>
+      <span class="floater" style="left:90%;font-size:1.1rem;animation-duration:14.5s;animation-delay:1.7s;--drift-x:22px;">♥</span>
+      <span class="floater" style="left:10%;font-size:0.9rem;animation-duration:13.5s;animation-delay:5.2s;--drift-x:-16px;">♪</span>
+      <span class="floater" style="left:55%;font-size:1.15rem;animation-duration:16.5s;animation-delay:6s;--drift-x:18px;">♥</span>
+      <span class="floater" style="left:85%;font-size:1rem;animation-duration:15.5s;animation-delay:3.6s;--drift-x:-18px;">♫</span>
+    </div>
+
     <div class="page-shell">
       <div class="story-frame">
-        <div class="step active" data-bg="#e8f5f1" data-transition="fade">
+        <div class="step hero-step active" data-bg="#e8f5f1" data-transition="fade">
           <div class="hero-text">
             <h1>Happy Birthday, Zor.</h1>
             <p class="typed-text" data-text="you are the youngest person ever"></p>
+            <p class="day-counter hidden" id="dayCounter"></p>
+            <iframe
+              id="heroSongEmbed"
+              class="hidden"
+              src=""
+              width="100%"
+              height="80"
+              frameborder="0"
+              allow="autoplay; encrypted-media; clipboard-write; fullscreen; picture-in-picture"
+              loading="lazy"
+            ></iframe>
+            <!-- <div class="hero-background-number">20</div>
+            <div id="heroConfettiLayer"></div>
+            <div id="heroBalloonLayer"></div>
+            <h1 class="birthday-title">
+              <span>H</span>
+              <span>A</span>
+              <span>P</span>
+              <span>P</span>
+              <span>Y</span>
+              <br>
+              <span>B</span>
+              <span>I</span>
+              <span>R</span>
+              <span>T</span>
+              <span>H</span>
+              <span>D</span>
+              <span>A</span>
+              <span>Y</span>
+              <br>
+              <span>Z</span>
+              <span>O</span>
+              <span>R</span>
+            </h1>
+            <p class="typed-text"
+            data-text="you are officially twenty!!">
+            </p>
+            <div class="age-wrapper">
+              <div class="age-label">YOU ARE</div>
+              <div id="liveAge">20.0000000000</div>
+              <div class="age-label">YEARS OLD</div>
+            </div> -->
           </div>
           <button class="continue-button hidden" id="continueButton">Continue</button>
         </div>
@@ -89,7 +155,7 @@
             <div class="gmail-body">
               <p
                 class="typed-text page-text"
-                data-text="Hi Zor,\n\nI figured this part had to look like Gmail, because this is where us really started: too many tabs open, a message box that somehow became a whole tiny universe, and two people pretending they were just casually answering questions while actually learning everything about each other.\n\nI still think about those long emails. The updates, the jokes, the questions that were secretly excuses to keep talking, the way a normal day could turn into several paragraphs because I wanted you to know the exact shape of it. I loved how much room we gave each other to be thoughtful. I loved that distance made us more intentional instead of making us smaller.\n\nSo this is placeholder letter space for now. Future me will come back and write the real thing here: the funny memories, the soft ones, the overly specific things I adore about you, and probably a few questions too, because it would not be one of our emails without me giving you homework.\n\nFor now, just know this: every message from you has felt like a little door opening. I am so grateful we kept walking through them.\n\nMore soon,\nMe"
+                data-text="Hi Zor,\n\nblah blah blah\n\nMore soon,\nMe"
               ></p>
             </div>
             <div class="gmail-compose-footer" aria-hidden="true">

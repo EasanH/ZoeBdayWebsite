@@ -21,6 +21,11 @@ const quizOptions = document.getElementById('quizOptions');
 const quizAnswer = document.getElementById('quizAnswer');
 const quizButtons = Array.from(document.querySelectorAll('.quiz-options button'));
 const nextButton = document.getElementById('nextButton');
+const preloaderEl = document.getElementById('preloader');
+const heroRevealPrompt = document.getElementById('heroRevealPrompt');
+const heroFloaters = document.getElementById('heroFloaters');
+const dayCounterEl = document.getElementById('dayCounter');
+const heroSongEmbed = document.getElementById('heroSongEmbed');
 
 let currentStep = 0;
 let typingRunId = 0;
@@ -30,6 +35,24 @@ let typingNoiseBuffer = null;
 let lastTypingSoundAt = 0;
 let isChangingStep = false;
 let activationRunId = 0;
+
+// Turn the keyboard typing sound up or down — 1 is the current volume,
+// 0.5 is half as loud, 2 is twice as loud, 0 mutes it entirely.
+const TYPING_SOUND_VOLUME = 1;
+
+// TODO: set this to the actual date you two started counting from (YYYY-MM-DD).
+// Powers the "Day X of us" counter under the headline.
+const BIRTH_DATE = '2006-10-11';
+
+// The song that plays the moment she taps to open the page. No Spotify
+// login required for this one — it's just the public embed widget, so it
+// works instantly for anyone, unlike the Premium-gated playback on the
+// soundtrack page later.
+const HERO_SONG_TRACK_ID = '4NpDZPwSXmL0cCTaJuVrCw';
+
+// Minimum time the "loading something good…" preloader stays up on a fresh
+// visit, so it doesn't flash by instantly if everything loads fast.
+const HERO_PRELOADER_MIN_MS = 1800;
 
 const AUTH_RESUME_STEP_KEY = 'sp_auth_resume_step';
 const AUTH_RESUME_PLAYLIST_KEY = 'sp_auth_resume_playlist';
@@ -518,6 +541,7 @@ function setStep(stepIndex) {
   });
   document.body.classList.toggle('music-page', steps[stepIndex]?.classList.contains('music-step'));
   document.body.classList.toggle('letter-page', steps[stepIndex]?.classList.contains('letter-step'));
+  document.body.classList.toggle('hero-page', steps[stepIndex]?.classList.contains('hero-step'));
   if (nextButton) nextButton.classList.toggle('hidden', stepIndex >= steps.length - 1);
 }
 
@@ -546,6 +570,7 @@ function resetInteractiveState() {
     button.classList.remove('correct', 'incorrect');
   });
   closeFlippedCard();
+  stopHeroSongEmbed();
 }
 
 function goToStep(index) {
@@ -554,6 +579,91 @@ function goToStep(index) {
   setStep(currentStep);
   window.scrollTo({ top: 0, behavior: 'auto' });
 }
+
+function getDaysSinceStart() {
+  const start = new Date(`${RELATIONSHIP_START_DATE}T00:00:00`);
+  if (Number.isNaN(start.getTime())) return null;
+  const diffMs = Date.now() - start.getTime();
+  return Math.max(0, Math.floor(diffMs / 86400000));
+}
+
+function startDayCounter() {
+  if (!dayCounterEl) return;
+  const target = getDaysSinceStart();
+  if (target === null) return;
+
+  showElement(dayCounterEl);
+  const duration = 1300;
+  const startTime = performance.now();
+
+  function tick(now) {
+    const progress = Math.min(1, (now - startTime) / duration);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    dayCounterEl.textContent = `Day ${Math.round(eased * target)} of us`;
+    if (progress < 1) requestAnimationFrame(tick);
+  }
+
+  requestAnimationFrame(tick);
+}
+
+function startHeroSongEmbed() {
+  if (!heroSongEmbed) return;
+  heroSongEmbed.src = `https://open.spotify.com/embed/track/${HERO_SONG_TRACK_ID}?utm_source=generator&theme=0&autoplay=1`;
+  showElement(heroSongEmbed);
+}
+
+function stopHeroSongEmbed() {
+  if (!heroSongEmbed) return;
+  if (heroSongEmbed.src) heroSongEmbed.src = '';
+  hideElement(heroSongEmbed);
+}
+
+function hidePreloader() {
+  if (preloaderEl) preloaderEl.classList.add('preloader-hidden');
+}
+
+// Resolves once she taps the "tap to open" prompt. The hero content behind
+// it is already visible but blurred (via the hero-pending-reveal body
+// class), so this is just waiting for the gesture before un-blurring it —
+// that same gesture is also what lets the song embed autoplay with sound.
+function waitForHeroTap() {
+  return new Promise((resolve) => {
+    document.body.classList.add('hero-pending-reveal');
+    if (!heroRevealPrompt) {
+      document.body.classList.remove('hero-pending-reveal');
+      resolve();
+      return;
+    }
+
+    const onTap = () => {
+      heroRevealPrompt.removeEventListener('click', onTap);
+      heroRevealPrompt.classList.add('reveal-dismissed');
+      document.body.classList.remove('hero-pending-reveal');
+      window.setTimeout(() => heroRevealPrompt.classList.remove('reveal-dismissed'), 600);
+      resolve();
+    };
+
+    heroRevealPrompt.addEventListener('click', onTap);
+  });
+}
+
+// Cursor sparkle trail — only spawns while she's on the hero step.
+let lastSparkleAt = 0;
+document.addEventListener('pointermove', (event) => {
+  if (!document.body.classList.contains('hero-page')) return;
+  const now = performance.now();
+  if (now - lastSparkleAt < 45) return;
+  lastSparkleAt = now;
+
+  const sparkle = document.createElement('span');
+  sparkle.className = 'cursor-sparkle';
+  sparkle.style.left = `${event.clientX - 3}px`;
+  sparkle.style.top = `${event.clientY - 3}px`;
+  sparkle.style.setProperty('--sx', `${(Math.random() - 0.5) * 24}px`);
+  sparkle.style.setProperty('--sy', `${10 + Math.random() * 20}px`);
+  document.body.appendChild(sparkle);
+  sparkle.addEventListener('animationend', () => sparkle.remove());
+});
 
 function createTypingNoiseBuffer(context) {
   const length = Math.max(1, Math.floor(context.sampleRate * 0.035));
@@ -604,13 +714,13 @@ function playTypingClick(character, minIntervalMs) {
     bodyFilter.frequency.setValueAtTime(1450 + Math.random() * 420, now);
     bodyFilter.Q.setValueAtTime(0.9, now);
     bodyGain.gain.setValueAtTime(0.0001, now);
-    bodyGain.gain.exponentialRampToValueAtTime(0.13, now + 0.004);
+    bodyGain.gain.exponentialRampToValueAtTime(Math.max(0.0001, 0.13 * TYPING_SOUND_VOLUME), now + 0.004);
     bodyGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.042 + Math.random() * 0.015);
 
     oscillator.type = 'square';
     oscillator.frequency.setValueAtTime(pitch, now);
     tapGain.gain.setValueAtTime(0.0001, now);
-    tapGain.gain.exponentialRampToValueAtTime(0.04, now + 0.003);
+    tapGain.gain.exponentialRampToValueAtTime(Math.max(0.0001, 0.04 * TYPING_SOUND_VOLUME), now + 0.003);
     tapGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.026);
 
     source.connect(bodyFilter);
@@ -914,13 +1024,29 @@ quizButtons.forEach((button) => {
 });
 
 async function bootstrapBirthdayPage() {
+  const bootStartedAt = performance.now();
+
   const token = await getAccessToken();
-  if (token) {
-    if (sdkReady) {
-      initializePlayer(token);
-    } else {
-      pendingPlayerToken = token;
-    }
+
+  if (!token) {
+    // No usable token at all (first-ever visit, or storage was cleared) —
+    // send her to Spotify login right now, before she's seen or clicked
+    // anything, so this never has to interrupt her once she's actually
+    // reading the page. A short pause first so the preloader doesn't just
+    // flash and vanish — it reads as "getting things ready" rather than a
+    // glitch.
+    sessionStorage.setItem(AUTH_RESUME_STEP_KEY, '0');
+    sessionStorage.setItem(AUTH_RESUME_PLAYLIST_KEY, '0');
+    const elapsedBeforeRedirect = performance.now() - bootStartedAt;
+    await new Promise((resolve) => window.setTimeout(resolve, Math.max(0, 500 - elapsedBeforeRedirect)));
+    redirectToSpotifyAuth();
+    return;
+  }
+
+  if (sdkReady) {
+    initializePlayer(token);
+  } else {
+    pendingPlayerToken = token;
   }
 
   const resumeStep = Number(sessionStorage.getItem(AUTH_RESUME_STEP_KEY) || 0);
@@ -928,7 +1054,26 @@ async function bootstrapBirthdayPage() {
   sessionStorage.removeItem(AUTH_RESUME_STEP_KEY);
   sessionStorage.removeItem(AUTH_RESUME_PLAYLIST_KEY);
 
-  await activateStep(resumeStep || 0);
+  // A fresh visit (no saved resume step) gets the full preloader + tap-to-
+  // reveal intro moment. Bouncing back from the Spotify login redirect mid-
+  // flow does not — she's already past that moment, so just get her back
+  // to where she was as quickly as possible.
+  const isFreshLanding = resumeStep === 0;
+  const minDelay = isFreshLanding ? HERO_PRELOADER_MIN_MS : 400;
+  const elapsed = performance.now() - bootStartedAt;
+  await new Promise((resolve) => window.setTimeout(resolve, Math.max(0, minDelay - elapsed)));
+  hidePreloader();
+
+  if (isFreshLanding) {
+    goToStep(0);
+    await waitForHeroTap();
+    await activateStep(0);
+    startHeroSongEmbed();
+    startDayCounter();
+  } else {
+    await activateStep(resumeStep);
+  }
+
   if (shouldLoadPlaylist && currentStep === 3 && showPlaylistButton) {
     showPlaylistButton.click();
   }
