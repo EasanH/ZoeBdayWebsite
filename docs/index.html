@@ -49,78 +49,48 @@
 
     <div id="preloader">
       <span class="preloader-heart">♡</span>
-      <span class="preloader-text">loading something good…</span>
+      <span class="preloader-text">HOLD YOUR HORSES</span>
     </div>
 
     <div id="heroRevealPrompt">
-      <span class="reveal-pill">Tap to open your birthday</span>
+      <span class="reveal-pill">CLICK ME PLS</span>
     </div>
 
-    <div id="heroFloaters" aria-hidden="true">
-      <span class="floater" style="left:6%;font-size:1.1rem;animation-duration:14s;animation-delay:0s;--drift-x:24px;">♥</span>
-      <span class="floater" style="left:16%;font-size:0.85rem;animation-duration:11s;animation-delay:1.4s;--drift-x:-18px;">♪</span>
-      <span class="floater" style="left:27%;font-size:1.3rem;animation-duration:16s;animation-delay:3.1s;--drift-x:16px;">♥</span>
-      <span class="floater" style="left:38%;font-size:0.9rem;animation-duration:12.5s;animation-delay:0.6s;--drift-x:-22px;">♫</span>
-      <span class="floater" style="left:49%;font-size:1.05rem;animation-duration:15s;animation-delay:2.2s;--drift-x:20px;">♥</span>
-      <span class="floater" style="left:60%;font-size:0.95rem;animation-duration:13s;animation-delay:4s;--drift-x:-14px;">♪</span>
-      <span class="floater" style="left:70%;font-size:1.2rem;animation-duration:17s;animation-delay:0.9s;--drift-x:18px;">♥</span>
-      <span class="floater" style="left:80%;font-size:0.85rem;animation-duration:12s;animation-delay:2.8s;--drift-x:-20px;">♫</span>
-      <span class="floater" style="left:90%;font-size:1.1rem;animation-duration:14.5s;animation-delay:1.7s;--drift-x:22px;">♥</span>
-      <span class="floater" style="left:10%;font-size:0.9rem;animation-duration:13.5s;animation-delay:5.2s;--drift-x:-16px;">♪</span>
-      <span class="floater" style="left:55%;font-size:1.15rem;animation-duration:16.5s;animation-delay:6s;--drift-x:18px;">♥</span>
-      <span class="floater" style="left:85%;font-size:1rem;animation-duration:15.5s;animation-delay:3.6s;--drift-x:-18px;">♫</span>
-    </div>
+    <div id="heroFloaters" aria-hidden="true"></div>
+
+    <div id="heroBalloons" aria-hidden="true"></div>
 
     <div class="page-shell">
       <div class="story-frame">
-        <div class="step hero-step active" data-bg="#e8f5f1" data-transition="fade">
+        <div class="step hero-step active" data-bg="#ff3d7f" data-transition="fade">
           <div class="hero-text">
-            <h1>Happy Birthday, Zor.</h1>
-            <p class="typed-text" data-text="you are the youngest person ever"></p>
-            <p class="day-counter hidden" id="dayCounter"></p>
-            <iframe
-              id="heroSongEmbed"
-              class="hidden"
-              src=""
-              width="100%"
-              height="80"
-              frameborder="0"
-              allow="autoplay; encrypted-media; clipboard-write; fullscreen; picture-in-picture"
-              loading="lazy"
-            ></iframe>
-            <!-- <div class="hero-background-number">20</div>
-            <div id="heroConfettiLayer"></div>
-            <div id="heroBalloonLayer"></div>
-            <h1 class="birthday-title">
-              <span>H</span>
-              <span>A</span>
-              <span>P</span>
-              <span>P</span>
-              <span>Y</span>
-              <br>
-              <span>B</span>
-              <span>I</span>
-              <span>R</span>
-              <span>T</span>
-              <span>H</span>
-              <span>D</span>
-              <span>A</span>
-              <span>Y</span>
-              <br>
-              <span>Z</span>
-              <span>O</span>
-              <span>R</span>
+            <h1 class="dancing-headline" id="heroHeadline" aria-label="Happy Birthday, Zor.">
+              <span class="dance-line" aria-hidden="true">
+                <span class="dance-letter">H</span><span class="dance-letter">a</span><span class="dance-letter">p</span><span class="dance-letter">p</span><span class="dance-letter">y</span>
+              </span>
+              <span class="dance-line" aria-hidden="true">
+                <span class="dance-letter">B</span><span class="dance-letter">i</span><span class="dance-letter">r</span><span class="dance-letter">t</span><span class="dance-letter">h</span><span class="dance-letter">d</span><span class="dance-letter">a</span><span class="dance-letter">y</span>
+              </span>
+              <span class="dance-line dance-line-name" aria-hidden="true">
+                <span class="dance-letter">Z</span><span class="dance-letter">o</span><span class="dance-letter">r</span><span class="dance-letter">!</span>
+              </span>
             </h1>
-            <p class="typed-text"
-            data-text="you are officially twenty!!">
-            </p>
-            <div class="age-wrapper">
-              <div class="age-label">YOU ARE</div>
-              <div id="liveAge">20.0000000000</div>
-              <div class="age-label">YEARS OLD</div>
-            </div> -->
+            <div class="age-counter hidden" id="dayCounter">
+              <span class="age-counter-label">YOU WERE BIRTHED</span>
+              <span class="age-counter-value" id="ageCounterValue">0y 0d 00:00:00</span>
+              <span class="age-counter-label">AGO</span>
+            </div>
+            <br>
+            <div id="heroSongEmbed" class="hidden"></div>
           </div>
-          <button class="continue-button hidden" id="continueButton">Continue</button>
+          <button class="continue-button envelope-button hidden" id="continueButton" aria-label="Open your letter">
+            <span class="envelope">
+              <span class="envelope-back"></span>
+              <span class="envelope-flap"></span>
+              <span class="envelope-seal">♥</span>
+            </span>
+            <span class="envelope-caption">Open your letter</span>
+          </button>
         </div>
 
         <div class="step" data-bg="#fff0f2" data-transition="zoom">
@@ -235,6 +205,7 @@
         </div>
       </div>
     </div>
+    <script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
     <script src="https://sdk.scdn.co/spotify-player.js"></script>
     <script src="scripts.js"></script>
   </body>

@@ -24,7 +24,9 @@ const nextButton = document.getElementById('nextButton');
 const preloaderEl = document.getElementById('preloader');
 const heroRevealPrompt = document.getElementById('heroRevealPrompt');
 const heroFloaters = document.getElementById('heroFloaters');
+const heroBalloons = document.getElementById('heroBalloons');
 const dayCounterEl = document.getElementById('dayCounter');
+const ageCounterValueEl = document.getElementById('ageCounterValue');
 const heroSongEmbed = document.getElementById('heroSongEmbed');
 
 let currentStep = 0;
@@ -40,9 +42,10 @@ let activationRunId = 0;
 // 0.5 is half as loud, 2 is twice as loud, 0 mutes it entirely.
 const TYPING_SOUND_VOLUME = 1;
 
-// TODO: set this to the actual date you two started counting from (YYYY-MM-DD).
-// Powers the "Day X of us" counter under the headline.
+// Powers the "time since birth" counter under the headline. Exact moment
+// she was born — used to build a live, to-the-second age readout.
 const BIRTH_DATE = '2006-10-11';
+const BIRTH_TIME = '00:24:00'; // 12:24 AM
 
 // The song that plays the moment she taps to open the page. No Spotify
 // login required for this one — it's just the public embed widget, so it
@@ -571,6 +574,7 @@ function resetInteractiveState() {
   });
   closeFlippedCard();
   stopHeroSongEmbed();
+  stopDayCounter();
 }
 
 function goToStep(index) {
@@ -580,42 +584,200 @@ function goToStep(index) {
   window.scrollTo({ top: 0, behavior: 'auto' });
 }
 
-function getDaysSinceStart() {
-  const start = new Date(`${RELATIONSHIP_START_DATE}T00:00:00`);
-  if (Number.isNaN(start.getTime())) return null;
-  const diffMs = Date.now() - start.getTime();
-  return Math.max(0, Math.floor(diffMs / 86400000));
+function getBirthTimestamp() {
+  const birth = new Date(`${BIRTH_DATE}T${BIRTH_TIME}`);
+  if (Number.isNaN(birth.getTime())) return null;
+  return birth.getTime();
 }
 
-function startDayCounter() {
-  if (!dayCounterEl) return;
-  const target = getDaysSinceStart();
-  if (target === null) return;
+// Breaks down milliseconds-since-birth into years (calendar-accurate, so
+// it lines up with her actual birthdays) plus days/hours/min/sec remainder.
+function getAgeBreakdown(birthMs, nowMs) {
+  const birth = new Date(birthMs);
+  const now = new Date(nowMs);
 
-  showElement(dayCounterEl);
-  const duration = 1300;
-  const startTime = performance.now();
-
-  function tick(now) {
-    const progress = Math.min(1, (now - startTime) / duration);
-    const eased = 1 - Math.pow(1 - progress, 3);
-    dayCounterEl.textContent = `Day ${Math.round(eased * target)} of us`;
-    if (progress < 1) requestAnimationFrame(tick);
+  let years = now.getFullYear() - birth.getFullYear();
+  const anniversaryThisYear = new Date(birth);
+  anniversaryThisYear.setFullYear(birth.getFullYear() + years);
+  if (anniversaryThisYear.getTime() > nowMs) {
+    years -= 1;
+    anniversaryThisYear.setFullYear(birth.getFullYear() + years);
   }
 
-  requestAnimationFrame(tick);
+  const remainderMs = nowMs - anniversaryThisYear.getTime();
+  const days = Math.floor(remainderMs / 86400000);
+  const hours = Math.floor((remainderMs % 86400000) / 3600000);
+  const minutes = Math.floor((remainderMs % 3600000) / 60000);
+  const seconds = Math.floor((remainderMs % 60000) / 1000);
+
+  return { years, days, hours, minutes, seconds };
 }
 
-function startHeroSongEmbed() {
-  if (!heroSongEmbed) return;
-  heroSongEmbed.src = `https://open.spotify.com/embed/track/${HERO_SONG_TRACK_ID}?utm_source=generator&theme=0&autoplay=1`;
-  showElement(heroSongEmbed);
+function pad2(n) {
+  return String(n).padStart(2, '0');
+}
+
+let ageCounterIntervalId = null;
+
+function startDayCounter() {
+  if (!dayCounterEl || !ageCounterValueEl) return;
+  const birthMs = getBirthTimestamp();
+  if (birthMs === null) return;
+
+  showElement(dayCounterEl);
+
+  function render() {
+    const { years, days, hours, minutes, seconds } = getAgeBreakdown(birthMs, Date.now());
+    ageCounterValueEl.textContent =
+      `${years}Y ${days}D ${pad2(hours)}:${pad2(minutes)}:${pad2(seconds)}`;
+  }
+
+  render();
+  if (ageCounterIntervalId) window.clearInterval(ageCounterIntervalId);
+  ageCounterIntervalId = window.setInterval(render, 1000);
+}
+
+function stopDayCounter() {
+  if (ageCounterIntervalId) {
+    window.clearInterval(ageCounterIntervalId);
+    ageCounterIntervalId = null;
+  }
+}
+
+// --- Hero background ambiance: falling confetti + drifting balloons ---
+
+const HERO_CONFETTI_COLORS = ['#ff3d7f', '#ffb703', '#06d6a0', '#4cc9f0', '#9b5de5', '#ff8fab', '#ffffff'];
+const HERO_BALLOON_COLORS = ['#ff3d7f', '#ffb703', '#06d6a0', '#4cc9f0', '#9b5de5'];
+let heroAmbianceBuilt = false;
+
+function buildHeroAmbiance() {
+  if (heroAmbianceBuilt) return;
+  heroAmbianceBuilt = true;
+
+  if (heroFloaters) {
+    const pieceCount = 80;
+    for (let i = 0; i < pieceCount; i++) {
+      const piece = document.createElement('span');
+      piece.className = 'confetti-piece';
+      const left = Math.random() * 100;
+      const duration = 6 + Math.random() * 7;
+      const delay = Math.random() * 10;
+      const drift = (Math.random() - 0.5) * 160;
+      const size = 7 + Math.random() * 7;
+      const color = HERO_CONFETTI_COLORS[Math.floor(Math.random() * HERO_CONFETTI_COLORS.length)];
+      const isCircle = Math.random() < 0.4;
+
+      piece.style.left = `${left}%`;
+      piece.style.width = `${size}px`;
+      piece.style.height = `${size * (isCircle ? 1 : 0.4)}px`;
+      piece.style.background = color;
+      piece.style.borderRadius = isCircle ? '50%' : '2px';
+      piece.style.animationDuration = `${duration}s`;
+      piece.style.animationDelay = `${delay}s`;
+      piece.style.setProperty('--confetti-drift', `${drift}px`);
+      heroFloaters.appendChild(piece);
+    }
+  }
+
+  if (heroBalloons) {
+    const balloonCount = 13;
+    for (let i = 0; i < balloonCount; i++) {
+      const balloon = document.createElement('span');
+      balloon.className = 'hero-balloon';
+      const left = 4 + Math.random() * 92;
+      const duration = 13 + Math.random() * 9;
+      const delay = Math.random() * 12;
+      const drift = (Math.random() - 0.5) * 120;
+      const scale = 0.75 + Math.random() * 0.6;
+      const color = HERO_BALLOON_COLORS[Math.floor(Math.random() * HERO_BALLOON_COLORS.length)];
+
+      balloon.style.left = `${left}%`;
+      balloon.style.animationDuration = `${duration}s`;
+      balloon.style.animationDelay = `${delay}s`;
+      balloon.style.setProperty('--balloon-drift', `${drift}px`);
+      balloon.style.setProperty('--balloon-scale', scale);
+      balloon.style.setProperty('--balloon-color', color);
+      balloon.innerHTML = '<span class="hero-balloon-string"></span>';
+      heroBalloons.appendChild(balloon);
+    }
+  }
+}
+
+// --- Hero song player, via Spotify's iFrame API ---
+//
+// The player widget is created as soon as the API is ready (paused, not
+// autoplaying) so it already exists by the time she taps "CLICK ME PLS".
+// The tap just calls .play() on the already-loaded controller — no src
+// swap, no race with autoplay-blocking, since the gesture itself is what
+// triggers play().
+
+// How far into the song playback should begin once she taps, in seconds.
+const HERO_SONG_START_SECONDS = 15;
+
+let heroSongController = null;
+let heroSongControllerReady = null; // resolves once the controller exists
+
+function setupHeroSongController() {
+  if (heroSongControllerReady) return heroSongControllerReady;
+
+  heroSongControllerReady = new Promise((resolve) => {
+    if (!heroSongEmbed) {
+      resolve(null);
+      return;
+    }
+
+    const onApiReady = (IFrameAPI) => {
+      const options = {
+        uri: `spotify:track:${HERO_SONG_TRACK_ID}`,
+        width: '100%',
+        height: '80',
+        startAt: HERO_SONG_START_SECONDS,
+      };
+      IFrameAPI.createController(heroSongEmbed, options, (controller) => {
+        heroSongController = controller;
+        resolve(controller);
+      });
+    };
+
+    if (window.Spotify && window.Spotify.Iframe) {
+      // API script already loaded (e.g. fast connection / cached).
+      onApiReady(window.Spotify.Iframe);
+    } else {
+      // Spotify calls this global once its iframe-api script finishes
+      // loading. Don't clobber it if something else already set it.
+      const previous = window.onSpotifyIframeApiReady;
+      window.onSpotifyIframeApiReady = (IFrameAPI) => {
+        if (typeof previous === 'function') previous(IFrameAPI);
+        onApiReady(IFrameAPI);
+      };
+    }
+  });
+
+  return heroSongControllerReady;
+}
+
+function showHeroSongEmbed() {
+  if (heroSongEmbed) showElement(heroSongEmbed);
+}
+
+function playHeroSong() {
+  showHeroSongEmbed();
+  setupHeroSongController().then((controller) => {
+    if (!controller) return;
+    controller.seek(HERO_SONG_START_SECONDS);
+    controller.play();
+  });
 }
 
 function stopHeroSongEmbed() {
-  if (!heroSongEmbed) return;
-  if (heroSongEmbed.src) heroSongEmbed.src = '';
-  hideElement(heroSongEmbed);
+  if (heroSongController) {
+    try {
+      heroSongController.pause();
+    } catch (e) {
+      // ignore — controller may not be ready yet
+    }
+  }
+  if (heroSongEmbed) hideElement(heroSongEmbed);
 }
 
 function hidePreloader() {
@@ -640,6 +802,7 @@ function waitForHeroTap() {
       heroRevealPrompt.classList.add('reveal-dismissed');
       document.body.classList.remove('hero-pending-reveal');
       window.setTimeout(() => heroRevealPrompt.classList.remove('reveal-dismissed'), 600);
+      playHeroSong();
       resolve();
     };
 
@@ -647,22 +810,50 @@ function waitForHeroTap() {
   });
 }
 
-// Cursor sparkle trail — only spawns while she's on the hero step.
-let lastSparkleAt = 0;
+// Cursor confetti trail — spawns little paper bits at the cursor that fall
+// and drift down the screen, the same way the background confetti does,
+// only while she's on the hero step. Capped and throttled since each piece
+// now lives several seconds instead of fading out almost instantly.
+const CONFETTI_COLORS = ['#ff3d7f', '#ffb703', '#06d6a0', '#4cc9f0', '#9b5de5', '#ff8fab'];
+const CURSOR_CONFETTI_MAX_ON_SCREEN = 300;
+let lastConfettiAt = 0;
+let cursorConfettiOnScreen = 0;
+
 document.addEventListener('pointermove', (event) => {
   if (!document.body.classList.contains('hero-page')) return;
   const now = performance.now();
-  if (now - lastSparkleAt < 45) return;
-  lastSparkleAt = now;
+  if (now - lastConfettiAt < 30) return;
+  lastConfettiAt = now;
+  if (cursorConfettiOnScreen >= CURSOR_CONFETTI_MAX_ON_SCREEN) return;
 
-  const sparkle = document.createElement('span');
-  sparkle.className = 'cursor-sparkle';
-  sparkle.style.left = `${event.clientX - 3}px`;
-  sparkle.style.top = `${event.clientY - 3}px`;
-  sparkle.style.setProperty('--sx', `${(Math.random() - 0.5) * 24}px`);
-  sparkle.style.setProperty('--sy', `${10 + Math.random() * 20}px`);
-  document.body.appendChild(sparkle);
-  sparkle.addEventListener('animationend', () => sparkle.remove());
+  const pieceCount = 1 + Math.floor(Math.random() * 2);
+  for (let i = 0; i < pieceCount; i++) {
+    const piece = document.createElement('span');
+    piece.className = 'cursor-confetti';
+    const color = CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)];
+    const size = 6 + Math.random() * 6;
+    const isCircle = Math.random() < 0.4;
+    const fallDistance = window.innerHeight - event.clientY + 40;
+    const duration = 4 + Math.random() * 3;
+    const drift = (Math.random() - 0.5) * 140;
+
+    piece.style.left = `${event.clientX + (Math.random() - 0.5) * 18}px`;
+    piece.style.top = `${event.clientY}px`;
+    piece.style.width = `${size}px`;
+    piece.style.height = `${size * (isCircle ? 1 : 0.4)}px`;
+    piece.style.background = color;
+    piece.style.borderRadius = isCircle ? '50%' : '2px';
+    piece.style.animationDuration = `${duration}s`;
+    piece.style.setProperty('--cursor-confetti-fall', `${fallDistance}px`);
+    piece.style.setProperty('--cursor-confetti-drift', `${drift}px`);
+
+    document.body.appendChild(piece);
+    cursorConfettiOnScreen += 1;
+    piece.addEventListener('animationend', () => {
+      piece.remove();
+      cursorConfettiOnScreen -= 1;
+    });
+  }
 });
 
 function createTypingNoiseBuffer(context) {
@@ -1066,9 +1257,10 @@ async function bootstrapBirthdayPage() {
 
   if (isFreshLanding) {
     goToStep(0);
+    buildHeroAmbiance();
+    setupHeroSongController();
     await waitForHeroTap();
     await activateStep(0);
-    startHeroSongEmbed();
     startDayCounter();
   } else {
     await activateStep(resumeStep);

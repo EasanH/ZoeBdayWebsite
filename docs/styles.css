@@ -13,12 +13,12 @@ html,
 body {
   margin: 0;
   min-height: 100%;
-  height: 100%;
   overflow-x: hidden;
+  overflow-y: auto;
 }
 
 body {
-  background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.95), #f8f7fd 30%);
+  background: radial-gradient(circle at top left, #ff7aa8, #ff3d7f 55%);
   transition: background 0.85s ease;
 }
 
@@ -48,7 +48,7 @@ a:focus-visible {
   align-items: center;
   justify-content: center;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 body.music-page {
@@ -177,9 +177,10 @@ body.letter-page .next-button {
   position: absolute;
   inset: 0;
   width: 100%;
-  height: 100%;
+  min-height: 100%;
   padding: 60px 20px;
   display: block;
+  text-align: center;
   opacity: 0;
   visibility: hidden;
   transform: translateY(22px) scale(0.97);
@@ -189,6 +190,8 @@ body.letter-page .next-button {
 }
 
 .step.active {
+  position: relative;
+  height: auto;
   opacity: 1;
   visibility: visible;
   transform: translateY(0) scale(1);
@@ -332,7 +335,7 @@ body.letter-page .next-button {
   align-items: center;
   justify-content: center;
   gap: 16px;
-  background: radial-gradient(circle at top left, #ffffff, #f8f7fd 60%);
+  background: radial-gradient(circle at top left, #ff7aa8, #ff3d7f 60%);
   transition: opacity 0.6s ease, visibility 0.6s ease;
 }
 
@@ -344,13 +347,13 @@ body.letter-page .next-button {
 
 #preloader .preloader-heart {
   font-size: 2.6rem;
-  color: #6b5dff;
+  color: #ffffff;
   animation: preloaderPulse 1.1s ease-in-out infinite;
 }
 
 #preloader .preloader-text {
   font: 600 0.92rem 'Poppins', 'Inter', sans-serif;
-  color: #6b5dff;
+  color: #ffffff;
   letter-spacing: 0.03em;
 }
 
@@ -373,7 +376,7 @@ body.letter-page .next-button {
   z-index: 400;
   align-items: center;
   justify-content: center;
-  background: rgba(232, 245, 241, 0.4);
+  background: rgba(255, 61, 127, 0.35);
   backdrop-filter: blur(3px);
   cursor: pointer;
   transition: opacity 0.5s ease;
@@ -391,13 +394,13 @@ body.hero-pending-reveal #heroRevealPrompt {
 #heroRevealPrompt .reveal-pill {
   padding: 18px 34px;
   border-radius: 999px;
-  background: linear-gradient(135deg, #6b5dff 0%, #824cff 100%);
+  background: linear-gradient(135deg, #ffb703 0%, #ff5d8f 100%);
   color: #ffffff;
   font-weight: 800;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   font-size: 0.95rem;
-  box-shadow: 0 20px 50px rgba(111, 75, 255, 0.35);
+  box-shadow: 0 20px 50px rgba(255, 93, 143, 0.45);
   animation: revealPulse 1.8s ease-in-out infinite;
 }
 
@@ -417,7 +420,7 @@ body.hero-pending-reveal .hero-step .continue-button {
   transition: filter 0.7s ease, opacity 0.7s ease;
 }
 
-/* --- Drifting hearts/notes behind the hero step only --- */
+/* --- Falling confetti behind the hero step only --- */
 #heroFloaters {
   display: none;
   position: fixed;
@@ -431,72 +434,166 @@ body.hero-page #heroFloaters {
   display: block;
 }
 
-#heroFloaters .floater {
+.confetti-piece {
   position: absolute;
-  bottom: -10vh;
-  color: #6b5dff;
+  top: -8vh;
   opacity: 0;
-  animation-name: floaterDrift;
+  animation-name: confettiFall;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
 }
 
-@keyframes floaterDrift {
+@keyframes confettiFall {
   0% {
     transform: translateY(0) translateX(0) rotate(0deg);
     opacity: 0;
   }
-  12% {
-    opacity: 0.5;
-  }
-  50% {
-    transform: translateY(-55vh) translateX(var(--drift-x, 20px)) rotate(10deg);
-  }
-  88% {
-    opacity: 0.35;
+  8% {
+    opacity: 0.95;
   }
   100% {
-    transform: translateY(-115vh) translateX(calc(var(--drift-x, 20px) * 2)) rotate(-12deg);
-    opacity: 0;
+    transform: translateY(112vh) translateX(var(--confetti-drift, 60px)) rotate(540deg);
+    opacity: 0.9;
   }
 }
 
-/* --- Cursor sparkle trail, spawned by JS, only while on the hero step --- */
-.cursor-sparkle {
+/* --- Drifting balloons behind the hero step only --- */
+#heroBalloons {
+  display: none;
   position: fixed;
-  z-index: 300;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #ffffff 0%, #b9a6ff 55%, transparent 100%);
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
   pointer-events: none;
-  animation: sparkleFade 0.7s ease-out forwards;
 }
 
-@keyframes sparkleFade {
+body.hero-page #heroBalloons {
+  display: block;
+}
+
+.hero-balloon {
+  position: absolute;
+  bottom: -22vh;
+  left: 0;
+  width: 46px;
+  height: 58px;
+  background: var(--balloon-color, #ff3d7f);
+  border-radius: 50% 50% 50% 50% / 58% 58% 42% 42%;
+  opacity: 0;
+  transform-origin: center;
+  animation-name: balloonRise;
+  animation-timing-function: ease-in;
+  animation-iteration-count: infinite;
+  box-shadow: inset -8px -10px 18px rgba(0, 0, 0, 0.14), inset 6px 8px 14px rgba(255, 255, 255, 0.35);
+}
+
+.hero-balloon::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -9px;
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 10px solid var(--balloon-color, #ff3d7f);
+  transform: translateX(-50%);
+}
+
+.hero-balloon-string {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 1px;
+  height: 70px;
+  background: rgba(40, 30, 20, 0.35);
+  transform: translateX(-50%);
+}
+
+@keyframes balloonRise {
   0% {
-    transform: scale(1) translate(0, 0);
+    transform: translateY(0) translateX(0) scale(var(--balloon-scale, 1)) rotate(-4deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.95;
+  }
+  50% {
+    transform: translateY(-60vh) translateX(var(--balloon-drift, 60px)) scale(var(--balloon-scale, 1)) rotate(4deg);
+  }
+  90% {
     opacity: 0.9;
   }
   100% {
-    transform: scale(0.2) translate(var(--sx, 0px), var(--sy, 18px));
+    transform: translateY(-128vh) translateX(calc(var(--balloon-drift, 60px) * 1.6)) scale(var(--balloon-scale, 1)) rotate(-4deg);
     opacity: 0;
   }
 }
 
-/* --- Day counter + hero song embed --- */
-.day-counter {
-  margin-top: 14px;
-  font-family: 'Caveat', cursive;
-  font-size: clamp(1.3rem, 2vw, 1.7rem);
-  font-weight: 700;
-  color: #6b5dff;
+/* --- Cursor confetti-burst trail, spawned by JS, only on the hero step --- */
+/* --- Cursor confetti trail, spawned by JS, only on the hero step. Falls
+   and drifts down the screen like the background confetti, rather than
+   bursting outward and vanishing. --- */
+.cursor-confetti {
+  position: fixed;
+  z-index: 300;
+  pointer-events: none;
+  opacity: 0;
+  animation-name: cursorConfettiFall;
+  animation-timing-function: ease-in;
+  animation-fill-mode: forwards;
+}
+
+@keyframes cursorConfettiFall {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.95;
+  }
+  85% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate(var(--cursor-confetti-drift, 60px), var(--cursor-confetti-fall, 60vh)) rotate(420deg);
+    opacity: 0;
+  }
+}
+
+/* --- Age counter + hero song embed --- */
+.age-counter {
+  margin-top: 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.age-counter-label {
+  font-family: 'Poppins', 'Inter', sans-serif;
+  font-size: clamp(2rem, 2vw, 1.05rem);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.age-counter-value {
+  font-family: 'Righteous', 'Poppins', sans-serif;
+  font-size: clamp(2rem, 6.2vw, 4.6rem);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  text-shadow: 0 4px 0 #ff3d7f, 0 10px 28px rgba(0, 0, 0, 0.28);
+  font-variant-numeric: tabular-nums;
 }
 
 #heroSongEmbed {
   margin-top: 26px;
   max-width: 380px;
   border-radius: 16px;
+  overflow: hidden;
   box-shadow: 0 18px 44px rgba(16, 16, 44, 0.14);
 }
 
@@ -753,17 +850,66 @@ body.letter-page .gmail-inbox-rail {
   margin-bottom: 22px;
 }
 
-.hero-text h1 {
-  font-family: 'Poppins', 'Inter', sans-serif;
-  font-size: clamp(4rem, 7vw, 8rem);
-  line-height: 0.92;
-  margin: 0 0 24px;
-  letter-spacing: -0.05em;
-  text-transform: uppercase;
-  text-shadow: 0 18px 45px rgba(107, 96, 255, 0.18);
+.dancing-headline {
+  margin: 0 0 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.1rem, 1vw, 0.4rem);
 }
 
-.step:nth-child(1) .hero-text h1,
+.dance-line {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.dance-letter {
+  display: inline-block;
+  font-family: 'Righteous', 'Poppins', sans-serif;
+  font-size: clamp(3.2rem, 9vw, 8.5rem);
+  line-height: 0.95;
+  color: #ffffff;
+  text-shadow: 0 6px 0 #ff3d7f, 0 9px 0 #ffb703, 0 16px 34px rgba(0, 0, 0, 0.28);
+  animation: letterDance 2.4s ease-in-out infinite;
+  will-change: transform;
+}
+
+.dance-line-name .dance-letter {
+  color: #fff7d6;
+  text-shadow: 0 6px 0 #9b5de5, 0 9px 0 #4cc9f0, 0 16px 34px rgba(0, 0, 0, 0.28);
+}
+
+.dance-line .dance-letter:nth-child(1) { animation-delay: 0s; }
+.dance-line .dance-letter:nth-child(2) { animation-delay: 0.08s; }
+.dance-line .dance-letter:nth-child(3) { animation-delay: 0.16s; }
+.dance-line .dance-letter:nth-child(4) { animation-delay: 0.24s; }
+.dance-line .dance-letter:nth-child(5) { animation-delay: 0.32s; }
+.dance-line .dance-letter:nth-child(6) { animation-delay: 0.4s; }
+.dance-line .dance-letter:nth-child(7) { animation-delay: 0.48s; }
+.dance-line .dance-letter:nth-child(8) { animation-delay: 0.56s; }
+
+@keyframes letterDance {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-14px) rotate(-6deg);
+  }
+  50% {
+    transform: translateY(0) rotate(0deg);
+  }
+  75% {
+    transform: translateY(-8px) rotate(6deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dance-letter {
+    animation: none;
+  }
+}
+
 .step:nth-child(1) .page-title {
   font-family: 'Playfair Display', serif;
   font-size: clamp(4rem, 7vw, 7rem);
@@ -774,9 +920,10 @@ body.letter-page .gmail-inbox-rail {
 .step:nth-child(1) .typed-text,
 .step:nth-child(1) .page-text {
   font-family: 'Caveat', cursive;
-  font-size: clamp(1.4rem, 2vw, 1.9rem);
+  font-size: clamp(1.5rem, 2.2vw, 2.1rem);
   font-weight: 700;
-  color: #16a085;
+  color: #fff7d6;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
 }
 
 .step:nth-child(2) .page-title,
@@ -1104,9 +1251,112 @@ body.letter-page .gmail-inbox-rail {
   left: 120%;
 }
 
-.step:nth-child(1) .continue-button,
-.step:nth-child(1) .reveal-button {
-  background: #16a085;
+.step:nth-child(1) .continue-button.envelope-button {
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px 28px 16px;
+  background: transparent;
+  box-shadow: none;
+  color: #ffffff;
+  overflow: visible;
+  animation: envelopeIdle 2.6s ease-in-out infinite;
+}
+
+.step:nth-child(1) .continue-button.envelope-button::before {
+  display: none;
+}
+
+.step:nth-child(1) .continue-button.envelope-button:hover {
+  transform: translateY(-4px) scale(1.04);
+  box-shadow: none;
+}
+
+.envelope {
+  position: relative;
+  width: 104px;
+  height: 72px;
+  filter: drop-shadow(0 14px 22px rgba(0, 0, 0, 0.28));
+}
+
+.envelope-back {
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #fff7e6 0%, #ffe9c2 100%);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+}
+
+.envelope-back::before,
+.envelope-back::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 0;
+  height: 0;
+  border-top: 36px solid transparent;
+}
+
+.envelope-back::before {
+  left: 0;
+  border-left: 52px solid rgba(0, 0, 0, 0.05);
+  border-bottom: 36px solid transparent;
+}
+
+.envelope-back::after {
+  right: 0;
+  border-right: 52px solid rgba(0, 0, 0, 0.05);
+  border-bottom: 36px solid transparent;
+}
+
+.envelope-flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-left: 52px solid transparent;
+  border-right: 52px solid transparent;
+  border-top: 38px solid #ffd791;
+  transform-origin: top center;
+  transition: transform 0.3s ease;
+}
+
+.step:nth-child(1) .continue-button.envelope-button:hover .envelope-flap {
+  transform: rotateX(-25deg);
+}
+
+.envelope-seal {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff5d8f 0%, #ff3d7f 100%);
+  color: #ffffff;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 14px rgba(255, 61, 127, 0.45);
+}
+
+.envelope-caption {
+  font-family: 'Poppins', 'Inter', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+@keyframes envelopeIdle {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-7px) rotate(-1.5deg);
+  }
 }
 
 .step:nth-child(2) .continue-button,
@@ -1432,8 +1682,8 @@ body.letter-page .gmail-inbox-rail {
     padding: 24px 18px 60px;
   }
 
-  .hero-text h1 {
-    font-size: 3rem;
+  .dance-letter {
+    font-size: 2.6rem;
   }
 
   .hero-text p,
