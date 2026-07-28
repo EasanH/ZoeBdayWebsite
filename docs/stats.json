@@ -1,0 +1,1166 @@
+{
+  "generated_at": "2026-07-27T16:02:44.374082",
+  "total_messages": 134241,
+  "per_person": {
+    "Me": {
+      "yelling_messages": 14716,
+      "yelling_ratio": 0.215,
+      "ellipsis_count": 2622,
+      "ellipsis_per_message": 0.0383,
+      "messages_sent": 68432,
+      "words_sent": 251967,
+      "characters_sent": 1183200,
+      "average_message_length_chars": 17.29,
+      "median_message_length_chars": 13.0,
+      "average_words_per_message": 3.68,
+      "longest_message": {
+        "text": "sure sure but you take any low salary job I think it will usually be the case where they aren't there out of choice and instead there out of necessity. I think that it completely depends on the person.  What attracts a lot of people to service is the intersection of something they enjoy (e.g. doing electrical work, cooking food, modding cars) and helping others. I was just talking about a similar subject with Evan the other day. His dream job is being a bartender, he loves making drinks and loves talking to people even more. I think that's the case for a lot of people. And I don't think it's true at all that you can't connect with people if your main job is to help their problems. There is obviously a weird dynamic where you are being paid to help them, but I think that if anything that's what makes it so much easier to connect--its literally your job to ask questions and connect.",
+        "length": 893,
+        "timestamp": "2025-11-04T17:07:38"
+      },
+      "shortest_message": {
+        "text": ".",
+        "length": 1,
+        "timestamp": "2025-08-16T20:36:22"
+      },
+      "vocabulary_size": 15832,
+      "top_50_words": [
+        [
+          "don't",
+          1196
+        ],
+        [
+          "up",
+          1160
+        ],
+        [
+          "fuck",
+          1045
+        ],
+        [
+          "good",
+          993
+        ],
+        [
+          "think",
+          957
+        ],
+        [
+          "need",
+          934
+        ],
+        [
+          "go",
+          896
+        ],
+        [
+          "one",
+          773
+        ],
+        [
+          "know",
+          732
+        ],
+        [
+          "okok",
+          712
+        ],
+        [
+          "love",
+          650
+        ],
+        [
+          "wait",
+          618
+        ],
+        [
+          "oh",
+          616
+        ],
+        [
+          "going",
+          610
+        ],
+        [
+          "right",
+          596
+        ],
+        [
+          "time",
+          588
+        ],
+        [
+          "that's",
+          583
+        ],
+        [
+          "make",
+          564
+        ],
+        [
+          "much",
+          559
+        ],
+        [
+          "see",
+          552
+        ],
+        [
+          "well",
+          535
+        ],
+        [
+          "back",
+          516
+        ],
+        [
+          "can't",
+          513
+        ],
+        [
+          "feel",
+          491
+        ],
+        [
+          "idk",
+          489
+        ],
+        [
+          "hush",
+          466
+        ],
+        [
+          "never",
+          464
+        ],
+        [
+          "mmm",
+          459
+        ],
+        [
+          "say",
+          459
+        ],
+        [
+          "sleep",
+          450
+        ],
+        [
+          "maybe",
+          424
+        ],
+        [
+          "hate",
+          421
+        ],
+        [
+          "work",
+          412
+        ],
+        [
+          "too",
+          409
+        ],
+        [
+          "mm",
+          406
+        ],
+        [
+          "damn",
+          402
+        ],
+        [
+          "god",
+          402
+        ],
+        [
+          "mhm",
+          396
+        ],
+        [
+          "take",
+          395
+        ],
+        [
+          "really",
+          390
+        ],
+        [
+          "grahhh",
+          372
+        ],
+        [
+          "fun",
+          369
+        ],
+        [
+          "tell",
+          361
+        ],
+        [
+          "day",
+          354
+        ],
+        [
+          "nice",
+          349
+        ],
+        [
+          "man",
+          343
+        ],
+        [
+          "bro",
+          342
+        ],
+        [
+          "beautiful",
+          335
+        ],
+        [
+          "got",
+          327
+        ],
+        [
+          "bbg",
+          318
+        ]
+      ],
+      "top_bigrams": [
+        [
+          "want to",
+          705
+        ],
+        [
+          "need to",
+          680
+        ],
+        [
+          "i have",
+          654
+        ],
+        [
+          "i will",
+          605
+        ],
+        [
+          "i want",
+          517
+        ],
+        [
+          "i think",
+          514
+        ],
+        [
+          "i don't",
+          514
+        ],
+        [
+          "i was",
+          468
+        ],
+        [
+          "have to",
+          458
+        ],
+        [
+          "going to",
+          452
+        ],
+        [
+          "i need",
+          448
+        ],
+        [
+          "i love",
+          446
+        ],
+        [
+          "i can",
+          401
+        ],
+        [
+          "to be",
+          371
+        ],
+        [
+          "but i",
+          361
+        ],
+        [
+          "and i",
+          338
+        ],
+        [
+          "this is",
+          333
+        ],
+        [
+          "to do",
+          326
+        ],
+        [
+          "i do",
+          321
+        ],
+        [
+          "i am",
+          308
+        ]
+      ],
+      "top_trigrams": [
+        [
+          "i need to",
+          332
+        ],
+        [
+          "i want to",
+          287
+        ],
+        [
+          "you sent an",
+          222
+        ],
+        [
+          "sent an attachment",
+          222
+        ],
+        [
+          "i'm going to",
+          163
+        ],
+        [
+          "i love you",
+          146
+        ],
+        [
+          "i have to",
+          144
+        ],
+        [
+          "i don't think",
+          139
+        ],
+        [
+          "i feel like",
+          130
+        ],
+        [
+          "don't want to",
+          92
+        ],
+        [
+          "i miss you",
+          71
+        ],
+        [
+          "i think i",
+          71
+        ],
+        [
+          "i don't want",
+          69
+        ],
+        [
+          "a lot of",
+          68
+        ],
+        [
+          "you want to",
+          68
+        ],
+        [
+          "want to be",
+          67
+        ],
+        [
+          "i have no",
+          66
+        ],
+        [
+          "i have a",
+          66
+        ],
+        [
+          "u want to",
+          65
+        ],
+        [
+          "i can't wait",
+          58
+        ]
+      ],
+      "top_emojis": [
+        [
+          "?",
+          1919
+        ],
+        [
+          "😔",
+          347
+        ],
+        [
+          "❤️",
+          191
+        ],
+        [
+          "💛💛",
+          184
+        ],
+        [
+          "👍",
+          68
+        ],
+        [
+          "🙏",
+          158
+        ],
+        [
+          "😈",
+          51
+        ],
+        [
+          "🤨",
+          51
+        ],
+        [
+          "👀",
+          151
+        ],
+        [
+          "💀💀",
+          44
+        ],
+        [
+          "👎",
+          43
+        ],
+        [
+          "💛",
+          35
+        ],
+        [
+          "💀",
+          33
+        ],
+        [
+          "😞",
+          30
+        ],
+        [
+          "🤨🤨",
+          27
+        ],
+        [
+          "🤩",
+          27
+        ]
+      ],
+      "total_emojis": 3156,
+      "emoji_per_message": 0.046,
+      "phrase_counts": {
+        "i love you": 148,
+        "sorry": 320,
+        "Megoodnights": 226,
+        "Hergoodnights": 0
+      },
+      "_longest_run": 64
+    },
+    "Her": {
+      "yelling_messages": 19336,
+      "yelling_ratio": 0.2938,
+      "ellipsis_count": 1726,
+      "ellipsis_per_message": 0.0262,
+      "messages_sent": 65809,
+      "words_sent": 353096,
+      "characters_sent": 1676055,
+      "average_message_length_chars": 25.47,
+      "median_message_length_chars": 19,
+      "average_words_per_message": 5.37,
+      "longest_message": {
+        "text": "OBVIOUSLY IVE YEARNED A LOT AND I WAS LOWKEY A YEARNER CHILD AND MY IDEA OF TGE IDEAL MAN HAS CERTAINLY CHANGED BUT SOME THINGS IVE KNOWN IVE WANTED FOR A WHILE AND I DONT CARE HOW SIMPLE SOME OF THESE THUNGS ARE SOME IF THEM ARE GENUINELY HARD TO FIND SO YOU HAVE TO UNDERSTAND THAT FINDING EVERYTHING I WANTED IN SOMEONE WAS JJST NOT SOMETHING I REALISTICALKY CONSIDERED. okay i can’t type in caps for this whole thing but i’ve just yearned for a very specific kind of person and sue me if i think you fit it absurdly well. ESSENTIALLY ive spent my life yearning for someone who’s kind at their core, and especially kind to me and is genuinely just a good person but also has the capabilities to be morally grey depending on the situation bc people who are 100% benevolent freak me out. and yeah sue me if i wanted someone who could be kind to me and also banter with me and take a joke while also knowing when to stop and also be emotionally mature and complex and as crazy as this sounds have things that have happened to them but be open about it and willing to share their experiences with me. also i hella yearned for a yearner, someone who never makes me feel like im the one more in love, someone who loves love and loves all the love languages (especially touch) and makes effort and makes me feel like they want to put in effort to me. and emphasis on the yearner, i can’t stress enough how much i wanted someone i could write letters to, bc it’s high key hard to find nowadays and i just wanted someone who wanted to hear what i had to say and would respond with their own thoughts and just write to me as lovers do. FUCK this is cheesy you can just kill me. i yearned for so many things you don’t understand, a man with a moral compass and correct political views and a genuine concern for things outside of his own life and also someone who just makes me laugh and cares about me and wants to be with me. and obviously good sex and passion and romantic connection, but more than that i just yearned for someone who wanted what i wanted and would play an active role with me to make it happen. i also hella yearned for a reader stfu. oh also and someone polite who knows what to do with a woman and knows how to treat her and can be a gentleman, but also doesn’t have a fragile masculinity that depends on adhering to strict gender roles in dating. the list goes on yknow, i realize that eeeeeeverything i want is just too long a list, but you unfortunately have met every single standard i’ve held to you so far so yes, from what you’ve shown me, you are everything childhood to preteen to teenage to current me has yearned for",
+        "length": 2641,
+        "timestamp": "2025-12-09T17:41:01"
+      },
+      "shortest_message": {
+        "text": "🫰",
+        "length": 1,
+        "timestamp": "2025-08-04T23:07:14"
+      },
+      "vocabulary_size": 22672,
+      "top_50_words": [
+        [
+          "m",
+          2712
+        ],
+        [
+          "know",
+          1726
+        ],
+        [
+          "go",
+          1368
+        ],
+        [
+          "good",
+          1295
+        ],
+        [
+          "up",
+          1279
+        ],
+        [
+          "need",
+          1144
+        ],
+        [
+          "think",
+          1133
+        ],
+        [
+          "fuck",
+          1065
+        ],
+        [
+          "too",
+          1001
+        ],
+        [
+          "one",
+          878
+        ],
+        [
+          "god",
+          852
+        ],
+        [
+          "see",
+          825
+        ],
+        [
+          "make",
+          804
+        ],
+        [
+          "much",
+          781
+        ],
+        [
+          "love",
+          756
+        ],
+        [
+          "bro",
+          750
+        ],
+        [
+          "oh",
+          738
+        ],
+        [
+          "ass",
+          723
+        ],
+        [
+          "time",
+          704
+        ],
+        [
+          "going",
+          704
+        ],
+        [
+          "well",
+          702
+        ],
+        [
+          "actually",
+          694
+        ],
+        [
+          "now",
+          672
+        ],
+        [
+          "even",
+          641
+        ],
+        [
+          "man",
+          630
+        ],
+        [
+          "easan",
+          595
+        ],
+        [
+          "back",
+          592
+        ],
+        [
+          "sleep",
+          578
+        ],
+        [
+          "say",
+          576
+        ],
+        [
+          "anything",
+          562
+        ],
+        [
+          "let",
+          550
+        ],
+        [
+          "feel",
+          521
+        ],
+        [
+          "fucking",
+          516
+        ],
+        [
+          "d",
+          515
+        ],
+        [
+          "right",
+          495
+        ],
+        [
+          "ill",
+          483
+        ],
+        [
+          "bc",
+          483
+        ],
+        [
+          "take",
+          482
+        ],
+        [
+          "sent",
+          480
+        ],
+        [
+          "really",
+          476
+        ],
+        [
+          "ve",
+          471
+        ],
+        [
+          "zoe",
+          467
+        ],
+        [
+          "tell",
+          466
+        ],
+        [
+          "day",
+          461
+        ],
+        [
+          "got",
+          460
+        ],
+        [
+          "very",
+          455
+        ],
+        [
+          "rn",
+          442
+        ],
+        [
+          "work",
+          438
+        ],
+        [
+          "off",
+          427
+        ],
+        [
+          "bed",
+          415
+        ]
+      ],
+      "top_bigrams": [
+        [
+          "i m",
+          2704
+        ],
+        [
+          "don t",
+          1677
+        ],
+        [
+          "it s",
+          1378
+        ],
+        [
+          "you re",
+          1283
+        ],
+        [
+          "i ll",
+          1056
+        ],
+        [
+          "and i",
+          1029
+        ],
+        [
+          "liked a",
+          900
+        ],
+        [
+          "a message",
+          900
+        ],
+        [
+          "i can",
+          869
+        ],
+        [
+          "that s",
+          756
+        ],
+        [
+          "i want",
+          728
+        ],
+        [
+          "i don",
+          727
+        ],
+        [
+          "i have",
+          713
+        ],
+        [
+          "if you",
+          709
+        ],
+        [
+          "want to",
+          667
+        ],
+        [
+          "i am",
+          627
+        ],
+        [
+          "need to",
+          623
+        ],
+        [
+          "i know",
+          621
+        ],
+        [
+          "i think",
+          552
+        ],
+        [
+          "to be",
+          547
+        ]
+      ],
+      "top_trigrams": [
+        [
+          "liked a message",
+          900
+        ],
+        [
+          "i don t",
+          725
+        ],
+        [
+          "zoe sent an",
+          457
+        ],
+        [
+          "sent an attachment",
+          457
+        ],
+        [
+          "i m gonna",
+          368
+        ],
+        [
+          "i need to",
+          336
+        ],
+        [
+          "i want to",
+          287
+        ],
+        [
+          "i m so",
+          259
+        ],
+        [
+          "i can t",
+          259
+        ],
+        [
+          "you don t",
+          220
+        ],
+        [
+          "i love you",
+          193
+        ],
+        [
+          "don t know",
+          184
+        ],
+        [
+          "i know you",
+          181
+        ],
+        [
+          "i m not",
+          181
+        ],
+        [
+          "i have to",
+          156
+        ],
+        [
+          "don t think",
+          152
+        ],
+        [
+          "i ll be",
+          150
+        ],
+        [
+          "that s what",
+          136
+        ],
+        [
+          "go to bed",
+          135
+        ],
+        [
+          "i miss you",
+          134
+        ]
+      ],
+      "top_emojis": [
+        [
+          "?",
+          2158
+        ],
+        [
+          "❤️",
+          1220
+        ],
+        [
+          "😭",
+          487
+        ],
+        [
+          "😔",
+          203
+        ],
+        [
+          "💛💛",
+          174
+        ],
+        [
+          "😁",
+          154
+        ],
+        [
+          "💔",
+          154
+        ],
+        [
+          "🙏",
+          134
+        ],
+        [
+          "🫶",
+          102
+        ],
+        [
+          "😛",
+          83
+        ],
+        [
+          "👍",
+          77
+        ],
+        [
+          "👎",
+          73
+        ],
+        [
+          "🫰",
+          65
+        ],
+        [
+          "🫩",
+          60
+        ],
+        [
+          "🤨",
+          53
+        ],
+        [
+          "????",
+          49
+        ],
+        [
+          "🫡",
+          47
+        ],
+        [
+          "💛",
+          45
+        ]
+      ],
+      "total_emojis": 5717,
+      "emoji_per_message": 0.087,
+      "phrase_counts": {
+        "i love you": 193,
+        "sorry": 397,
+        "Megoodnights": 50,
+        "Hergoodnights": 94
+      },
+      "_longest_run": 33
+    }
+  },
+  "overall": {
+    "average_message_length_chars": 21.3,
+    "median_message_length_chars": 16,
+    "average_words_per_message": 4.51,
+    "longest_message": {
+      "sender": "Her",
+      "text": "OBVIOUSLY IVE YEARNED A LOT AND I WAS LOWKEY A YEARNER CHILD AND MY IDEA OF TGE IDEAL MAN HAS CERTAINLY CHANGED BUT SOME THINGS IVE KNOWN IVE WANTED FOR A WHILE AND I DONT CARE HOW SIMPLE SOME OF THESE THUNGS ARE SOME IF THEM ARE GENUINELY HARD TO FIND SO YOU HAVE TO UNDERSTAND THAT FINDING EVERYTHING I WANTED IN SOMEONE WAS JJST NOT SOMETHING I REALISTICALKY CONSIDERED. okay i can’t type in caps for this whole thing but i’ve just yearned for a very specific kind of person and sue me if i think you fit it absurdly well. ESSENTIALLY ive spent my life yearning for someone who’s kind at their core, and especially kind to me and is genuinely just a good person but also has the capabilities to be morally grey depending on the situation bc people who are 100% benevolent freak me out. and yeah sue me if i wanted someone who could be kind to me and also banter with me and take a joke while also knowing when to stop and also be emotionally mature and complex and as crazy as this sounds have things that have happened to them but be open about it and willing to share their experiences with me. also i hella yearned for a yearner, someone who never makes me feel like im the one more in love, someone who loves love and loves all the love languages (especially touch) and makes effort and makes me feel like they want to put in effort to me. and emphasis on the yearner, i can’t stress enough how much i wanted someone i could write letters to, bc it’s high key hard to find nowadays and i just wanted someone who wanted to hear what i had to say and would respond with their own thoughts and just write to me as lovers do. FUCK this is cheesy you can just kill me. i yearned for so many things you don’t understand, a man with a moral compass and correct political views and a genuine concern for things outside of his own life and also someone who just makes me laugh and cares about me and wants to be with me. and obviously good sex and passion and romantic connection, but more than that i just yearned for someone who wanted what i wanted and would play an active role with me to make it happen. i also hella yearned for a reader stfu. oh also and someone polite who knows what to do with a woman and knows how to treat her and can be a gentleman, but also doesn’t have a fragile masculinity that depends on adhering to strict gender roles in dating. the list goes on yknow, i realize that eeeeeeverything i want is just too long a list, but you unfortunately have met every single standard i’ve held to you so far so yes, from what you’ve shown me, you are everything childhood to preteen to teenage to current me has yearned for",
+      "length": 2641,
+      "timestamp": "2025-12-09T17:41:01"
+    },
+    "shortest_message": {
+      "sender": "Her",
+      "text": "🫰",
+      "length": 1,
+      "timestamp": "2025-08-04T23:07:14"
+    }
+  },
+  "response_times": {
+    "Me": {
+      "average_response_time_seconds": 330.2,
+      "average_response_time_human": "5m",
+      "median_response_time_seconds": 6.0,
+      "median_response_time_human": "6s",
+      "fastest_response_seconds": 0.0,
+      "fastest_response_human": "0s",
+      "slowest_response_seconds": 429888.0,
+      "slowest_response_human": "4d 23h 24m"
+    },
+    "Her": {
+      "average_response_time_seconds": 553.0,
+      "average_response_time_human": "9m",
+      "median_response_time_seconds": 6.0,
+      "median_response_time_human": "6s",
+      "fastest_response_seconds": 0.0,
+      "fastest_response_human": "0s",
+      "slowest_response_seconds": 1901755.0,
+      "slowest_response_human": "22d 15m"
+    }
+  },
+  "messages_by_hour": {
+    "0": 12220,
+    "1": 4748,
+    "2": 1627,
+    "3": 444,
+    "4": 77,
+    "5": 35,
+    "6": 103,
+    "7": 604,
+    "8": 758,
+    "9": 1964,
+    "10": 3708,
+    "11": 7077,
+    "12": 6899,
+    "13": 6128,
+    "14": 6566,
+    "15": 7155,
+    "16": 6231,
+    "17": 6606,
+    "18": 6012,
+    "19": 6342,
+    "20": 7592,
+    "21": 9152,
+    "22": 12927,
+    "23": 19266
+  },
+  "messages_by_weekday": {
+    "Monday": 21615,
+    "Tuesday": 20405,
+    "Wednesday": 17396,
+    "Thursday": 19885,
+    "Friday": 20492,
+    "Saturday": 16374,
+    "Sunday": 18074
+  },
+  "messages_by_month_of_year": {
+    "January": 12171,
+    "February": 17391,
+    "March": 19560,
+    "April": 13128,
+    "May": 4494,
+    "June": 5056,
+    "July": 3862,
+    "August": 2125,
+    "September": 7685,
+    "October": 14586,
+    "November": 15246,
+    "December": 18937
+  },
+  "messages_by_year": {
+    "2025": 58699,
+    "2026": 75542
+  },
+  "messages_over_time_by_year_month": {
+    "2025-07": 120,
+    "2025-08": 2125,
+    "2025-09": 7685,
+    "2025-10": 14586,
+    "2025-11": 15246,
+    "2025-12": 18937,
+    "2026-01": 12171,
+    "2026-02": 17391,
+    "2026-03": 19560,
+    "2026-04": 13128,
+    "2026-05": 4494,
+    "2026-06": 5056,
+    "2026-07": 3742
+  },
+  "longest_daily_texting_streak_days": 149,
+  "longest_gap_without_texting": {
+    "duration_human": "22d 15m",
+    "duration_seconds": 1901755.0,
+    "start": "2025-07-06T17:38:52",
+    "end": "2025-07-28T17:54:47"
+  },
+  "most_messages_in_one_day": {
+    "date": "2026-03-13",
+    "count": 2193
+  },
+  "conversations_started": {
+    "Her": 560,
+    "Me": 328
+  },
+  "total_conversations": 888,
+  "double_text_events": {
+    "Her": 15942,
+    "Me": 17803
+  },
+  "longest_consecutive_message_run": {
+    "Me": {
+      "count": 64,
+      "start": "2026-01-09T23:48:24",
+      "end": "2026-01-10T01:12:00"
+    },
+    "Her": {
+      "count": 33,
+      "start": "2026-04-18T14:27:43",
+      "end": "2026-04-18T17:03:57"
+    }
+  },
+  "first_to_say": {
+    "i love you": {
+      "sender": "Me",
+      "timestamp": "2025-10-07T17:13:00",
+      "text": "I LOVE YOU"
+    },
+    "sorry": {
+      "sender": "Me",
+      "timestamp": "2025-08-01T10:00:00",
+      "text": "awww I'm sorry what are you ranked????"
+    },
+    "Megoodnights": {
+      "sender": "Me",
+      "timestamp": "2025-10-29T23:48:23",
+      "text": "goodnight beautiful"
+    },
+    "Hergoodnights": {
+      "sender": "Her",
+      "timestamp": "2025-12-21T00:41:58",
+      "text": "goodnight handsome"
+    }
+  },
+  "milestones": {
+    "1": {
+      "sender": "Her",
+      "timestamp": "2025-07-03T00:02:05",
+      "text": "are you free friday"
+    },
+    "100": {
+      "sender": "Me",
+      "timestamp": "2025-07-28T18:22:15",
+      "text": "WAIT I WAS ABOUT TO"
+    },
+    "1000": {
+      "sender": "Her",
+      "timestamp": "2025-08-23T14:07:59",
+      "text": "wah wah wah"
+    },
+    "5000": {
+      "sender": "Her",
+      "timestamp": "2025-10-01T20:08:03",
+      "text": "😛"
+    },
+    "10000": {
+      "sender": "Me",
+      "timestamp": "2025-10-16T12:30:07",
+      "text": "U ARE A HARD WORKING WOMAN"
+    },
+    "100000": {
+      "sender": "Me",
+      "timestamp": "2026-06-04T23:46:27",
+      "text": "sleep"
+    }
+  },
+  "awards": {
+    "speed_texter": {
+      "winner": "Me",
+      "detail": "Average response time of 5m"
+    },
+    "wall_of_text": {
+      "winner": "Her",
+      "detail": "2641-character message: \"OBVIOUSLY IVE YEARNED A LOT AND I WAS LOWKEY A YEARNER CHILD AND MY IDEA OF TGE …\""
+    },
+    "double_texter": {
+      "winner": "Me",
+      "detail": "64 messages in a row without a reply"
+    },
+    "emoji_master": {
+      "winner": "Her",
+      "detail": "0.087 emojis per message on average"
+    },
+    "yeller": {
+      "winner": "Her",
+      "detail": "19,336 ALL CAPS messages"
+    },
+    "dot_dot_dot": {
+      "winner": "Me",
+      "detail": "2,622 uses of \"...\""
+    },
+    "night_owl": {
+      "winner": "Me",
+      "detail": "8099 messages sent between midnight and 4am"
+    }
+  },
+  "_note": "Merged: 107,587 iMessages + 26,654 Instagram DMs = 134,241 total. Generated 2026-07-27 16:02."
+}

@@ -5,18 +5,17 @@ const continueButtons = {
   2: document.getElementById('continueButton2'),
   3: document.getElementById('continueButton3'),
   4: document.getElementById('continueButton4'),
-  5: document.getElementById('continueButton5'),
 };
-const revealMemoryButton = document.getElementById('revealMemory');
-const memoryImage = document.getElementById('memoryImage');
 const showPlaylistButton = document.getElementById('showPlaylist');
 const playlistLink = document.getElementById('playlistLink');
 const playlistGrid = document.getElementById('playlistGrid');
 const playlistEmbed = document.getElementById('playlistEmbed');
 const playlistStatus = document.getElementById('playlistStatus');
 const playlistHint = document.getElementById('playlistHint');
-const surpriseReveal = document.getElementById('surpriseReveal');
-const surpriseList = document.getElementById('surpriseList');
+const statsPanel = document.getElementById('statsPanel');
+const overTimeChartEl = document.getElementById('overTimeChart');
+const byHourChartEl = document.getElementById('byHourChart');
+const byWeekdayChartEl = document.getElementById('byWeekdayChart');
 const quizOptions = document.getElementById('quizOptions');
 const quizAnswer = document.getElementById('quizAnswer');
 const quizButtons = Array.from(document.querySelectorAll('.quiz-options button'));
@@ -529,7 +528,7 @@ function showFallbackEmbed(message) {
   }
   showElement(playlistEmbed);
   showElement(playlistLink);
-  showElement(continueButtons[3]);
+  showElement(continueButtons[2]);
 }
 
 // --- Page flow (unrelated to Spotify) ---
@@ -557,17 +556,14 @@ function hideElement(element) {
 }
 
 function resetInteractiveState() {
-  hideElement(memoryImage);
   hideElement(playlistLink);
   hideElement(playlistGrid);
   hideElement(playlistEmbed);
   hideElement(playlistStatus);
   hideElement(playlistHint);
-  hideElement(surpriseList);
+  hideElement(statsPanel);
   hideElement(quizAnswer);
-  hideElement(revealMemoryButton);
   hideElement(showPlaylistButton);
-  hideElement(surpriseReveal);
   Object.values(continueButtons).forEach(hideElement);
   quizButtons.forEach((button) => {
     button.classList.remove('correct', 'incorrect');
@@ -575,6 +571,368 @@ function resetInteractiveState() {
   closeFlippedCard();
   stopHeroSongEmbed();
   stopDayCounter();
+}
+
+// ── Chart helpers ─────────────────────────────────────────────────────
+function renderBarChart(svgEl, points, color) {
+  if (!svgEl) return;
+  svgEl.innerHTML = '';
+  const vb = svgEl.viewBox.baseVal;
+  const W = vb.width || 320, H = vb.height || 130;
+  const padB = 22, padT = 8;
+  const chartH = H - padB - padT;
+  const maxVal = Math.max(1, ...points.map((p) => p.value));
+  const gap = points.length > 12 ? 3 : 8;
+  const barW = (W - gap * (points.length - 1)) / points.length;
+  const svgNS = 'http://www.w3.org/2000/svg';
+
+  points.forEach((pt, i) => {
+    const bh = (pt.value / maxVal) * chartH;
+    const x = i * (barW + gap);
+    const y = padT + (chartH - bh);
+    const rect = document.createElementNS(svgNS, 'rect');
+    rect.setAttribute('x', x.toFixed(1));
+    rect.setAttribute('y', y.toFixed(1));
+    rect.setAttribute('width', barW.toFixed(1));
+    rect.setAttribute('height', Math.max(bh, 2).toFixed(1));
+    rect.setAttribute('rx', Math.min(4, barW / 3).toFixed(1));
+    rect.setAttribute('fill', pt.highlight ? '#ff9f0a' : (color || '#0a84ff'));
+    rect.setAttribute('opacity', pt.highlight ? '1' : '0.75');
+    svgEl.appendChild(rect);
+
+    if (pt.label) {
+      const lbl = document.createElementNS(svgNS, 'text');
+      lbl.setAttribute('x', (x + barW / 2).toFixed(1));
+      lbl.setAttribute('y', (H - 6).toFixed(1));
+      lbl.setAttribute('text-anchor', 'middle');
+      lbl.setAttribute('class', 'ios-bar-label');
+      lbl.textContent = pt.label;
+      svgEl.appendChild(lbl);
+    }
+  });
+}
+
+function renderLineChart(svgEl, points) {
+  if (!svgEl || points.length === 0) return;
+  svgEl.innerHTML = '';
+  const vb = svgEl.viewBox.baseVal;
+  const W = vb.width || 320, H = vb.height || 130;
+  const padB = 24, padT = 12, padX = 8;
+  const chartH = H - padB - padT;
+  const maxVal = Math.max(1, ...points.map((p) => p.value));
+  const stepX = points.length > 1 ? (W - padX * 2) / (points.length - 1) : 0;
+  const svgNS = 'http://www.w3.org/2000/svg';
+
+  const coords = points.map((pt, i) => ({
+    x: padX + i * stepX,
+    y: padT + (chartH - (pt.value / maxVal) * chartH),
+    label: pt.label,
+    value: pt.value,
+  }));
+
+  const defs = document.createElementNS(svgNS, 'defs');
+  const gid = `g${Math.random().toString(36).slice(2, 7)}`;
+  defs.innerHTML = `<linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#0a84ff" stop-opacity="0.4"/>
+    <stop offset="100%" stop-color="#0a84ff" stop-opacity="0"/>
+  </linearGradient>`;
+  svgEl.appendChild(defs);
+
+  const linePts = coords.map((c, i) => `${i === 0 ? 'M' : 'L'}${c.x.toFixed(1)},${c.y.toFixed(1)}`).join(' ');
+  const areaPts = `${linePts} L${coords.at(-1).x.toFixed(1)},${(H - padB).toFixed(1)} L${coords[0].x.toFixed(1)},${(H - padB).toFixed(1)} Z`;
+
+  const area = document.createElementNS(svgNS, 'path');
+  area.setAttribute('d', areaPts);
+  area.setAttribute('fill', `url(#${gid})`);
+  svgEl.appendChild(area);
+
+  const line = document.createElementNS(svgNS, 'path');
+  line.setAttribute('d', linePts);
+  line.setAttribute('class', 'ios-line-path');
+  svgEl.appendChild(line);
+
+  coords.forEach((c) => {
+    const dot = document.createElementNS(svgNS, 'circle');
+    dot.setAttribute('cx', c.x.toFixed(1));
+    dot.setAttribute('cy', c.y.toFixed(1));
+    dot.setAttribute('r', '3');
+    dot.setAttribute('class', 'ios-line-dot');
+    svgEl.appendChild(dot);
+
+    if (c.label) {
+      const lbl = document.createElementNS(svgNS, 'text');
+      lbl.setAttribute('x', c.x.toFixed(1));
+      lbl.setAttribute('y', (H - 7).toFixed(1));
+      lbl.setAttribute('text-anchor', 'middle');
+      lbl.setAttribute('class', 'ios-bar-label');
+      lbl.textContent = c.label;
+      svgEl.appendChild(lbl);
+    }
+  });
+}
+
+// ── Label helpers ─────────────────────────────────────────────────────
+
+const ME_KEY = 'Me';
+const HER_KEY = 'Her';
+
+function n(val) {
+  // Format a number with locale commas, or return the value as-is (strings like "5m")
+  if (typeof val === 'number') return val.toLocaleString('en-US');
+  return val ?? '—';
+}
+
+function fmtDate(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function senderLabel(sender) {
+  return sender === ME_KEY ? 'Me' : 'You';
+}
+
+function senderClass(sender) {
+  return sender === ME_KEY ? 'ios-me' : 'ios-her';
+}
+
+// ── Award definitions ──────────────────────────────────────────────────
+
+const AWARD_META = {
+  speed_texter:  { emoji: '⚡', title: 'Speed Texter' },
+  night_owl:     { emoji: '🌙', title: 'Night Owl' },
+  wall_of_text:  { emoji: '📜', title: 'Wall of Text' },
+  double_texter: { emoji: '💬', title: 'Double Texter' },
+  emoji_master:  { emoji: '😂', title: 'Emoji Master' },
+  yeller:        { emoji: '📢', title: 'Yeller' },
+  dot_dot_dot:   { emoji: '…', title: 'Dot Dot Dot' },
+};
+
+// ── Main render ───────────────────────────────────────────────────────
+
+async function loadAndRenderStats() {
+  // Set every id-ed element to a loading placeholder first
+  const ids = ['s-total','s-total-sub','s-streak','s-best-day-count','s-best-day-date',
+               's-reply-me','s-reply-her','s-hour-note'];
+  ids.forEach(id => { const el = document.getElementById(id); if (el) el.textContent = '…'; });
+
+  let data;
+  try {
+    const resp = await fetch('stats.json');
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    data = await resp.json();
+  } catch (err) {
+    console.error('Could not load stats.json:', err);
+    if (statsPanel) {
+      statsPanel.insertAdjacentHTML('afterbegin',
+        `<div style="color:#ff375f;padding:12px;font-size:.85rem;">
+          ⚠️ Could not load stats.json — make sure it's in the same folder as index.html.
+        </div>`);
+    }
+    return;
+  }
+
+  const me  = data.per_person?.[ME_KEY]  ?? {};
+  const her = data.per_person?.[HER_KEY] ?? {};
+  const rt  = data.response_times       ?? {};
+
+  // ── Hero total ────────────────────────────────────────────────────
+  set('s-total', n(data.total_messages));
+  const firstDate = data.milestones?.['1']?.timestamp
+    ? fmtDate(data.milestones['1'].timestamp) : '';
+  set('s-total-sub', firstDate ? `messages since ${firstDate}` : 'messages');
+
+  // ── Who sent more ─────────────────────────────────────────────────
+  const meSent  = me.messages_sent  ?? 0;
+  const herSent = her.messages_sent ?? 0;
+  const total   = meSent + herSent || 1;
+  const mePct   = (meSent / total) * 100;
+  const fillEl  = document.getElementById('s-sent-fill');
+  if (fillEl) fillEl.style.width = `${mePct.toFixed(1)}%`;
+  set('s-sent-me',  `<strong>${n(meSent)}</strong> Me`);
+  set('s-sent-her', `<strong>${n(herSent)}</strong> You`);
+
+  // ── Quick stat cards ──────────────────────────────────────────────
+  set('s-streak', `${n(data.longest_daily_texting_streak_days)} days`);
+
+  const bestDay = data.most_messages_in_one_day ?? {};
+  set('s-best-day-count', n(bestDay.count));
+  set('s-best-day-date', bestDay.date ? fmtDate(bestDay.date + 'T00:00:00') : '—');
+
+  set('s-reply-me',  rt[ME_KEY]?.average_response_time_human  ?? '—');
+  set('s-reply-her', rt[HER_KEY]?.average_response_time_human ?? '—');
+
+  // ── Charts ────────────────────────────────────────────────────────
+  // Over time
+  const otRaw = data.messages_over_time_by_year_month ?? {};
+  const otPoints = Object.entries(otRaw).map(([ym, v]) => {
+    const [, mo] = ym.split('-');
+    const shortMo = ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+mo];
+    return { label: shortMo, value: v };
+  });
+  renderLineChart(overTimeChartEl, otPoints);
+
+  // By hour
+  const hourRaw = data.messages_by_hour ?? {};
+  const maxHour = Math.max(...Object.values(hourRaw));
+  const hourPoints = Object.entries(hourRaw).map(([h, v]) => {
+    const hNum = +h;
+    const label = hNum % 6 === 0
+      ? (hNum === 0 ? '12a' : hNum === 6 ? '6a' : hNum === 12 ? '12p' : '6p')
+      : '';
+    return { label, value: v, highlight: v === maxHour };
+  });
+  renderBarChart(byHourChartEl, hourPoints, '#0a84ff');
+  // Peak hour note
+  const peakHour = +Object.entries(hourRaw).sort((a, b) => b[1] - a[1])[0]?.[0];
+  const peakLabel = peakHour !== undefined
+    ? (peakHour === 0 ? 'midnight' : peakHour < 12 ? `${peakHour}am` : peakHour === 12 ? 'noon' : `${peakHour - 12}pm`)
+    : '';
+  set('s-hour-note', peakLabel ? `peak: ${peakLabel} 🌙` : '');
+
+  // By weekday
+  const wdRaw = data.messages_by_weekday ?? {};
+  const maxWd = Math.max(...Object.values(wdRaw));
+  const wdPoints = Object.entries(wdRaw).map(([day, v]) => ({
+    label: day.slice(0, 3),
+    value: v,
+    highlight: v === maxWd,
+  }));
+  renderBarChart(byWeekdayChartEl, wdPoints, '#34c759');
+
+  // ── Who texts first ───────────────────────────────────────────────
+  const convos = data.conversations_started ?? {};
+  const meConvos  = convos[ME_KEY]  ?? 0;
+  const herConvos = convos[HER_KEY] ?? 0;
+  const convTotal = meConvos + herConvos || 1;
+  const meCPct    = (meConvos / convTotal) * 100;
+  const firstFill = document.getElementById('s-first-fill');
+  if (firstFill) firstFill.style.width = `${meCPct.toFixed(1)}%`;
+  set('s-first-me',  `<strong>${meCPct.toFixed(1)}%</strong> Me (${n(meConvos)})`);
+  set('s-first-her', `<strong>${(100 - meCPct).toFixed(1)}%</strong> You (${n(herConvos)})`);
+
+  // ── Awards ────────────────────────────────────────────────────────
+  const awardsEl = document.getElementById('s-awards');
+  if (awardsEl) {
+    awardsEl.innerHTML = '';
+    Object.entries(data.awards ?? {}).forEach(([key, award]) => {
+      if (!award) return;
+      const meta = AWARD_META[key] ?? { emoji: '🏆', title: key };
+      const winner = senderLabel(award.winner);
+      const card = document.createElement('div');
+      card.className = 'ios-award-card';
+      card.innerHTML = `
+        <span class="ios-award-emoji">${meta.emoji}</span>
+        <span class="ios-award-title">${meta.title}</span>
+        <span class="ios-award-winner">${winner}</span>
+        <span class="ios-award-detail">${award.detail}</span>
+      `;
+      awardsEl.appendChild(card);
+    });
+  }
+
+  // ── Milestones ────────────────────────────────────────────────────
+  const msEl = document.getElementById('s-milestones');
+  if (msEl) {
+    msEl.innerHTML = '';
+    Object.entries(data.milestones ?? {}).forEach(([num, ms]) => {
+      if (!ms) return;
+      const cls = senderClass(ms.sender);
+      const label = senderLabel(ms.sender);
+      const row = document.createElement('div');
+      row.className = 'ios-milestone';
+      row.innerHTML = `
+        <span class="ios-milestone-num">#${Number(num).toLocaleString()}</span>
+        <div class="ios-milestone-body">
+          <span class="ios-milestone-sender ${cls}">${label}</span>
+          <span class="ios-milestone-text">"${ms.text.replace(/"/g, '&quot;').slice(0, 80)}"</span>
+          <span class="ios-milestone-date">${fmtDate(ms.timestamp)}</span>
+        </div>
+      `;
+      msEl.appendChild(row);
+    });
+  }
+
+  // ── Firsts ────────────────────────────────────────────────────────
+  const firstsEl = document.getElementById('s-firsts');
+  if (firstsEl) {
+    firstsEl.innerHTML = '';
+    const firstsMap = {
+      'i love you': 'First "I love you"',
+      'sorry':      'First "sorry"',
+      'Megoodnights': 'First goodnight (me)',
+      'Hergoodnights': 'First goodnight (you)',
+    };
+    Object.entries(data.first_to_say ?? {}).forEach(([key, val]) => {
+      if (!val || !firstsMap[key]) return;
+      const cls = val.sender === ME_KEY ? 'ios-me-text' : 'ios-her-text';
+      const who = senderLabel(val.sender);
+      const row = document.createElement('div');
+      row.className = 'ios-first-row';
+      row.innerHTML = `
+        <span class="ios-first-label">${firstsMap[key]}</span>
+        <span class="ios-first-val ${cls}">${who} — ${fmtDate(val.timestamp)}</span>
+      `;
+      firstsEl.appendChild(row);
+    });
+  }
+
+  // ── Top words ─────────────────────────────────────────────────────
+  function renderWordCol(elId, words, headerClass, headerLabel) {
+    const el = document.getElementById(elId);
+    if (!el) return;
+    el.innerHTML = `<div class="ios-words-header ${headerClass}">${headerLabel}</div>`;
+    (words ?? []).slice(0, 10).forEach(([word, count], i) => {
+      const row = document.createElement('div');
+      row.className = 'ios-word-row';
+      row.innerHTML = `<span class="ios-word-rank">${i + 1}</span><span class="ios-word">${word}</span><span class="ios-word-count">${n(count)}</span>`;
+      el.appendChild(row);
+    });
+  }
+  renderWordCol('s-words-me',  me.top_50_words,  'ios-me-text',  'Me');
+  renderWordCol('s-words-her', her.top_50_words, 'ios-her-text', 'You');
+
+  // ── Top emojis ────────────────────────────────────────────────────
+  function renderEmojiCol(elId, emojis, headerClass, headerLabel) {
+    const el = document.getElementById(elId);
+    if (!el) return;
+    el.innerHTML = `<div class="ios-words-header ${headerClass}">${headerLabel}</div>`;
+    (emojis ?? []).slice(0, 7).forEach(([glyph, count]) => {
+      const row = document.createElement('div');
+      row.className = 'ios-emoji-row';
+      row.innerHTML = `<span class="ios-emoji-glyph">${glyph}</span><span class="ios-emoji-count">${n(count)}</span>`;
+      el.appendChild(row);
+    });
+  }
+  renderEmojiCol('s-emoji-me',  me.top_emojis,  'ios-me-text',  'Me');
+  renderEmojiCol('s-emoji-her', her.top_emojis, 'ios-her-text', 'You');
+
+  // ── Fun facts ─────────────────────────────────────────────────────
+  const factsEl = document.getElementById('s-facts');
+  if (factsEl) {
+    const ilyMe  = me.phrase_counts?.['i love you']  ?? 0;
+    const ilyHer = her.phrase_counts?.['i love you'] ?? 0;
+    const sryMe  = me.phrase_counts?.['sorry']       ?? 0;
+    const sryHer = her.phrase_counts?.['sorry']      ?? 0;
+    const msOne  = data.milestones?.['1'];
+
+    const facts = [
+      `📚 You have a vocabulary of <strong>${n(her.vocabulary_size)} unique words</strong>. I use ${n(me.vocabulary_size)}.`,
+      `📏 Your average message is <strong>${her.average_message_length_chars} chars</strong>. Mine is ${me.average_message_length_chars}.`,
+      `❤️ You've said "I love you" <strong>${n(ilyHer)} times</strong>. I've said it ${n(ilyMe)} times.`,
+      `😈 You said sorry <strong>${n(sryHer)} times</strong>. I said sorry ${n(sryMe)} times.`,
+      msOne ? `💛 Message #1 was ${senderLabel(msOne.sender) === 'You' ? 'you' : 'me'} asking <strong>"${msOne.text.slice(0, 60)}"</strong>` : null,
+      `💬 We've sent an average of <strong>${Math.round(data.total_messages / Math.max(1, Object.keys(data.messages_over_time_by_year_month ?? {}).length))} messages per month</strong>.`,
+    ].filter(Boolean);
+
+    factsEl.innerHTML = facts.map(f => `<div class="ios-fact">${f}</div>`).join('');
+  }
+}
+
+// Quick helper: set innerHTML on an element by id
+function set(id, html) {
+  const el = document.getElementById(id);
+  if (el) el.innerHTML = html;
 }
 
 function goToStep(index) {
@@ -788,6 +1146,55 @@ function hidePreloader() {
 // it is already visible but blurred (via the hero-pending-reveal body
 // class), so this is just waiting for the gesture before un-blurring it —
 // that same gesture is also what lets the song embed autoplay with sound.
+const confettiBurstLayer = document.getElementById('confettiBurstLayer');
+const BURST_CONFETTI_COLORS = ['#ff3d7f', '#ffb703', '#06d6a0', '#4cc9f0', '#9b5de5', '#ff8fab', '#ffffff'];
+
+// Fires a big burst of confetti from a screen point (the steak's center)
+// that flies outward to cover the whole viewport. Returns a promise that
+// resolves once the burst has had time to read as "the reveal moment."
+function fireConfettiBurst(originX, originY) {
+  return new Promise((resolve) => {
+    if (!confettiBurstLayer || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      resolve();
+      return;
+    }
+
+    const pieceCount = 140;
+    const maxDistance = Math.hypot(window.innerWidth, window.innerHeight) * 0.75;
+
+    for (let i = 0; i < pieceCount; i++) {
+      const piece = document.createElement('span');
+      piece.className = 'confetti-burst-piece';
+      const angle = Math.random() * Math.PI * 2;
+      const distance = maxDistance * (0.35 + Math.random() * 0.65);
+      const burstX = Math.cos(angle) * distance;
+      const burstY = Math.sin(angle) * distance;
+      const size = 8 + Math.random() * 9;
+      const isCircle = Math.random() < 0.4;
+      const color = BURST_CONFETTI_COLORS[Math.floor(Math.random() * BURST_CONFETTI_COLORS.length)];
+      const duration = 0.9 + Math.random() * 0.6;
+      const delay = Math.random() * 0.18;
+
+      piece.style.left = `${originX}px`;
+      piece.style.top = `${originY}px`;
+      piece.style.width = `${size}px`;
+      piece.style.height = `${size * (isCircle ? 1 : 0.42)}px`;
+      piece.style.background = color;
+      piece.style.borderRadius = isCircle ? '50%' : '2px';
+      piece.style.animationDuration = `${duration}s`;
+      piece.style.animationDelay = `${delay}s`;
+      piece.style.setProperty('--burst-x', `${burstX}px`);
+      piece.style.setProperty('--burst-y', `${burstY}px`);
+      piece.style.setProperty('--burst-r', `${(Math.random() - 0.5) * 900}deg`);
+
+      confettiBurstLayer.appendChild(piece);
+      piece.addEventListener('animationend', () => piece.remove());
+    }
+
+    window.setTimeout(resolve, 650);
+  });
+}
+
 function waitForHeroTap() {
   return new Promise((resolve) => {
     document.body.classList.add('hero-pending-reveal');
@@ -797,12 +1204,20 @@ function waitForHeroTap() {
       return;
     }
 
-    const onTap = () => {
+    const onTap = async () => {
       heroRevealPrompt.removeEventListener('click', onTap);
+      playHeroSong();
+
+      const steakButton = heroRevealPrompt.querySelector('.steak-button');
+      const originRect = steakButton ? steakButton.getBoundingClientRect() : null;
+      const originX = originRect ? originRect.left + originRect.width / 2 : window.innerWidth / 2;
+      const originY = originRect ? originRect.top + originRect.height / 2 : window.innerHeight / 2;
+
+      await fireConfettiBurst(originX, originY);
+
       heroRevealPrompt.classList.add('reveal-dismissed');
       document.body.classList.remove('hero-pending-reveal');
       window.setTimeout(() => heroRevealPrompt.classList.remove('reveal-dismissed'), 600);
-      playHeroSong();
       resolve();
     };
 
@@ -1017,18 +1432,17 @@ async function activateStep(stepIndex) {
       showElement(continueButtons[0]);
       break;
     case 1:
-      showElement(revealMemoryButton);
+      showElement(continueButtons[1]);
       break;
     case 2:
-      showElement(continueButtons[2]);
-      break;
-    case 3:
       showElement(showPlaylistButton);
       break;
-    case 4:
-      showElement(surpriseReveal);
+    case 3:
+      showElement(statsPanel);
+      loadAndRenderStats();
+      showElement(continueButtons[3]);
       break;
-    case 5:
+    case 4:
       showElement(quizOptions);
       break;
     default:
@@ -1135,14 +1549,6 @@ if (backButton) {
   });
 }
 
-if (revealMemoryButton) {
-  revealMemoryButton.addEventListener('click', () => {
-    showElement(memoryImage);
-    hideElement(revealMemoryButton);
-    showElement(continueButtons[1]);
-  });
-}
-
 if (showPlaylistButton) {
   showPlaylistButton.addEventListener('click', async () => {
     hideElement(showPlaylistButton);
@@ -1159,7 +1565,7 @@ if (showPlaylistButton) {
 
     const token = await getAccessToken();
     if (!token) {
-      sessionStorage.setItem(AUTH_RESUME_STEP_KEY, '3');
+      sessionStorage.setItem(AUTH_RESUME_STEP_KEY, '2');
       sessionStorage.setItem(AUTH_RESUME_PLAYLIST_KEY, '1');
       redirectToSpotifyAuth(); // redirects away to Spotify login
       return;
@@ -1171,7 +1577,7 @@ if (showPlaylistButton) {
       populatePlaylist(pairs);
       showElement(playlistGrid);
       showElement(playlistHint);
-      showElement(continueButtons[3]);
+      showElement(continueButtons[2]);
 
       // Status stays visible (e.g. "Connecting to Spotify…") until the
       // Web Playback SDK reports its device is ready, then it hides itself.
@@ -1184,14 +1590,6 @@ if (showPlaylistButton) {
       console.warn('Spotify setup failed, falling back to embed', e);
       showFallbackEmbed("Couldn't load your songs — here's the playlist instead.");
     }
-  });
-}
-
-if (surpriseReveal) {
-  surpriseReveal.addEventListener('click', () => {
-    showElement(surpriseList);
-    hideElement(surpriseReveal);
-    showElement(continueButtons[4]);
   });
 }
 
@@ -1209,7 +1607,7 @@ quizButtons.forEach((button) => {
         ? 'Yes! It was music and our late-night messages that made us click.'
         : 'Close! Our first connection really sparked over talking about music.';
       showElement(quizAnswer);
-      showElement(continueButtons[5]);
+      showElement(continueButtons[4]);
     }
   });
 });
@@ -1266,7 +1664,7 @@ async function bootstrapBirthdayPage() {
     await activateStep(resumeStep);
   }
 
-  if (shouldLoadPlaylist && currentStep === 3 && showPlaylistButton) {
+  if (shouldLoadPlaylist && currentStep === 2 && showPlaylistButton) {
     showPlaylistButton.click();
   }
 }

@@ -52,11 +52,19 @@
       <span class="preloader-text">HOLD YOUR HORSES</span>
     </div>
 
-    <div id="heroRevealPrompt">
-      <span class="reveal-pill">CLICK ME PLS</span>
+    <div id="heroRevealPrompt" role="button" tabindex="0" aria-label="Tap to open your birthday surprise">
+      <span class="reveal-caption reveal-caption-top">Oh look, a glowing juicy steak...</span>
+      <span class="steak-button">
+        <span class="steak-glow-ring" aria-hidden="true"></span>
+        <img class="steak-img" src="images/steak.png" alt="A glowing steak" />
+      </span>
+      <span class="reveal-caption reveal-caption-bottom">"please don't eat me"</span>
     </div>
 
+    <div id="confettiBurstLayer" aria-hidden="true"></div>
+
     <div id="heroFloaters" aria-hidden="true"></div>
+
 
     <div id="heroBalloons" aria-hidden="true"></div>
 
@@ -91,16 +99,6 @@
             </span>
             <span class="envelope-caption">Open your letter</span>
           </button>
-        </div>
-
-        <div class="step" data-bg="#fff0f2" data-transition="zoom">
-          <div class="story-copy">
-            <h2 class="page-title">Remember This</h2>
-            <p class="typed-text page-text" data-text="First: a memory. The moment we first connected over email, and everything began to feel brighter."></p>
-            <div class="image-placeholder hidden" id="memoryImage">Photo placeholder</div>
-          </div>
-          <button class="continue-button hidden" id="revealMemory">Reveal memory</button>
-          <button class="continue-button hidden" id="continueButton1">Keep going</button>
         </div>
 
         <div class="step letter-step" data-bg="#f6f8fc" data-transition="slide-left">
@@ -139,7 +137,7 @@
               <span>More</span>
             </div>
           </div>
-          <button class="continue-button hidden" id="continueButton2"></button>
+          <button class="continue-button hidden" id="continueButton1"></button>
         </div>
 
         <div class="step music-step" data-bg="#121212" data-transition="scale-up">
@@ -164,23 +162,129 @@
             </div>
             <a class="playlist-link hidden" id="playlistLink" href="https://open.spotify.com/playlist/6PrcgmoTysAS2ldAmrUasV?si=2c928c2ca4c94ed9" target="_blank" rel="noreferrer">Open playlist in Spotify</a>
           </div>
-          <button class="continue-button hidden" id="continueButton3">Next surprise</button>
+          <button class="continue-button hidden" id="continueButton2">Next surprise</button>
         </div>
 
-        <div class="step" data-bg="#fff8e8" data-transition="flip">
+        <div class="step stats-step" data-bg="#000000" data-transition="flip">
           <div class="story-copy">
-            <h2 class="page-title">Surprise</h2>
-            <p class="typed-text page-text" data-text="Time for a surprise. Reveal five reasons I love you when you're ready."></p>
-            <button class="reveal-button hidden" id="surpriseReveal">Reveal the surprise</button>
-            <div class="reveal-list hidden" id="surpriseList">
-              <p>1. Your smile lights up the screen.</p>
-              <p>2. You keep chasing your goals every day.</p>
-              <p>3. You make long distance feel close.</p>
-              <p>4. Your laugh is the best part of my day.</p>
-              <p>5. Every message from you feels like a gift.</p>
+            <p class="typed-text page-text" data-text="Pulling up our text history..."></p>
+            <div class="ios-stats hidden" id="statsPanel">
+
+              <div class="ios-stats-header">
+                <span class="ios-stats-eyebrow">US, IN NUMBERS</span>
+                <div class="ios-hero-num" id="s-total">—</div>
+                <div class="ios-hero-sub" id="s-total-sub">messages</div>
+              </div>
+
+              <div class="ios-section">
+                <span class="ios-section-title">WHO SENT MORE</span>
+                <div class="ios-card ios-split-card">
+                  <div class="ios-split-bar"><span class="ios-split-fill" id="s-sent-fill" style="width:50%"></span></div>
+                  <div class="ios-split-labels">
+                    <span class="ios-split-me" id="s-sent-me">—</span>
+                    <span class="ios-split-her" id="s-sent-her">—</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="ios-card-grid" id="s-quick-cards">
+                <div class="ios-card">
+                  <span class="ios-card-icon" style="background:#ff375f;">🔥</span>
+                  <span class="ios-card-label">Longest Streak</span>
+                  <span class="ios-card-value ios-card-value-sm" id="s-streak">—</span>
+                </div>
+                <div class="ios-card">
+                  <span class="ios-card-icon" style="background:#ff9f0a;">📅</span>
+                  <span class="ios-card-label">Best Day Ever</span>
+                  <span class="ios-card-value ios-card-value-sm" id="s-best-day-count">—</span>
+                  <span class="ios-card-sublabel" id="s-best-day-date">—</span>
+                </div>
+                <div class="ios-card">
+                  <span class="ios-card-icon" style="background:#34c759;">⚡</span>
+                  <span class="ios-card-label">My Avg Reply</span>
+                  <span class="ios-card-value ios-card-value-sm" id="s-reply-me">—</span>
+                </div>
+                <div class="ios-card">
+                  <span class="ios-card-icon" style="background:#0a84ff;">⏱️</span>
+                  <span class="ios-card-label">Your Avg Reply</span>
+                  <span class="ios-card-value ios-card-value-sm" id="s-reply-her">—</span>
+                </div>
+              </div>
+
+              <div class="ios-section">
+                <span class="ios-section-title">MESSAGES OVER TIME</span>
+                <div class="ios-card">
+                  <svg class="ios-line-chart" id="overTimeChart" viewBox="0 0 320 130" preserveAspectRatio="xMidYMid meet"></svg>
+                </div>
+              </div>
+
+              <div class="ios-section">
+                <span class="ios-section-title">WHEN WE TEXT (BY HOUR)</span>
+                <div class="ios-card">
+                  <svg class="ios-bar-chart" id="byHourChart" viewBox="0 0 320 130" preserveAspectRatio="xMidYMid meet"></svg>
+                  <div class="ios-chart-note" id="s-hour-note"></div>
+                </div>
+              </div>
+
+              <div class="ios-section">
+                <span class="ios-section-title">MOST ACTIVE DAY OF WEEK</span>
+                <div class="ios-card">
+                  <svg class="ios-bar-chart" id="byWeekdayChart" viewBox="0 0 320 110" preserveAspectRatio="xMidYMid meet"></svg>
+                </div>
+              </div>
+
+              <div class="ios-section">
+                <span class="ios-section-title">WHO TEXTS FIRST</span>
+                <div class="ios-card ios-split-card">
+                  <div class="ios-split-bar"><span class="ios-split-fill" id="s-first-fill" style="width:50%"></span></div>
+                  <div class="ios-split-labels">
+                    <span class="ios-split-me" id="s-first-me">—</span>
+                    <span class="ios-split-her" id="s-first-her">—</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="ios-section">
+                <span class="ios-section-title">AWARDS 🏆</span>
+                <div class="ios-awards-grid" id="s-awards"></div>
+              </div>
+
+              <div class="ios-section">
+                <span class="ios-section-title">MILESTONE MESSAGES</span>
+                <div class="ios-card ios-milestones" id="s-milestones"></div>
+              </div>
+
+              <div class="ios-section">
+                <span class="ios-section-title">FIRSTS</span>
+                <div class="ios-card ios-firsts" id="s-firsts"></div>
+              </div>
+
+              <div class="ios-section">
+                <span class="ios-section-title">TOP WORDS — ME VS YOU</span>
+                <div class="ios-card ios-words-two-col">
+                  <div class="ios-words-col" id="s-words-me"></div>
+                  <div class="ios-words-divider"></div>
+                  <div class="ios-words-col" id="s-words-her"></div>
+                </div>
+              </div>
+
+              <div class="ios-section">
+                <span class="ios-section-title">TOP EMOJIS</span>
+                <div class="ios-card ios-emoji-grid">
+                  <div class="ios-emoji-col" id="s-emoji-me"></div>
+                  <div class="ios-words-divider"></div>
+                  <div class="ios-emoji-col" id="s-emoji-her"></div>
+                </div>
+              </div>
+
+              <div class="ios-section">
+                <span class="ios-section-title">FUN FACTS</span>
+                <div class="ios-card ios-facts" id="s-facts"></div>
+              </div>
+
             </div>
           </div>
-          <button class="continue-button hidden" id="continueButton4">Ready for one last question</button>
+          <button class="continue-button hidden" id="continueButton3">Ready for one last question</button>
         </div>
 
         <div class="step" data-bg="#f3fff5" data-transition="drift">
@@ -194,7 +298,7 @@
             </div>
             <p class="quiz-answer hidden" id="quizAnswer">Yes! It was music and our late-night messages that made us click.</p>
           </div>
-          <button class="continue-button hidden" id="continueButton5">Finish</button>
+          <button class="continue-button hidden" id="continueButton4">Finish</button>
         </div>
 
         <div class="step" data-bg="#ffeff6" data-transition="fade">

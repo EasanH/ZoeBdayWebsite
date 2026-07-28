@@ -374,9 +374,11 @@ body.letter-page .next-button {
   position: fixed;
   inset: 0;
   z-index: 400;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 61, 127, 0.35);
+  gap: 22px;
+  background: radial-gradient(circle at center, #4a4a4a, #2b2b2b 75%);
   backdrop-filter: blur(3px);
   cursor: pointer;
   transition: opacity 0.5s ease;
@@ -391,25 +393,149 @@ body.hero-pending-reveal #heroRevealPrompt {
   pointer-events: none;
 }
 
-#heroRevealPrompt .reveal-pill {
-  padding: 18px 34px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, #ffb703 0%, #ff5d8f 100%);
-  color: #ffffff;
+.reveal-caption {
+  font-family: 'Poppins', 'Inter', sans-serif;
   font-weight: 800;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  font-size: 0.95rem;
-  box-shadow: 0 20px 50px rgba(255, 93, 143, 0.45);
-  animation: revealPulse 1.8s ease-in-out infinite;
+  letter-spacing: 0.02em;
+  text-align: center;
+  color: #ffffff;
+  text-shadow: 0 3px 16px rgba(0, 0, 0, 0.5);
+  max-width: 90vw;
 }
 
-@keyframes revealPulse {
+.reveal-caption-top {
+  font-size: clamp(1.1rem, 2.6vw, 1.6rem);
+  animation: revealCaptionFloat 2.4s ease-in-out infinite;
+}
+
+.reveal-caption-bottom {
+  font-size: clamp(0.85rem, 1.6vw, 1.05rem);
+  font-style: italic;
+  font-weight: 600;
+  color: #ffd9d9;
+  opacity: 0.9;
+  animation: revealCaptionWiggle 1.6s ease-in-out infinite;
+}
+
+@keyframes revealCaptionFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes revealCaptionWiggle {
+  0%, 100%, 40% {
+    transform: rotate(0deg);
+  }
+  44% {
+    transform: rotate(-3deg);
+  }
+  48% {
+    transform: rotate(3deg);
+  }
+  52% {
+    transform: rotate(-2deg);
+  }
+  56% {
+    transform: rotate(0deg);
+  }
+}
+
+.steak-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(180px, 38vw, 280px);
+  height: clamp(164px, 34vw, 255px);
+  animation: steakPulse 1.7s ease-in-out infinite;
+}
+
+.steak-img {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 14px 30px rgba(0, 0, 0, 0.45));
+}
+
+.steak-glow-ring {
+  position: absolute;
+  inset: -18%;
+  z-index: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 226, 122, 0.95) 0%, rgba(255, 183, 3, 0.55) 50%, rgba(255, 183, 3, 0) 75%);
+  animation: steakGlowPulse 1.7s ease-in-out infinite;
+}
+
+@keyframes steakPulse {
   0%, 100% {
     transform: scale(1);
   }
   50% {
-    transform: scale(1.045);
+    transform: scale(1.06);
+  }
+}
+
+@keyframes steakGlowPulse {
+  0%, 100% {
+    opacity: 0.75;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+}
+
+/* --- Screen-covering confetti burst, fired the moment she taps the steak.
+   Pieces are spawned by JS from the steak's position and fly outward to
+   fill the whole viewport before the hero is revealed underneath. --- */
+#confettiBurstLayer {
+  position: fixed;
+  inset: 0;
+  z-index: 450;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.confetti-burst-piece {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  animation-name: confettiBurstFly;
+  animation-timing-function: cubic-bezier(0.15, 0.6, 0.4, 1);
+  animation-fill-mode: forwards;
+}
+
+@keyframes confettiBurstFly {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 0;
+  }
+  6% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--burst-x, 0px), var(--burst-y, 0px)) rotate(var(--burst-r, 360deg));
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .steak-button,
+  .steak-glow-ring,
+  .reveal-caption-top,
+  .reveal-caption-bottom {
+    animation: none;
   }
 }
 
@@ -926,21 +1052,7 @@ body.letter-page .gmail-inbox-rail {
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
 }
 
-.step:nth-child(2) .page-title,
-.step:nth-child(2) .page-text {
-  font-family: 'Fredoka One', sans-serif;
-  font-size: clamp(1.1rem, 1.2vw, 1.6rem);
-}
-
-.step:nth-child(3) .page-title,
-.step:nth-child(3) .page-text {
-  font-family: 'Inter', Arial, sans-serif;
-  font-size: 1rem;
-  letter-spacing: 0;
-  color: #202124;
-}
-
-.step:nth-child(4) .page-title {
+.step:nth-child(3) .page-title {
   font-family: 'Oswald', sans-serif;
   font-size: clamp(3.8rem, 8vw, 8rem);
   line-height: 0.86;
@@ -950,7 +1062,7 @@ body.letter-page .gmail-inbox-rail {
   text-shadow: 0 18px 48px rgba(29, 185, 84, 0.22);
 }
 
-.step:nth-child(4) .page-text {
+.step:nth-child(3) .page-text {
   font-family: 'Inter', sans-serif;
   font-size: clamp(1rem, 1.2vw, 1.18rem);
   letter-spacing: 0;
@@ -958,22 +1070,23 @@ body.letter-page .gmail-inbox-rail {
   color: rgba(255, 255, 255, 0.76);
 }
 
-.step:nth-child(5) .page-title,
-.step:nth-child(5) .page-text {
-  font-family: 'Satisfy', cursive;
-  font-size: clamp(1.35rem, 1.8vw, 2.3rem);
-  color: #c55a11;
+.step:nth-child(4) .page-title,
+.step:nth-child(4) .page-text {
+  font-family: -apple-system, 'SF Pro Text', 'Inter', sans-serif;
+  font-size: 1rem;
+  color: rgba(235, 235, 245, 0.55);
+  letter-spacing: 0;
 }
 
-.step:nth-child(6) .page-title,
-.step:nth-child(6) .page-text {
+.step:nth-child(5) .page-title,
+.step:nth-child(5) .page-text {
   font-family: 'Fredoka One', sans-serif;
   font-size: clamp(1.05rem, 1.2vw, 1.5rem);
   color: #27ae60;
 }
 
-.step:nth-child(7) .page-title,
-.step:nth-child(7) .page-text {
+.step:nth-child(6) .page-title,
+.step:nth-child(6) .page-text {
   font-family: 'Playfair Display', serif;
   font-size: clamp(1.25rem, 1.6vw, 1.8rem);
   font-weight: 700;
@@ -1361,11 +1474,6 @@ body.letter-page .gmail-inbox-rail {
 
 .step:nth-child(2) .continue-button,
 .step:nth-child(2) .reveal-button {
-  background: #d4527a;
-}
-
-.step:nth-child(3) .continue-button,
-.step:nth-child(3) .reveal-button {
   background: #0b57d0;
   box-shadow: 0 16px 36px rgba(11, 87, 208, 0.24);
   border-radius: 18px;
@@ -1373,30 +1481,31 @@ body.letter-page .gmail-inbox-rail {
   text-transform: none;
 }
 
-.step:nth-child(3) .continue-button::after {
+.step:nth-child(2) .continue-button::after {
   content: '  Send';
 }
 
-.step:nth-child(4) .continue-button,
-.step:nth-child(4) .reveal-button,
-.step:nth-child(4) .playlist-link {
+.step:nth-child(3) .continue-button,
+.step:nth-child(3) .reveal-button,
+.step:nth-child(3) .playlist-link {
   background: #1db954;
   color: #07120b;
   box-shadow: 0 18px 42px rgba(29, 185, 84, 0.24);
 }
 
+.step:nth-child(4) .continue-button,
+.step:nth-child(4) .reveal-button {
+  background: #0a84ff;
+  box-shadow: 0 14px 36px rgba(10, 132, 255, 0.32);
+}
+
 .step:nth-child(5) .continue-button,
 .step:nth-child(5) .reveal-button {
-  background: #f39c12;
+  background: #27ae60;
 }
 
 .step:nth-child(6) .continue-button,
 .step:nth-child(6) .reveal-button {
-  background: #27ae60;
-}
-
-.step:nth-child(7) .continue-button,
-.step:nth-child(7) .reveal-button {
   background: #c2185b;
 }
 
@@ -1677,6 +1786,370 @@ body.letter-page .gmail-inbox-rail {
   }
 }
 
+/* ═══════════════════════════════════════════════════════════════════
+   "Us, in Texts" — iOS-themed stats dashboard
+   ═══════════════════════════════════════════════════════════════════ */
+
+.stats-step .story-copy {
+  max-width: 440px;
+  width: 100%;
+}
+
+.ios-stats {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  font-family: -apple-system, 'SF Pro Text', 'Inter', sans-serif;
+  color: #ffffff;
+  text-align: left;
+}
+
+.ios-stats-header {
+  padding: 0 4px 4px;
+}
+
+.ios-stats-eyebrow {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #0a84ff;
+  margin-bottom: 6px;
+}
+
+.ios-hero-num {
+  font-size: clamp(2.8rem, 10vw, 4.2rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.ios-hero-sub {
+  font-size: 0.82rem;
+  color: rgba(235,235,245,0.5);
+  margin-top: 4px;
+}
+
+.ios-section {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.ios-section-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: rgba(235,235,245,0.55);
+  padding: 0 4px;
+}
+
+/* Base card */
+.ios-card {
+  background: rgba(28,28,30,0.95);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 16px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.38);
+}
+
+/* 2-col grid */
+.ios-card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.ios-card-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  margin-bottom: 3px;
+}
+
+.ios-card-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(235,235,245,0.55);
+}
+
+.ios-card-value {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  font-variant-numeric: tabular-nums;
+}
+
+.ios-card-value-sm {
+  font-size: 1.25rem;
+}
+
+.ios-card-sublabel {
+  font-size: 0.72rem;
+  color: rgba(235,235,245,0.38);
+}
+
+/* Split bar (who sent more / who texts first) */
+.ios-split-card { gap: 10px; }
+
+.ios-split-bar {
+  width: 100%;
+  height: 12px;
+  border-radius: 6px;
+  background: #34c759;   /* her = green on the right */
+  overflow: hidden;
+  position: relative;
+}
+
+.ios-split-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: #0a84ff;   /* me = blue on the left */
+  border-radius: 6px 0 0 6px;
+}
+
+.ios-split-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  color: rgba(235,235,245,0.65);
+}
+
+.ios-split-me { color: #4db8ff; }
+.ios-split-her { color: #34c759; }
+.ios-split-me strong, .ios-split-her strong { font-weight: 700; }
+
+.ios-me-text { color: #4db8ff; }
+.ios-her-text { color: #34c759; }
+
+/* SVG charts */
+.ios-bar-chart, .ios-line-chart {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+.ios-bar-label {
+  font-size: 8.5px;
+  fill: rgba(235,235,245,0.45);
+  font-family: -apple-system, 'SF Pro Text', 'Inter', sans-serif;
+}
+
+.ios-line-path {
+  fill: none;
+  stroke: #0a84ff;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ios-line-dot {
+  fill: #ffffff;
+  stroke: #0a84ff;
+  stroke-width: 2;
+}
+
+.ios-chart-note {
+  font-size: 0.72rem;
+  color: rgba(235,235,245,0.45);
+  margin-top: 4px;
+}
+
+/* Awards */
+.ios-awards-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.ios-award-card {
+  background: rgba(28,28,30,0.95);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 14px;
+  padding: 12px 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+}
+
+.ios-award-emoji { font-size: 1.3rem; margin-bottom: 2px; }
+.ios-award-title { font-size: 0.72rem; font-weight: 700; color: rgba(235,235,245,0.55); letter-spacing: 0.02em; }
+.ios-award-winner { font-size: 1rem; font-weight: 800; color: #ffffff; }
+.ios-award-detail { font-size: 0.68rem; color: rgba(235,235,245,0.4); }
+
+/* Milestones */
+.ios-milestones { gap: 12px; }
+
+.ios-milestone {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.ios-milestone-num {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #0a84ff;
+  min-width: 44px;
+  padding-top: 2px;
+}
+
+.ios-milestone-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: 1;
+}
+
+.ios-milestone-sender {
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.ios-me { color: #4db8ff; }
+.ios-her { color: #34c759; }
+
+.ios-milestone-text {
+  font-size: 0.85rem;
+  color: #ffffff;
+  font-style: italic;
+}
+
+.ios-milestone-date {
+  font-size: 0.68rem;
+  color: rgba(235,235,245,0.38);
+}
+
+/* Firsts */
+.ios-firsts { gap: 10px; }
+
+.ios-first-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.ios-first-label {
+  font-size: 0.82rem;
+  color: rgba(235,235,245,0.6);
+}
+
+.ios-first-val {
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-align: right;
+}
+
+/* Word comparison */
+.ios-words-two-col {
+  flex-direction: row;
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.ios-words-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 14px 12px;
+}
+
+.ios-words-header {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  margin-bottom: 8px;
+}
+
+.ios-words-divider {
+  width: 1px;
+  background: rgba(255,255,255,0.07);
+  align-self: stretch;
+}
+
+.ios-word-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.ios-word-rank {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: rgba(235,235,245,0.35);
+  min-width: 12px;
+}
+
+.ios-word {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #ffffff;
+  flex: 1;
+}
+
+.ios-word-count {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: rgba(235,235,245,0.5);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Emoji grid */
+.ios-emoji-grid {
+  flex-direction: row;
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.ios-emoji-col {
+  flex: 1;
+  padding: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ios-emoji-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ios-emoji-glyph { font-size: 1.1rem; min-width: 28px; }
+.ios-emoji-count { font-size: 0.78rem; font-weight: 700; color: rgba(235,235,245,0.6); }
+
+/* Fun facts */
+.ios-facts { gap: 10px; }
+
+.ios-fact {
+  font-size: 0.85rem;
+  color: rgba(235,235,245,0.75);
+  line-height: 1.45;
+  padding-bottom: 9px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.ios-fact:last-child { border-bottom: none; padding-bottom: 0; }
+.ios-fact strong { color: #ffffff; font-weight: 700; }
+
 @media (max-width: 620px) {
   .page-shell {
     padding: 24px 18px 60px;
@@ -1726,4 +2199,9 @@ body.letter-page .gmail-inbox-rail {
     width: calc(100vw - 28px);
     height: min(620px, calc(100vh - 52px));
   }
+
+  .ios-hero-num { font-size: 2.6rem; }
+  .ios-card-value { font-size: 1.6rem; }
+  .ios-awards-grid { grid-template-columns: 1fr 1fr; }
+  .ios-first-row { flex-direction: column; align-items: flex-start; gap: 2px; }
 }

@@ -17,3 +17,5 @@ package.json
 package-lock.json
 .eslintrc.json
 .prettierrc.json
+docs/messages/message_*.html
+docs/messages/sms-20260723115320.html
