@@ -16,9 +16,7 @@ const statsPanel = document.getElementById('statsPanel');
 const overTimeChartEl = document.getElementById('overTimeChart');
 const byHourChartEl = document.getElementById('byHourChart');
 const byWeekdayChartEl = document.getElementById('byWeekdayChart');
-const quizOptions = document.getElementById('quizOptions');
-const quizAnswer = document.getElementById('quizAnswer');
-const quizButtons = Array.from(document.querySelectorAll('.quiz-options button'));
+// quiz removed — step 4 is now the digicam page
 const nextButton = document.getElementById('nextButton');
 const preloaderEl = document.getElementById('preloader');
 const heroRevealPrompt = document.getElementById('heroRevealPrompt');
@@ -75,9 +73,7 @@ const AUTH_RESUME_PLAYLIST_KEY = 'sp_auth_resume_playlist';
 //       presumably yours) must have an active Premium subscription, or
 //       the app stops working entirely. This is separate from her needing
 //       Premium to actually stream.
-// 3. She needs Spotify Premium to use the Web Playback SDK (you said she
-//    has it — free accounts can't stream this way, full stop).
-// 4. Fill in TRACK_LINKS and SONG_NOTES below.
+// 3. User needs Spotify Premium to use the Web Playback SDK.
 // 5. Note: track info is fetched one song at a time (GET /tracks/{id}),
 //    not via the batch endpoint or the playlist endpoint — Spotify removed/
 //    restricted both of those for Development Mode apps in Feb 2026.
@@ -87,32 +83,35 @@ const SPOTIFY_CLIENT_ID = 'cca417449a7c41a9a24a2ee6eeb1cbd5'; // set from user i
 const SPOTIFY_REDIRECT_URI = window.location.origin + window.location.pathname;
 const SPOTIFY_SCOPES = 'streaming user-read-email user-read-private user-modify-playback-state';
 
-// Paste a Spotify link (or spotify:track:... URI) for each song, in the
-// order you want them shown. Easiest way to get one: in Spotify, right-click
-// a song → Share → Copy Song Link. We pull the track ID out automatically.
 const TRACK_LINKS = [
   'https://open.spotify.com/track/6lrQo6KAYvb92MGk6ZuZlt?si=8d59831668b84543', //Say You Love Me
-  'https://open.spotify.com/track/1C042FLYy7rP3MfnkOcnha?si=96b33daef49049d2', //Cherry Wine
+  'https://open.spotify.com/track/28jCwARf1gYfHtTHmJJNHQ?si=93489632a3224616', //In a week
   'https://open.spotify.com/track/3mwFncaI2HBczQ92GP9MQF?si=aabf0eb00e8445a7', //Lady Writer
-  'https://open.spotify.com/track/4LrGrY6IyJUlkFu6Ms4myU?si=e11e6133f38c481e', //The Sweetest Taboo
   'https://open.spotify.com/track/3EUl8M6SzxZl03NPkB8mUd?si=6fc729d2e39b4e14', //Neon Moon
+  'https://open.spotify.com/track/09RamrocZneYcLYLRIxYha?si=c0cb332c8a5c4e41', //Steeeeam
+  'https://open.spotify.com/track/1RPsOAaHaRu8JlVdeaciuL?si=cfbb9d59a0144b34', //lana
   'https://open.spotify.com/track/4KoNBTm9a55KgLMtEaf3n6?si=eec63f279ec248d2', //If you Could Only See
-  'https://open.spotify.com/track/57MflfPN3ObQQAQtPUp0WF?si=754f96544c4946e3', //Romeo and Juliet
-  'https://open.spotify.com/track/2pW5kNCx133MWWirxegvng?si=38b570c503474cb8', //Placeholder
-  'https://open.spotify.com/track/4RY96Asd9IefaL3X4LOLZ8?si=c7097c9bf9474b2b', //Placeholder
+  'https://open.spotify.com/track/608xszaAxVh4m7NcKJiAbF?si=49b535f3b1564fe7', //one of these nights
+  'https://open.spotify.com/track/5TpPSTItCwtZ8Sltr3vdzm?si=8ec89429283245f7', //last night on earth
+  'https://open.spotify.com/track/4OJ3lHcyZdUaYNyhFQdbax?si=249525887836429e', //summer
+  'https://open.spotify.com/track/5j2kEBaonl3vDg1BvnYFtA?si=4514ec3e621c4210', //EDM
+  'https://open.spotify.com/track/4LrGrY6IyJUlkFu6Ms4myU?si=e11e6133f38c481e', //The Sweetest Taboo 
 ];
 
-// A personal note for each song, in the SAME ORDER as TRACK_LINKS above.
+// in the SAME ORDER as TRACK_LINKS above.
 const SONG_NOTES = [
-  'Song 1 — add your memory for this one here.',
-  'Song 2 — add your memory for this one here.',
-  'Song 3 — add your memory for this one here.',
-  'Song 4 — add your memory for this one here.',
-  'Song 5 — add your memory for this one here.',
-  'Song 6 — add your memory for this one here.',
-  'Song 7 — add your memory for this one here.',
-  'Song 8 — add your memory for this one here.',
-  'Song 9 — add your memory for this one here.',
+  'It\'s the first song on the list so I gotta start it off with a bang. This is the ultimate you song. Now don\'t get me wrong, I have always loved Fleetwood Mac, but prior to meeting you, I hadn\'t listened to them in a hot minute. They were mainly reserved for family events and long road trips. Once you told me they were your favorite band though I knew I had to shape up and get back on the grind. This song was your favorite FLeetwood Mac song and soon became mine.', //Say You Love Me
+  'I was going to get super sappy with this one, but I think you know exactly what this song means to me/us. It was one of the first songs I recommended you and was also the music for our hard launch. Don\'t ever tell Lev though...can\'t give him the satisfaction of knowing I like a Hozier song this much', //In a week
+  '"Is that Putin??" - you', //Lady Writer
+  'I\'m really getting overwhelmed by the white culture with this one. And I know you said this was the only country song you liked, but given that you love horses, eat jello salad, and turn into a tomato with 5 minutes of sun exposure, I think that must be a lie. Embrace your cultural background zor!', //Neon Moon
+  'performative ass.', //Steeeeam
+  'toxic ass.', //lana
+  'This is truly one of the songs that reminds me of you the most. It was in that first Queasan\'s mix, and was one that I specifically pointed out as my favorite. It was one of my first impressions of your so called "superior music taste" and you didn\'t disappoint :)', //If you Could Only See
+  'I feel like I had to add some 70s song, it would be doing you an injustice to not include one, so I picked a classic ', //one of these nights
+  '👀', //last night on earth
+  'I remember you telling me at some point there are two artists whom which you gatekeep from others, Landon Conrath and the Volunteers. While I don\'t fully understand the Conrath glaze, I must admit the Volunteers are pretty awesome', //summer
+  'A little birdy (you) once told me you had a big EDM phase. Until you show me that playlist this is what I imagine elementary school zoe was rocking out to.', //EDM
+  'Of course I can\'t complete this list without including a Sade song. I was debating which one to include and ultimately landed on The Sweetest Taboo. Not only is it one of your favorites but it\'s themes are also quite apt. And not to be tooo dramatic or cringey but I couldn\'t express my love for you in better terms. The song talks about the complexity and intensity of relationships. About passionate, dangerous feelings that foster both devotion and sacrifice. It acknowledges a love that is too good for them, and disbelief that they have found someone who brings out the best in them. And that\'s exactly what you do, Zoe, you bring out the best in the ones you love', //The Sweetest Taboo 
 ];
 
 function getTrackIdFromLink(link) {
@@ -421,7 +420,7 @@ function handleCardClick(card, uri) {
   if (playlistGrid) playlistGrid.classList.add('has-expanded');
 
   if (card._indicatorEl) {
-    card._indicatorEl.textContent = spotifyDeviceId ? '♪ Now playing' : 'Connecting…';
+    card._indicatorEl.textContent = spotifyDeviceId ? '' : 'Connecting…';
   }
 
   if (uri) playTrackOnDevice(uri);
@@ -431,7 +430,7 @@ function populatePlaylist(pairs) {
   if (!playlistGrid) return;
   closeFlippedCard();
   playlistGrid.innerHTML = '';
-  const count = Math.min(9, pairs.length);
+  const count = Math.min(12, pairs.length);
 
   for (let i = 0; i < count; i++) {
     const t = pairs[i].track;
@@ -562,12 +561,8 @@ function resetInteractiveState() {
   hideElement(playlistStatus);
   hideElement(playlistHint);
   hideElement(statsPanel);
-  hideElement(quizAnswer);
   hideElement(showPlaylistButton);
   Object.values(continueButtons).forEach(hideElement);
-  quizButtons.forEach((button) => {
-    button.classList.remove('correct', 'incorrect');
-  });
   closeFlippedCard();
   stopHeroSongEmbed();
   stopDayCounter();
@@ -1443,12 +1438,15 @@ async function activateStep(stepIndex) {
       showElement(continueButtons[3]);
       break;
     case 4:
-      showElement(quizOptions);
+      showElement(continueButtons[4]);
+      break;
+      showElement(continueButtons[4]);
       break;
     default:
       break;
   }
 }
+
 
 function getExitClass(step, direction) {
   if (direction === 'back') return 'exit-back';
@@ -1592,25 +1590,6 @@ if (showPlaylistButton) {
     }
   });
 }
-
-quizButtons.forEach((button) => {
-  button.addEventListener('click', () => {
-    const isCorrect = button.textContent.trim() === 'Music';
-
-    quizButtons.forEach((btn) => {
-      btn.classList.remove('correct', 'incorrect');
-    });
-
-    button.classList.add(isCorrect ? 'correct' : 'incorrect');
-    if (quizAnswer) {
-      quizAnswer.textContent = isCorrect
-        ? 'Yes! It was music and our late-night messages that made us click.'
-        : 'Close! Our first connection really sparked over talking about music.';
-      showElement(quizAnswer);
-      showElement(continueButtons[4]);
-    }
-  });
-});
 
 async function bootstrapBirthdayPage() {
   const bootStartedAt = performance.now();
