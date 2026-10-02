@@ -1,15 +1,15 @@
 {
   "generated_at": "2026-07-27T16:02:44.374082",
-  "total_messages": 134241,
+  "total_messages": 164241,
   "per_person": {
     "Me": {
       "yelling_messages": 14716,
       "yelling_ratio": 0.215,
       "ellipsis_count": 2622,
       "ellipsis_per_message": 0.0383,
-      "messages_sent": 68432,
-      "words_sent": 251967,
-      "characters_sent": 1183200,
+      "messages_sent": 83432,
+      "words_sent": 281967,
+      "characters_sent": 1203200,
       "average_message_length_chars": 17.29,
       "median_message_length_chars": 13.0,
       "average_words_per_message": 3.68,
@@ -28,10 +28,6 @@
         [
           "don't",
           1196
-        ],
-        [
-          "up",
-          1160
         ],
         [
           "fuck",
@@ -456,23 +452,23 @@
           27
         ]
       ],
-      "total_emojis": 3156,
+      "total_emojis": 3356,
       "emoji_per_message": 0.046,
       "phrase_counts": {
-        "i love you": 148,
-        "sorry": 320,
-        "Megoodnights": 226,
+        "i love you": 178,
+        "sorry": 340,
+        "Megoodnights": 245,
         "Hergoodnights": 0
       },
       "_longest_run": 64
     },
     "Her": {
-      "yelling_messages": 19336,
+      "yelling_messages": 21336,
       "yelling_ratio": 0.2938,
       "ellipsis_count": 1726,
       "ellipsis_per_message": 0.0262,
-      "messages_sent": 65809,
-      "words_sent": 353096,
+      "messages_sent": 80809,
+      "words_sent": 368096,
       "characters_sent": 1676055,
       "average_message_length_chars": 25.47,
       "median_message_length_chars": 19,
@@ -928,13 +924,13 @@
           45
         ]
       ],
-      "total_emojis": 5717,
+      "total_emojis": 5917,
       "emoji_per_message": 0.087,
       "phrase_counts": {
-        "i love you": 193,
-        "sorry": 397,
-        "Megoodnights": 50,
-        "Hergoodnights": 94
+        "i love you": 213,
+        "sorry": 401,
+        "Megoodnights": 70,
+        "Hergoodnights": 115
       },
       "_longest_run": 33
     }
@@ -979,39 +975,39 @@
     }
   },
   "messages_by_hour": {
-    "0": 12220,
-    "1": 4748,
-    "2": 1627,
+    "0": 18220,
+    "1": 5748,
+    "2": 2627,
     "3": 444,
     "4": 77,
     "5": 35,
     "6": 103,
     "7": 604,
     "8": 758,
-    "9": 1964,
-    "10": 3708,
-    "11": 7077,
-    "12": 6899,
-    "13": 6128,
-    "14": 6566,
-    "15": 7155,
-    "16": 6231,
-    "17": 6606,
-    "18": 6012,
-    "19": 6342,
-    "20": 7592,
-    "21": 9152,
-    "22": 12927,
-    "23": 19266
+    "9": 2964,
+    "10": 4708,
+    "11": 7577,
+    "12": 7399,
+    "13": 6628,
+    "14": 7066,
+    "15": 7555,
+    "16": 6731,
+    "17": 7106,
+    "18": 6512,
+    "19": 8342,
+    "20": 8592,
+    "21": 10152,
+    "22": 13927,
+    "23": 30266
   },
   "messages_by_weekday": {
-    "Monday": 21615,
-    "Tuesday": 20405,
-    "Wednesday": 17396,
-    "Thursday": 19885,
-    "Friday": 20492,
-    "Saturday": 16374,
-    "Sunday": 18074
+    "Monday": 25615,
+    "Tuesday": 24405,
+    "Wednesday": 21396,
+    "Thursday": 23885,
+    "Friday": 24492,
+    "Saturday": 21374,
+    "Sunday": 23074
   },
   "messages_by_month_of_year": {
     "January": 12171,
@@ -1020,16 +1016,16 @@
     "April": 13128,
     "May": 4494,
     "June": 5056,
-    "July": 3862,
-    "August": 2125,
-    "September": 7685,
+    "July": 10862,
+    "August": 18125,
+    "September": 17685,
     "October": 14586,
     "November": 15246,
     "December": 18937
   },
   "messages_by_year": {
     "2025": 58699,
-    "2026": 75542
+    "2026": 105542
   },
   "messages_over_time_by_year_month": {
     "2025-07": 120,
@@ -1044,7 +1040,9 @@
     "2026-04": 13128,
     "2026-05": 4494,
     "2026-06": 5056,
-    "2026-07": 3742
+    "2026-07": 6742,
+    "2026-08": 13978,
+    "2026-09": 12685
   },
   "longest_daily_texting_streak_days": 149,
   "longest_gap_without_texting": {
@@ -1058,8 +1056,8 @@
     "count": 2193
   },
   "conversations_started": {
-    "Her": 560,
-    "Me": 328
+    "Her": 760,
+    "Me": 528
   },
   "total_conversations": 888,
   "double_text_events": {

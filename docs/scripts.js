@@ -5,6 +5,7 @@ const continueButtons = {
   2: document.getElementById('continueButton2'),
   3: document.getElementById('continueButton3'),
   4: document.getElementById('continueButton4'),
+  5: document.getElementById('continueButton5'),
 };
 const showPlaylistButton = document.getElementById('showPlaylist');
 const playlistLink = document.getElementById('playlistLink');
@@ -112,6 +113,203 @@ const SONG_NOTES = [
   'I remember you telling me at some point there are two artists whom which you gatekeep from others, Landon Conrath and the Volunteers. While I don\'t fully understand the Conrath glaze, I must admit the Volunteers are pretty awesome', //summer
   'A little birdy (you) once told me you had a big EDM phase. Until you show me that playlist this is what I imagine elementary school zoe was rocking out to.', //EDM
   'Of course I can\'t complete this list without including a Sade song. I was debating which one to include and ultimately landed on The Sweetest Taboo. Not only is it one of your favorites but it\'s themes are also quite apt. And not to be tooo dramatic or cringey but I couldn\'t express my love for you in better terms. The song talks about the complexity and intensity of relationships. About passionate, dangerous feelings that foster both devotion and sacrifice. It acknowledges a love that is too good for them, and disbelief that they have found someone who brings out the best in them. And that\'s exactly what you do, Zoe, you bring out the best in the ones you love', //The Sweetest Taboo 
+];
+
+// ── Digicam page photos ──────────────────────────────────────────────────
+//
+// GALLERY_PHOTOS — fills the blurred mosaic background behind the camera.
+// List every photo path here. They should live in a photos/ subfolder next
+// to index.html. For best performance resize to ~400px wide before adding.
+//
+// POLAROID_PHOTOS — the random polaroid pool. caption is optional; leave
+// '' if you don't want text in the white strip below the photo.
+//
+// Both arrays can use the same photos or different subsets.
+const GALLERY_PHOTOS = [
+  'photos/_DSC7146.jpeg',
+  'photos/_DSC7503.jpg',
+  'photos/_DSC7507.jpg',
+  'photos/_DSC7517.jpg',
+  'photos/_DSC8348.jpg',
+  'photos/_DSC8380.jpg',
+  'photos/_DSC8383.jpg',
+  'photos/_DSC8386.jpg',
+  'photos/_DSC8391.jpg',
+  'photos/_DSC8402.jpg',
+  'photos/_DSC8521.jpg',
+  'photos/_DSC8565.jpg',
+  'photos/_DSC8590.jpg',
+  'photos/_DSC8594.jpg',
+  'photos/_DSC8651.jpg',
+  'photos/_DSC8671.jpg',
+  'photos/5269462785449040391.jpg',
+  'photos/DSCI1337.jpg',
+  'photos/DSCI1366.jpg',
+  'photos/IMG_1114.jpg',
+  'photos/IMG_1117.jpg',
+  'photos/IMG_1122.jpg',
+  'photos/IMG_1382.jpg',
+  'photos/IMG_1531.jpg',
+  'photos/IMG_1536.jpg',
+  'photos/IMG_1541.jpg',
+  'photos/IMG_1552.jpg',
+  'photos/IMG_1571.jpg',
+  'photos/IMG_1576.jpg',
+  'photos/IMG_0785.png',
+  'photos/IMG_1579.png',
+  'photos/IMG_1583.jpg',
+  'photos/IMG_1585.jpg',
+  'photos/IMG_1601.jpg',
+  'photos/IMG_1602.jpg',
+  'photos/IMG_1628.jpg',
+  'photos/IMG_2803.png',
+  'photos/IMG_7622.jpg',
+  'photos/IMG_8280.jpg',
+  'photos/IMG_9839.jpg', 
+  'photos/IMG_20251126_100024.png',
+  'photos/IMG_20260901_202333.png',
+  'photos/IMG_20260901_202338.jpg',
+  'photos/IMG_20260901_202553.png',
+  'photos/IMG_20260901_202554.jpg',
+  'photos/IMG_20260901_202555.jpg', 
+  'photos/IMG_20260901_202559.jpg',
+  'photos/IMG_20260901_202606.jpg',
+  'photos/PXL_20250910_233219554.jpg',
+  'photos/PXL_20250911_024152992.jpg',
+  'photos/PXL_20250913_052734646.jpg',
+  'photos/PXL_20250914_011325184.jpg',
+  'photos/PXL_20251126_065335204.jpg',
+  'photos/PXL_20260325_214307241.jpg',
+  'photos/PXL_20260702_033527877.jpg',
+  'photos/PXL_20260728_052043754.MP.jpg',
+  'photos/Screenshot_20260922-220009.png',
+  'photos/IMG_20260901_202655.jpg',
+  'photos/IMG_20260901_203126.jpg',
+  'photos/IMG_20260901_204006.jpg',
+  'photos/IMG_20260901_204008.jpg',
+  'photos/IMG_20260913_162339_601.jpg',
+  'photos/IMG_20260913_162339_782.jpg',
+  'photos/IMG_20260913_162427_418.jpg',
+  'photos/IMG_20260913_162427_531.jpg',
+  'photos/IMG_20260913_162427_549.jpg',
+  'photos/IMG_20260913_162427_556.jpg',
+  'photos/IMG_20260913_162427_595.jpg',
+  'photos/IMG_20260913_162427_612.jpg',
+  'photos/IMG_20260913_162427_638.jpg',
+  'photos/IMG_20260913_162427_710.jpg',
+  'photos/IMG_20260913_162427_717.jpg',
+  'photos/IMG_20260913_162427_795.jpg',
+  'photos/IMG_20260913_162442_742.jpg',
+  'photos/IMG_20260913_162442_751.jpg',
+  'photos/IMG_20260913_162442_817.jpg',
+  'photos/IMG_20260913_162442_820.jpg',
+  'photos/IMG_20260913_162442_872.jpg',
+  'photos/IMG_20260913_162521_108.jpg',
+  'photos/IMG_20260913_162528_408.jpg',
+  'photos/IMG_20260914_093657_619.jpg',
+  'photos/IMG_20260914_093657_823.jpg',
+  'photos/IMG_20260914_093657_894.jpg',
+  'photos/IMG_20260914_093657_931.jpg',
+  'photos/IMG_20260914_093658_122.jpg',
+  'photos/IMG_20260914_093658_322.jpg',
+  'photos/IMG_20260914_144801_283.jpg',
+  'photos/IMG_20260914_144801_407.jpg',
+  'photos/IMG_20260914_144801_438.jpg',
+  'photos/IMG_20260914_144807_235.jpg',
+];
+
+const POLAROID_PHOTOS = [
+  { src: 'photos/gallery/_DSC6503.jpg', caption: '' },
+  { src: 'photos/_DSC7146.jpeg', caption: '' },
+  { src: 'photos/_DSC7503.jpg', caption: '' },
+  { src: 'photos/_DSC7507.jpg', caption: '' },
+  { src: 'photos/_DSC7517.jpg', caption: '' },
+  { src: 'photos/_DSC8348.jpg', caption: '' },
+  { src: 'photos/_DSC8380.jpg', caption: '' },
+  { src: 'photos/_DSC8383.jpg', caption: '' },
+  { src: 'photos/_DSC8386.jpg', caption: '' },
+  { src: 'photos/_DSC8391.jpg', caption: '' },
+  { src: 'photos/_DSC8402.jpg', caption: '' },
+  { src: 'photos/_DSC8521.jpg', caption: '' },
+  { src: 'photos/_DSC8565.jpg', caption: '' },
+  { src: 'photos/_DSC8590.jpg', caption: '' },
+  { src: 'photos/_DSC8594.jpg', caption: '' },
+  { src: 'photos/_DSC8651.jpg', caption: '' },
+  { src: 'photos/_DSC8671.jpg', caption: '' },
+  { src: 'photos/5269462785449040391.jpg', caption: '' },
+  { src: 'photos/DSCI1337.jpg', caption: '' },
+  { src: 'photos/DSCI1366.jpg', caption: '' },
+  { src: 'photos/IMG_1114.jpg', caption: '' },
+  { src: 'photos/IMG_1117.jpg', caption: '' },
+  { src: 'photos/IMG_1122.jpg', caption: '' },
+  { src: 'photos/IMG_1382.jpg', caption: '' },
+  { src: 'photos/IMG_1531.jpg', caption: '' },
+  { src: 'photos/IMG_1536.jpg', caption: '' },
+  { src: 'photos/IMG_1541.jpg', caption: '' },
+  { src: 'photos/IMG_1552.jpg', caption: '' },
+  { src: 'photos/IMG_1571.jpg', caption: '' },
+  { src: 'photos/IMG_1576.jpg', caption: '' },
+  { src: 'photos/IMG_0785.png', caption: '' },
+  { src: 'photos/IMG_1579.png', caption: '' },
+  { src: 'photos/IMG_1583.jpg', caption: '' },
+  { src: 'photos/IMG_1585.jpg', caption: '' },
+  { src: 'photos/IMG_1601.jpg', caption: '' },
+  { src: 'photos/IMG_1602.jpg', caption: '' },
+  { src: 'photos/IMG_1628.jpg', caption: '' },
+  { src: 'photos/IMG_2803.png', caption: '' },
+  { src: 'photos/IMG_7622.jpg', caption: '' },
+  { src: 'photos/IMG_8280.jpg', caption: '' },
+  { src: 'photos/IMG_9839.jpg', caption: '' },
+  { src: 'photos/IMG_20251126_100024.png', caption: '' },
+  { src: 'photos/IMG_20260901_202333.png', caption: '' },
+  { src: 'photos/IMG_20260901_202338.jpg', caption: '' },
+  { src: 'photos/IMG_20260901_202553.png', caption: '' },
+  { src: 'photos/IMG_20260901_202554.jpg', caption: '' },
+  { src: 'photos/IMG_20260901_202555.jpg', caption: '' },
+  { src: 'photos/IMG_20260901_202559.jpg', caption: '' },
+  { src: 'photos/IMG_20260901_202606.jpg', caption: '' },
+  { src: 'photos/PXL_20250910_233219554.jpg', caption: '' },
+  { src: 'photos/PXL_20250911_024152992.jpg', caption: '' },
+  { src: 'photos/PXL_20250913_052734646.jpg', caption: '' },
+  { src: 'photos/PXL_20250914_011325184.jpg', caption: '' },
+  { src: 'photos/PXL_20251126_065335204.jpg', caption: '' },
+  { src: 'photos/PXL_20260325_214307241.jpg', caption: '' },
+  { src: 'photos/PXL_20260702_033527877.jpg', caption: '' },
+  { src: 'photos/PXL_20260728_052043754.MP.jpg', caption: '' },
+  { src: 'photos/Screenshot_20260922-220009.png', caption: '' },
+  { src: 'photos/IMG_20260901_202655.jpg', caption: '' },
+  { src: 'photos/IMG_20260901_203126.jpg', caption: '' },
+  { src: 'photos/IMG_20260901_204006.jpg', caption: '' },
+  { src: 'photos/IMG_20260901_204008.jpg', caption: '' },
+  { src: 'photos/IMG_20260913_162339_601.jpg', caption: '' },
+  { src: 'photos/IMG_20260913_162339_782.jpg', caption: '' },
+  { src: 'photos/IMG_20260913_162427_418.jpg', caption: '' },
+  { src: 'photos/IMG_20260913_162427_531.jpg', caption: '' },
+  { src: 'photos/IMG_20260913_162427_549.jpg', caption: '' },
+  { src: 'photos/IMG_20260913_162427_556.jpg', caption: '' },
+  { src: 'photos/IMG_20260913_162427_595.jpg', caption: '' },
+  { src: 'photos/IMG_20260913_162427_612.jpg', caption: '' },
+  { src: 'photos/IMG_20260913_162427_638.jpg', caption: '' },
+  { src: 'photos/IMG_20260913_162427_710.jpg', caption: '' },
+  { src: 'photos/IMG_20260913_162427_717.jpg', caption: '' },
+  { src: 'photos/IMG_20260913_162427_795.jpg', caption: '' },
+  { src: 'photos/IMG_20260913_162442_742.jpg', caption: '' },
+  { src: 'photos/IMG_20260913_162442_751.jpg', caption: '' },
+  { src: 'photos/IMG_20260913_162442_817.jpg', caption: '' },
+  { src: 'photos/IMG_20260913_162442_820.jpg', caption: '' },
+  { src: 'photos/IMG_20260913_162442_872.jpg', caption: '' },
+  { src: 'photos/IMG_20260913_162521_108.jpg', caption: '' },
+  { src: 'photos/IMG_20260913_162528_408.jpg', caption: '' },
+  { src: 'photos/IMG_20260914_093657_619.jpg', caption: '' },
+  { src: 'photos/IMG_20260914_093657_823.jpg', caption: '' },
+  { src: 'photos/IMG_20260914_093657_894.jpg', caption: '' },
+  { src: 'photos/IMG_20260914_093657_931.jpg', caption: '' },
+  { src: 'photos/IMG_20260914_093658_122.jpg', caption: '' },
+  { src: 'photos/IMG_20260914_093658_322.jpg', caption: '' },
+  { src: 'photos/IMG_20260914_144801_283.jpg', caption: '' },
+  { src: 'photos/IMG_20260914_144801_407.jpg', caption: '' },
+  { src: 'photos/IMG_20260914_144801_438.jpg', caption: '' },
+  { src: 'photos/IMG_20260914_144807_235.jpg', caption: '' },
 ];
 
 function getTrackIdFromLink(link) {
@@ -540,9 +738,10 @@ function setStep(stepIndex) {
       if (bg) document.body.style.background = bg;
     }
   });
-  document.body.classList.toggle('music-page', steps[stepIndex]?.classList.contains('music-step'));
-  document.body.classList.toggle('letter-page', steps[stepIndex]?.classList.contains('letter-step'));
-  document.body.classList.toggle('hero-page', steps[stepIndex]?.classList.contains('hero-step'));
+  document.body.classList.toggle('music-page',   steps[stepIndex]?.classList.contains('music-step'));
+  document.body.classList.toggle('letter-page',  steps[stepIndex]?.classList.contains('letter-step'));
+  document.body.classList.toggle('hero-page',    steps[stepIndex]?.classList.contains('hero-step'));
+  document.body.classList.toggle('digicam-page', steps[stepIndex]?.classList.contains('digicam-step'));
   if (nextButton) nextButton.classList.toggle('hidden', stepIndex >= steps.length - 1);
 }
 
@@ -566,41 +765,92 @@ function resetInteractiveState() {
   closeFlippedCard();
   stopHeroSongEmbed();
   stopDayCounter();
+  stopCamTimecode();
+  clearGalleryBg();
+  // Reset polaroid so it's fresh on re-entry
+  if (polaroidFrame)   polaroidFrame.classList.remove('hidden');
+  if (polaroidBtn)     polaroidBtn.textContent = 'Click to roll!';
+  _lastPolaroidIdx = -1;
 }
 
 // ── Chart helpers ─────────────────────────────────────────────────────
+
 function renderBarChart(svgEl, points, color) {
   if (!svgEl) return;
   svgEl.innerHTML = '';
   const vb = svgEl.viewBox.baseVal;
   const W = vb.width || 320, H = vb.height || 130;
-  const padB = 22, padT = 8;
+  const padB = 22, padT = 24, padL = 34, padR = 6;
+  const chartW = W - padL - padR;
   const chartH = H - padB - padT;
   const maxVal = Math.max(1, ...points.map((p) => p.value));
-  const gap = points.length > 12 ? 3 : 8;
-  const barW = (W - gap * (points.length - 1)) / points.length;
+  const gap = points.length > 12 ? 2 : 6;
+  const barW = (chartW - gap * (points.length - 1)) / points.length;
   const svgNS = 'http://www.w3.org/2000/svg';
 
+  // ── Y-axis gridlines + labels ──────────────────────────────────────
+  const gridSteps = 4;
+  for (let g = 0; g <= gridSteps; g++) {
+    const frac = g / gridSteps;
+    const gy = padT + chartH - frac * chartH;
+    const gridVal = Math.round(maxVal * frac);
+
+    // horizontal gridline
+    const gridLine = document.createElementNS(svgNS, 'line');
+    gridLine.setAttribute('x1', padL.toFixed(1));
+    gridLine.setAttribute('x2', (padL + chartW).toFixed(1));
+    gridLine.setAttribute('y1', gy.toFixed(1));
+    gridLine.setAttribute('y2', gy.toFixed(1));
+    gridLine.setAttribute('class', 'ios-grid-line');
+    svgEl.appendChild(gridLine);
+
+    // Y-axis label
+    const yLbl = document.createElementNS(svgNS, 'text');
+    yLbl.setAttribute('x', (padL - 4).toFixed(1));
+    yLbl.setAttribute('y', (gy + 3).toFixed(1));
+    yLbl.setAttribute('text-anchor', 'end');
+    yLbl.setAttribute('class', 'ios-axis-label');
+    yLbl.textContent = gridVal >= 1000 ? `${(gridVal / 1000).toFixed(gridVal >= 10000 ? 0 : 1)}k` : gridVal;
+    svgEl.appendChild(yLbl);
+  }
+
+  // ── Bars + value labels ────────────────────────────────────────────
   points.forEach((pt, i) => {
-    const bh = (pt.value / maxVal) * chartH;
-    const x = i * (barW + gap);
-    const y = padT + (chartH - bh);
+    const bh = Math.max((pt.value / maxVal) * chartH, 2);
+    const x  = padL + i * (barW + gap);
+    const y  = padT + chartH - bh;
+
     const rect = document.createElementNS(svgNS, 'rect');
     rect.setAttribute('x', x.toFixed(1));
     rect.setAttribute('y', y.toFixed(1));
     rect.setAttribute('width', barW.toFixed(1));
-    rect.setAttribute('height', Math.max(bh, 2).toFixed(1));
-    rect.setAttribute('rx', Math.min(4, barW / 3).toFixed(1));
+    rect.setAttribute('height', bh.toFixed(1));
+    rect.setAttribute('rx', Math.min(3, barW / 3).toFixed(1));
     rect.setAttribute('fill', pt.highlight ? '#ff9f0a' : (color || '#0a84ff'));
-    rect.setAttribute('opacity', pt.highlight ? '1' : '0.75');
+    rect.setAttribute('opacity', pt.highlight ? '1' : '0.7');
     svgEl.appendChild(rect);
 
+    // Value label above bar (only if bar is tall enough to not crowd)
+    if (bh > 12 || pt.highlight) {
+      const valLbl = document.createElementNS(svgNS, 'text');
+      valLbl.setAttribute('x', (x + barW / 2).toFixed(1));
+      valLbl.setAttribute('y', (y - 3).toFixed(1));
+      valLbl.setAttribute('text-anchor', 'middle');
+      valLbl.setAttribute('class', pt.highlight ? 'ios-bar-val-highlight' : 'ios-bar-val');
+      const display = pt.value >= 1000
+        ? `${(pt.value / 1000).toFixed(pt.value >= 10000 ? 0 : 1)}k`
+        : pt.value;
+      valLbl.textContent = display;
+      svgEl.appendChild(valLbl);
+    }
+
+    // X-axis label
     if (pt.label) {
       const lbl = document.createElementNS(svgNS, 'text');
       lbl.setAttribute('x', (x + barW / 2).toFixed(1));
       lbl.setAttribute('y', (H - 6).toFixed(1));
       lbl.setAttribute('text-anchor', 'middle');
-      lbl.setAttribute('class', 'ios-bar-label');
+      lbl.setAttribute('class', pt.highlight ? 'ios-bar-label-highlight' : 'ios-bar-label');
       lbl.textContent = pt.label;
       svgEl.appendChild(lbl);
     }
@@ -612,29 +862,61 @@ function renderLineChart(svgEl, points) {
   svgEl.innerHTML = '';
   const vb = svgEl.viewBox.baseVal;
   const W = vb.width || 320, H = vb.height || 130;
-  const padB = 24, padT = 12, padX = 8;
+  const padB = 24, padT = 20, padL = 36, padR = 8;
+  const chartW = W - padL - padR;
   const chartH = H - padB - padT;
   const maxVal = Math.max(1, ...points.map((p) => p.value));
-  const stepX = points.length > 1 ? (W - padX * 2) / (points.length - 1) : 0;
+  const stepX = points.length > 1 ? chartW / (points.length - 1) : 0;
   const svgNS = 'http://www.w3.org/2000/svg';
 
-  const coords = points.map((pt, i) => ({
-    x: padX + i * stepX,
-    y: padT + (chartH - (pt.value / maxVal) * chartH),
-    label: pt.label,
-    value: pt.value,
-  }));
-
+  // ── Gradient fill ──────────────────────────────────────────────────
   const defs = document.createElementNS(svgNS, 'defs');
   const gid = `g${Math.random().toString(36).slice(2, 7)}`;
   defs.innerHTML = `<linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0%" stop-color="#0a84ff" stop-opacity="0.4"/>
+    <stop offset="0%" stop-color="#0a84ff" stop-opacity="0.35"/>
     <stop offset="100%" stop-color="#0a84ff" stop-opacity="0"/>
   </linearGradient>`;
   svgEl.appendChild(defs);
 
-  const linePts = coords.map((c, i) => `${i === 0 ? 'M' : 'L'}${c.x.toFixed(1)},${c.y.toFixed(1)}`).join(' ');
-  const areaPts = `${linePts} L${coords.at(-1).x.toFixed(1)},${(H - padB).toFixed(1)} L${coords[0].x.toFixed(1)},${(H - padB).toFixed(1)} Z`;
+  // ── Y-axis gridlines + labels ──────────────────────────────────────
+  const gridSteps = 4;
+  for (let g = 0; g <= gridSteps; g++) {
+    const frac = g / gridSteps;
+    const gy = padT + chartH - frac * chartH;
+    const gridVal = Math.round(maxVal * frac);
+
+    const gridLine = document.createElementNS(svgNS, 'line');
+    gridLine.setAttribute('x1', padL.toFixed(1));
+    gridLine.setAttribute('x2', (padL + chartW).toFixed(1));
+    gridLine.setAttribute('y1', gy.toFixed(1));
+    gridLine.setAttribute('y2', gy.toFixed(1));
+    gridLine.setAttribute('class', 'ios-grid-line');
+    svgEl.appendChild(gridLine);
+
+    const yLbl = document.createElementNS(svgNS, 'text');
+    yLbl.setAttribute('x', (padL - 4).toFixed(1));
+    yLbl.setAttribute('y', (gy + 3).toFixed(1));
+    yLbl.setAttribute('text-anchor', 'end');
+    yLbl.setAttribute('class', 'ios-axis-label');
+    yLbl.textContent = gridVal >= 1000 ? `${(gridVal / 1000).toFixed(gridVal >= 10000 ? 0 : 1)}k` : gridVal;
+    svgEl.appendChild(yLbl);
+  }
+
+  // ── Coords ────────────────────────────────────────────────────────
+  const coords = points.map((pt, i) => ({
+    x: padL + i * stepX,
+    y: padT + chartH - (pt.value / maxVal) * chartH,
+    label: pt.label,
+    value: pt.value,
+  }));
+
+  // Find the peak point
+  const peakIdx = coords.reduce((best, c, i) => c.value > coords[best].value ? i : best, 0);
+
+  // ── Area fill ─────────────────────────────────────────────────────
+  const linePts  = coords.map((c, i) => `${i === 0 ? 'M' : 'L'}${c.x.toFixed(1)},${c.y.toFixed(1)}`).join(' ');
+  const baseY    = (padT + chartH).toFixed(1);
+  const areaPts  = `${linePts} L${coords.at(-1).x.toFixed(1)},${baseY} L${coords[0].x.toFixed(1)},${baseY} Z`;
 
   const area = document.createElementNS(svgNS, 'path');
   area.setAttribute('d', areaPts);
@@ -646,14 +928,34 @@ function renderLineChart(svgEl, points) {
   line.setAttribute('class', 'ios-line-path');
   svgEl.appendChild(line);
 
-  coords.forEach((c) => {
+  // ── Dots + value labels at every point ───────────────────────────
+  coords.forEach((c, i) => {
+    const isPeak = i === peakIdx;
+
+    // Dot
     const dot = document.createElementNS(svgNS, 'circle');
     dot.setAttribute('cx', c.x.toFixed(1));
     dot.setAttribute('cy', c.y.toFixed(1));
-    dot.setAttribute('r', '3');
-    dot.setAttribute('class', 'ios-line-dot');
+    dot.setAttribute('r',  isPeak ? '4.5' : '2.5');
+    dot.setAttribute('class', isPeak ? 'ios-line-dot-peak' : 'ios-line-dot');
     svgEl.appendChild(dot);
 
+    // Value callout — show on peak, and every Nth point to avoid crowding
+    const showVal = isPeak || (points.length <= 12) || (i % Math.ceil(points.length / 8) === 0);
+    if (showVal) {
+      const vLbl = document.createElementNS(svgNS, 'text');
+      vLbl.setAttribute('x', c.x.toFixed(1));
+      vLbl.setAttribute('y', (c.y - 7).toFixed(1));
+      vLbl.setAttribute('text-anchor', 'middle');
+      vLbl.setAttribute('class', isPeak ? 'ios-bar-val-highlight' : 'ios-bar-val');
+      const display = c.value >= 1000
+        ? `${(c.value / 1000).toFixed(c.value >= 10000 ? 0 : 1)}k`
+        : c.value;
+      vLbl.textContent = display;
+      svgEl.appendChild(vLbl);
+    }
+
+    // X-axis label
     if (c.label) {
       const lbl = document.createElementNS(svgNS, 'text');
       lbl.setAttribute('x', c.x.toFixed(1));
@@ -695,10 +997,10 @@ function senderClass(sender) {
 
 const AWARD_META = {
   speed_texter:  { emoji: '⚡', title: 'Speed Texter' },
-  night_owl:     { emoji: '🌙', title: 'Night Owl' },
+  night_owl:     { emoji: '🌙', title: 'No Sleep Schedule' },
   wall_of_text:  { emoji: '📜', title: 'Wall of Text' },
   double_texter: { emoji: '💬', title: 'Double Texter' },
-  emoji_master:  { emoji: '😂', title: 'Emoji Master' },
+  emoji_master:  { emoji: '😂', title: 'Emoji Spammer' },
   yeller:        { emoji: '📢', title: 'Yeller' },
   dot_dot_dot:   { emoji: '…', title: 'Dot Dot Dot' },
 };
@@ -713,7 +1015,7 @@ async function loadAndRenderStats() {
 
   let data;
   try {
-    const resp = await fetch('stats.json');
+    const resp = await fetch('stats.json?v=' + Date.now());
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     data = await resp.json();
   } catch (err) {
@@ -1438,18 +1740,120 @@ async function activateStep(stepIndex) {
       showElement(continueButtons[3]);
       break;
     case 4:
+      initCrossword();
       showElement(continueButtons[4]);
       break;
-      showElement(continueButtons[4]);
+    case 5:
+      buildGalleryBg();
+      startCamTimecode();
+      showElement(continueButtons[5]);
       break;
     default:
       break;
   }
 }
 
+// ── Gallery background ────────────────────────────────────────────────────
+function buildGalleryBg() {
+  const grid = document.getElementById('galleryGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  if (!GALLERY_PHOTOS.length) return;   // nothing to show; dark bg is the fallback
+
+  // Fill enough cells to cover any screen size, cycling photos if needed
+  const CELL = 190;
+  const cols = Math.ceil(window.innerWidth  / CELL) + 1;
+  const rows = Math.ceil(window.innerHeight / CELL) + 1;
+  // Shuffle the photo list so the mosaic isn't in insertion order
+  const shuffled = [...GALLERY_PHOTOS].sort(() => Math.random() - 0.5);
+
+  for (let i = 0; i < cols * rows; i++) {
+    const img = document.createElement('img');
+    img.className = 'gallery-photo';
+    img.src       = shuffled[i % shuffled.length];
+    img.alt       = '';
+    img.loading   = 'lazy';
+    // Slight per-tile scale + rotation keeps it from feeling like a plain grid
+    const rot   = (Math.random() - 0.5) * 5;
+    img.style.transform = `rotate(${rot}deg) scale(1.06)`;
+    grid.appendChild(img);
+  }
+}
+
+function clearGalleryBg() {
+  const grid = document.getElementById('galleryGrid');
+  if (grid) grid.innerHTML = '';
+}
+
+// ── Digicam timecode ──────────────────────────────────────────────────────
+let _camTimecodeInterval = null;
+
+function startCamTimecode() {
+  const el = document.getElementById('camTimecode');
+  if (!el) return;
+  const start = Date.now();
+  el.textContent = '00:00:00';
+  _camTimecodeInterval = setInterval(() => {
+    const s   = Math.floor((Date.now() - start) / 1000);
+    const pad = (n) => String(n).padStart(2, '0');
+    el.textContent = `${pad(Math.floor(s / 3600))}:${pad(Math.floor((s % 3600) / 60))}:${pad(s % 60)}`;
+  }, 1000);
+}
+
+function stopCamTimecode() {
+  if (_camTimecodeInterval) {
+    clearInterval(_camTimecodeInterval);
+    _camTimecodeInterval = null;
+  }
+  const el = document.getElementById('camTimecode');
+  if (el) el.textContent = '00:00:00';
+}
+
+// ── Polaroid handler ──────────────────────────────────────────────────────
+const polaroidBtn     = document.getElementById('polaroidBtn');
+const polaroidFrame   = document.getElementById('polaroidFrame');
+const polaroidImg     = document.getElementById('polaroidImg');
+const polaroidCaption = document.getElementById('polaroidCaption');
+
+let _lastPolaroidIdx = -1;
+
+if (polaroidBtn) {
+  polaroidBtn.addEventListener('click', () => {
+    if (!POLAROID_PHOTOS.length) return;
+
+    // Pick a different photo than last time
+    let idx;
+    do {
+      idx = Math.floor(Math.random() * POLAROID_PHOTOS.length);
+    } while (idx === _lastPolaroidIdx && POLAROID_PHOTOS.length > 1);
+    _lastPolaroidIdx = idx;
+
+    const photo    = POLAROID_PHOTOS[idx];
+    const rotation = (Math.random() - 0.5) * 10;  // -5° to +5°
+
+    // Restart the CSS animation on each click (developing effect)
+    polaroidFrame.style.animation = 'none';
+    polaroidFrame.offsetHeight;           // force reflow
+    polaroidFrame.style.animation = '';
+
+    polaroidFrame.style.setProperty('--pol-rotate', `${rotation}deg`);
+    polaroidFrame.classList.remove('hidden');
+
+    polaroidImg.src = photo.src;
+    polaroidImg.alt = photo.caption || '';
+
+    if (photo.caption) {
+      polaroidCaption.textContent = photo.caption;
+      polaroidCaption.style.display = 'block';
+    } else {
+      polaroidCaption.style.display = 'none';
+    }
+
+    polaroidBtn.textContent = '📸 Another one';
+  });
+}
 
 function getExitClass(step, direction) {
-  if (direction === 'back') return 'exit-back';
   if (step?.classList.contains('letter-step')) return 'exit-send';
   if (step?.classList.contains('music-step')) return 'exit-record';
   if (step?.dataset.transition === 'drift') return 'exit-spiral';
@@ -1649,3 +2053,312 @@ async function bootstrapBirthdayPage() {
 }
 
 bootstrapBirthdayPage();
+
+// ═══════════════════════════════════════════════════════════════════════
+// CROSSWORD ENGINE
+// ═══════════════════════════════════════════════════════════════════════
+
+const XW_GRID = [
+//  0     1     2     3     4     5     6     7     8     9    10    11    12    13    14    15    16    17    18
+  [null, null, null, null, null, null, 'S',  'E',  'X',  'Y',  null, null, null, 'C',  null, null, null, null, null],
+  [null, null, null, null, null, null, 'P',  null, null, 'O',  null, null, null, 'O',  null, 'W',  null, null, null],
+  ['C',  'O',  'L',  'E',  'S',  'L',  'A',  'W',  null, 'U',  'N',  'D',  'E',  'R',  'B',  'A',  'K',  'E',  'D'],
+  [null, 'F',  null, null, null, null, 'D',  null, null, 'N',  null, 'I',  null, 'O',  null, 'H',  null, null, null],
+  [null, 'M',  null, null, null, null, 'E',  null, null, 'G',  'A',  'S',  null, 'N',  null, 'W',  null, null, null],
+  [null, 'Y',  null, 'P',  'O',  'R',  'S',  'C',  'H',  'E',  null, 'C',  null, 'A',  null, 'A',  null, null, null],
+  [null, 'L',  null, 'I',  null, 'I',  null, 'O',  null, 'S',  null, 'U',  null, null, null, 'H',  null, null, null],
+  [null, 'A',  null, 'N',  null, 'B',  null, 'L',  null, 'T',  null, 'S',  'A',  'N',  'D',  'W',  'I',  'C',  'H'],
+  [null, 'B',  'A',  'G',  'U',  'E',  'T',  'T',  'E',  null, null, null, null, null, null, 'A',  null, null, null],
+  [null, 'O',  null, null, null, 'Y',  null, null, null, null, null, null, null, null, null, 'H',  null, null, null],
+  [null, 'R',  null, null, null, 'E',  null, null, null, null, null, null, null, null, null, null, null, null, null],
+];
+
+const XW_CLUES = {
+  across: {
+    1:  { answer: 'SEXY',       clue: '\"ahaha, no, don\'t kill yourself, you\'re so ____\"' },
+    5:  { answer: 'COLESLAW',   clue: 'The perfect cabbage dish to go with your unseasoned chicken and jello salad' },
+    7:  { answer: 'UNDERBAKED', clue: 'How you like your brownies' },
+    9:  { answer: 'GAS',        clue: 'What you pass all the time (Hint: stinky)' },
+    10: { answer: 'PORSCHE',    clue: 'Your dream car' },
+    13: { answer: 'SANDWICH',   clue: 'You had your favorite one of these in Italy' },
+    14: { answer: 'BAGUETTE',   clue: 'Oui, Oui, \"________\" ' },
+  },
+  down: {
+    1:  { answer: 'SPADES',    clue: 'The type of queen you take all the time :)' },
+    2:  { answer: 'YOUNGEST',  clue: 'You are the ________ person ever!' },
+    3:  { answer: 'CORONA',    clue: 'What you might find in Ryan\'s hand at one of your house parties' },
+    4:  { answer: 'WAHWAHWAH', clue: 'Your response to me complaining about something you did' },
+    6:  { answer: 'OFMYLABOR', clue: '\"STAND BY ME AND ENJOY THE FRUITS __ __ _____, OR BE GONE!!\"' },
+    8:  { answer: 'DISCUS',    clue: 'The coolest sport ever' },
+    10: { answer: 'PING',      clue: 'The name of both a little chinese boy and a hippo' },
+    11: { answer: 'RIBEYE',    clue: 'Your favorite cut (of beef)' },
+    12: { answer: 'COLT',      clue: 'A young male horse (i think?)' },
+  },
+};
+
+// ── Layout computation ────────────────────────────────────────────────
+function computeXwLayout() {
+  const ROWS = XW_GRID.length;
+  const COLS = XW_GRID[0].length;
+
+  const startsAcross = (r, c) =>
+    !!XW_GRID[r][c] &&
+    (c === 0 || !XW_GRID[r][c - 1]) &&
+    c + 1 < COLS && !!XW_GRID[r][c + 1];
+
+  const startsDown = (r, c) =>
+    !!XW_GRID[r][c] &&
+    (r === 0 || !XW_GRID[r - 1][c]) &&
+    r + 1 < ROWS && !!XW_GRID[r + 1][c];
+
+  const cellNum = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+  let num = 1;
+  for (let r = 0; r < ROWS; r++)
+    for (let c = 0; c < COLS; c++)
+      if (startsAcross(r, c) || startsDown(r, c)) cellNum[r][c] = num++;
+
+  const cellAcross = Array.from({ length: ROWS }, () => Array(COLS).fill(null));
+  const cellDown   = Array.from({ length: ROWS }, () => Array(COLS).fill(null));
+
+  for (let r = 0; r < ROWS; r++) {
+    let cur = null;
+    for (let c = 0; c < COLS; c++) {
+      if (!XW_GRID[r][c]) { cur = null; continue; }
+      if (startsAcross(r, c)) cur = cellNum[r][c];
+      if (cur) cellAcross[r][c] = cur;
+    }
+  }
+  for (let c = 0; c < COLS; c++) {
+    let cur = null;
+    for (let r = 0; r < ROWS; r++) {
+      if (!XW_GRID[r][c]) { cur = null; continue; }
+      if (startsDown(r, c)) cur = cellNum[r][c];
+      if (cur) cellDown[r][c] = cur;
+    }
+  }
+
+  return { cellNum, cellAcross, cellDown, ROWS, COLS };
+}
+
+// ── State ─────────────────────────────────────────────────────────────
+let xwLayout   = null;
+let xwSelected = null;
+let xwDir      = 'across';
+let xwInputs   = null;
+
+function initCrossword() {
+  const grid = document.getElementById('xwGrid');
+  if (!grid || grid.dataset.built === '1') return;
+  grid.dataset.built = '1';
+
+  xwLayout = computeXwLayout();
+  const { cellNum, cellAcross, cellDown, ROWS, COLS } = xwLayout;
+  xwInputs = Array.from({ length: ROWS }, () => Array(COLS).fill(null));
+  grid.style.gridTemplateColumns = `repeat(${COLS}, var(--xw-cell))`;
+
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      const cell = document.createElement('div');
+      cell.className = 'xw-cell';
+      if (!XW_GRID[r][c]) {
+        cell.classList.add('xw-black');
+      } else {
+        if (cellNum[r][c]) {
+          const n = document.createElement('span');
+          n.className = 'xw-num';
+          n.textContent = cellNum[r][c];
+          cell.appendChild(n);
+        }
+        const inp = document.createElement('input');
+        inp.type = 'text'; inp.maxLength = 1;
+        inp.autocomplete = 'off'; inp.autocorrect = 'off';
+        inp.autocapitalize = 'characters'; inp.spellcheck = false;
+        inp.dataset.r = r; inp.dataset.c = c;
+        inp.className = 'xw-input';
+        inp.addEventListener('focus',   () => xwSelectCell(r, c, null));
+        inp.addEventListener('keydown', (e) => xwHandleKey(e, r, c));
+        inp.addEventListener('input',   (e) => xwHandleInput(e, r, c));
+        cell.appendChild(inp);
+        xwInputs[r][c] = inp;
+      }
+      grid.appendChild(cell);
+    }
+  }
+  xwBuildClueLists();
+  document.getElementById('xwCheck')?.addEventListener('click',  xwCheckAnswers);
+  document.getElementById('xwReveal')?.addEventListener('click', xwRevealSelected);
+  document.getElementById('xwClear')?.addEventListener('click',  xwClearAll);
+}
+
+function xwSelectCell(r, c, forceDir) {
+  const { cellAcross, cellDown } = xwLayout;
+  if (xwSelected?.r === r && xwSelected?.c === c && forceDir === null) {
+    if (cellAcross[r][c] && cellDown[r][c])
+      xwDir = xwDir === 'across' ? 'down' : 'across';
+  } else {
+    if (forceDir) xwDir = forceDir;
+    else if (!cellAcross[r][c] && cellDown[r][c]) xwDir = 'down';
+    else if (cellAcross[r][c] && !cellDown[r][c]) xwDir = 'across';
+  }
+  xwSelected = { r, c };
+  xwHighlight();
+  xwInputs[r][c]?.focus({ preventScroll: true });
+}
+
+function xwHighlight() {
+  if (!xwLayout || !xwSelected) return;
+  const { cellAcross, cellDown, ROWS, COLS } = xwLayout;
+  const { r, c } = xwSelected;
+  const activeClue = xwDir === 'across' ? cellAcross[r]?.[c] : cellDown[r]?.[c];
+  for (let rr = 0; rr < ROWS; rr++) {
+    for (let cc = 0; cc < COLS; cc++) {
+      const inp = xwInputs[rr]?.[cc];
+      if (!inp) continue;
+      const inWord = xwDir === 'across'
+        ? cellAcross[rr][cc] === activeClue
+        : cellDown[rr][cc] === activeClue;
+      inp.parentElement.classList.toggle('xw-word',   inWord);
+      inp.parentElement.classList.toggle('xw-cursor', rr === r && cc === c);
+    }
+  }
+  document.querySelectorAll('.xw-clue-item').forEach((li) => {
+    const isActive = li.dataset.dir === xwDir && Number(li.dataset.num) === activeClue;
+    li.classList.toggle('xw-clue-active', isActive);
+    if (isActive) li.scrollIntoView({ block: 'nearest' });
+  });
+}
+
+function xwHandleKey(e, r, c) {
+  const { ROWS, COLS } = xwLayout;
+  const dr = xwDir === 'down'   ? 1 : 0;
+  const dc = xwDir === 'across' ? 1 : 0;
+  if (e.key === 'Backspace') {
+    e.preventDefault();
+    if (xwInputs[r][c].value) {
+      xwInputs[r][c].value = '';
+    } else {
+      const pr = r - dr, pc = c - dc;
+      if (pr >= 0 && pc >= 0 && xwInputs[pr]?.[pc]) {
+        xwInputs[pr][pc].value = '';
+        xwSelectCell(pr, pc, xwDir);
+      }
+    }
+    return;
+  }
+  if (e.key === 'Tab')        { e.preventDefault(); xwNextWord(e.shiftKey); return; }
+  if (e.key === 'ArrowRight') { e.preventDefault(); xwMove(r, c, 0,  1); return; }
+  if (e.key === 'ArrowLeft')  { e.preventDefault(); xwMove(r, c, 0, -1); return; }
+  if (e.key === 'ArrowDown')  { e.preventDefault(); xwMove(r, c,  1, 0); return; }
+  if (e.key === 'ArrowUp')    { e.preventDefault(); xwMove(r, c, -1, 0); return; }
+}
+
+function xwHandleInput(e, r, c) {
+  const { ROWS, COLS } = xwLayout;
+  const dr = xwDir === 'down'   ? 1 : 0;
+  const dc = xwDir === 'across' ? 1 : 0;
+  const raw = e.target.value.replace(/[^a-zA-Z]/g, '').slice(-1).toUpperCase();
+  e.target.value = raw;
+  e.target.classList.remove('xw-correct', 'xw-wrong', 'xw-revealed');
+  if (raw) {
+    const nr = r + dr, nc = c + dc;
+    if (nr < ROWS && nc < COLS && xwInputs[nr]?.[nc]) xwSelectCell(nr, nc, xwDir);
+  }
+}
+
+function xwMove(r, c, dr, dc) {
+  const { ROWS, COLS } = xwLayout;
+  const nr = r + dr, nc = c + dc;
+  if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS && xwInputs[nr]?.[nc]) {
+    if (dr !== 0) xwDir = 'down';
+    if (dc !== 0) xwDir = 'across';
+    xwSelectCell(nr, nc, xwDir);
+  }
+}
+
+function xwNextWord(backwards) {
+  const words = [
+    ...Object.keys(XW_CLUES.across).map(n => ({ num: +n, dir: 'across' })),
+    ...Object.keys(XW_CLUES.down).map(n => ({ num: +n, dir: 'down' })),
+  ].sort((a, b) => a.num - b.num || (a.dir === 'across' ? -1 : 1));
+  const { cellAcross, cellDown } = xwLayout;
+  const { r, c } = xwSelected || { r: 0, c: 0 };
+  const curClue = xwDir === 'across' ? cellAcross[r]?.[c] : cellDown[r]?.[c];
+  const curIdx  = words.findIndex(w => w.dir === xwDir && w.num === curClue);
+  const next    = words[(curIdx + (backwards ? -1 : 1) + words.length) % words.length];
+  xwDir = next.dir;
+  for (let rr = 0; rr < XW_GRID.length; rr++)
+    for (let cc = 0; cc < XW_GRID[0].length; cc++) {
+      const clue = next.dir === 'across' ? xwLayout.cellAcross[rr][cc] : xwLayout.cellDown[rr][cc];
+      if (clue === next.num) { xwSelectCell(rr, cc, next.dir); return; }
+    }
+}
+
+function xwCheckAnswers() {
+  const { ROWS, COLS } = xwLayout;
+  let correct = 0, total = 0;
+  for (let r = 0; r < ROWS; r++)
+    for (let c = 0; c < COLS; c++) {
+      const inp = xwInputs[r]?.[c];
+      if (!inp || inp.classList.contains('xw-revealed') || !inp.value) continue;
+      total++;
+      if (inp.value.toUpperCase() === XW_GRID[r][c]) {
+        inp.classList.replace('xw-wrong', 'xw-correct') || inp.classList.add('xw-correct');
+        correct++;
+      } else {
+        inp.classList.replace('xw-correct', 'xw-wrong') || inp.classList.add('xw-wrong');
+      }
+    }
+  const s = document.getElementById('xwStatus');
+  if (s) s.textContent = total === 0
+    ? 'Fill in some letters first!'
+    : `${correct} of ${total} filled letters correct.`;
+}
+
+function xwRevealSelected() {
+  if (!xwSelected) return;
+  const { r, c } = xwSelected;
+  const inp = xwInputs[r]?.[c];
+  if (!inp) return;
+  inp.value = XW_GRID[r][c];
+  inp.classList.remove('xw-correct', 'xw-wrong');
+  inp.classList.add('xw-revealed');
+}
+
+function xwClearAll() {
+  const { ROWS, COLS } = xwLayout;
+  for (let r = 0; r < ROWS; r++)
+    for (let c = 0; c < COLS; c++) {
+      const inp = xwInputs[r]?.[c];
+      if (inp) { inp.value = ''; inp.classList.remove('xw-correct', 'xw-wrong', 'xw-revealed'); }
+    }
+  const s = document.getElementById('xwStatus');
+  if (s) s.textContent = '';
+}
+
+function xwBuildClueLists() {
+  const acrossList = document.getElementById('xwAcrossClues');
+  const downList   = document.getElementById('xwDownClues');
+  if (!acrossList || !downList) return;
+  const { cellAcross, cellDown, ROWS, COLS } = xwLayout;
+
+  const makeItem = (num, data, dir) => {
+    const li = document.createElement('li');
+    li.className = 'xw-clue-item';
+    li.dataset.num = num; li.dataset.dir = dir;
+    const ns = document.createElement('span'); ns.className = 'xw-clue-num'; ns.textContent = `${num}.`;
+    const ts = document.createElement('span'); ts.className = 'xw-clue-text';
+    ts.textContent = data.clue || `(${data.answer.length} letters)`;
+    li.appendChild(ns); li.appendChild(ts);
+    li.addEventListener('click', () => {
+      for (let r = 0; r < ROWS; r++)
+        for (let c = 0; c < COLS; c++) {
+          const cl = dir === 'across' ? cellAcross[r][c] : cellDown[r][c];
+          if (cl === +num) { xwDir = dir; xwSelectCell(r, c, dir); return; }
+        }
+    });
+    return li;
+  };
+
+  Object.entries(XW_CLUES.across).sort((a,b)=>+a[0]-+b[0]).forEach(([n,d]) => acrossList.appendChild(makeItem(n, d, 'across')));
+  Object.entries(XW_CLUES.down).sort((a,b)=>+a[0]-+b[0]).forEach(([n,d]) => downList.appendChild(makeItem(n, d, 'down')));
+}

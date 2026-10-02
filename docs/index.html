@@ -16,6 +16,13 @@
     <button class="back-button" id="backButton">Back</button>
     <button class="next-button" id="nextButton" aria-label="Skip to next section">Next</button>
 
+    <!-- Photo gallery background — only visible on the digicam step.
+         Populated by JS from the GALLERY_PHOTOS array in scripts.js. -->
+    <div id="digicamGalleryBg" aria-hidden="true">
+      <div class="gallery-grid" id="galleryGrid"></div>
+      <div class="gallery-overlay"></div>
+    </div>
+
     <div class="gmail-inbox-bg" aria-hidden="true">
       <div class="gmail-inbox-toolbar">
         <span class="gmail-inbox-tab active">Primary</span>
@@ -189,23 +196,23 @@
 
               <div class="ios-card-grid" id="s-quick-cards">
                 <div class="ios-card">
-                  <span class="ios-card-icon" style="background:#ff375f;">🔥</span>
+                  <span class="ios-card-icon" style="background:#f8737a;">🔥</span>
                   <span class="ios-card-label">Longest Streak</span>
                   <span class="ios-card-value ios-card-value-sm" id="s-streak">—</span>
                 </div>
                 <div class="ios-card">
-                  <span class="ios-card-icon" style="background:#ff9f0a;">📅</span>
+                  <span class="ios-card-icon" style="background:#f3bf70;">📅</span>
                   <span class="ios-card-label">Best Day Ever</span>
                   <span class="ios-card-value ios-card-value-sm" id="s-best-day-count">—</span>
                   <span class="ios-card-sublabel" id="s-best-day-date">—</span>
                 </div>
                 <div class="ios-card">
-                  <span class="ios-card-icon" style="background:#34c759;">⚡</span>
+                  <span class="ios-card-icon" style="background:#99dba9;">⚡</span>
                   <span class="ios-card-label">My Avg Reply</span>
                   <span class="ios-card-value ios-card-value-sm" id="s-reply-me">—</span>
                 </div>
                 <div class="ios-card">
-                  <span class="ios-card-icon" style="background:#0a84ff;">⏱️</span>
+                  <span class="ios-card-icon" style="background:#8eb4da;">⏱️</span>
                   <span class="ios-card-label">Your Avg Reply</span>
                   <span class="ios-card-value ios-card-value-sm" id="s-reply-her">—</span>
                 </div>
@@ -214,14 +221,14 @@
               <div class="ios-section">
                 <span class="ios-section-title">MESSAGES OVER TIME</span>
                 <div class="ios-card">
-                  <svg class="ios-line-chart" id="overTimeChart" viewBox="0 0 320 130" preserveAspectRatio="xMidYMid meet"></svg>
+                  <svg class="ios-line-chart" id="overTimeChart" viewBox="0 0 320 155" preserveAspectRatio="xMidYMid meet"></svg>
                 </div>
               </div>
 
               <div class="ios-section">
                 <span class="ios-section-title">WHEN WE TEXT (BY HOUR)</span>
                 <div class="ios-card">
-                  <svg class="ios-bar-chart" id="byHourChart" viewBox="0 0 320 130" preserveAspectRatio="xMidYMid meet"></svg>
+                  <svg class="ios-bar-chart" id="byHourChart" viewBox="0 0 320 155" preserveAspectRatio="xMidYMid meet"></svg>
                   <div class="ios-chart-note" id="s-hour-note"></div>
                 </div>
               </div>
@@ -229,7 +236,7 @@
               <div class="ios-section">
                 <span class="ios-section-title">MOST ACTIVE DAY OF WEEK</span>
                 <div class="ios-card">
-                  <svg class="ios-bar-chart" id="byWeekdayChart" viewBox="0 0 320 110" preserveAspectRatio="xMidYMid meet"></svg>
+                  <svg class="ios-bar-chart" id="byWeekdayChart" viewBox="0 0 320 150" preserveAspectRatio="xMidYMid meet"></svg>
                 </div>
               </div>
 
@@ -288,20 +295,128 @@
         </div>
 
         <!-- ── DIGICAM VIDEO PAGE ── -->
+        <!-- ── CROSSWORD PAGE ── -->
+        <div class="step crossword-step" data-bg="#f0ece0" data-transition="slide-left">
+          <div class="xw-outer">
+
+            <!-- Newspaper masthead -->
+            <div class="xw-masthead">
+              <div class="xw-masthead-name">The Zor Gazette</div>
+              <div class="xw-masthead-bar">
+                <span>Vol. 2: October 11th, 2026</span>
+                <span class="xw-masthead-title">TODAY'S CROSS-WORD</span>
+                <span>Special Edition</span>
+              </div>
+              <div class="xw-masthead-rule"></div>
+            </div>
+
+            <!-- Three-column newspaper body -->
+            <div class="xw-paper-body">
+
+              <!-- Left decorative column -->
+              <aside class="xw-aside xw-aside-left">
+                <article class="xw-article">
+                  <h4 class="xw-article-hed">LOCAL WOMAN HAS EXCELLENT TASTE</h4>
+                  <div class="xw-col-rule"></div>
+                  <p>Sources close to the situation confirmed yesterday that local resident Zoe Roberts continues to display impeccable taste in music, food, and hair styles — an assessment echoed universally by all who know her.</p>
+                  <p>"She was right about the Volunteers," said one admirer. "She is always right..."</p>
+                  <p>No further comment was issued at pressent time.</p>
+                </article>
+                <article class="xw-article">
+                  <h4 class="xw-article-hed">Opportunities</h4>
+                  <div class="xw-col-rule"></div>
+                  <p><strong>SEEKING:</strong> GRAAAAHHHHHH I CAN'T THINK OF ANYTHING ELSE. WHAT ELSE GOES IN A NEWSPAPER????? blah blah blah blah looking for part timer blah blah salary negotiation blah blah blah</p>
+                </article>
+              </aside>
+
+              <!-- Centre: the crossword -->
+              <div class="xw-centre">
+                <div class="xw-section-hdr">
+                  <hr class="xw-section-rule"/>
+                  <span class="xw-section-lbl">PUZZLES &amp; GAMES</span>
+                  <hr class="xw-section-rule"/>
+                </div>
+
+                <div class="xw-puzzle-area">
+                  <div class="xw-grid-wrap">
+                    <div class="xw-grid" id="xwGrid"></div>
+                    <div class="xw-actions">
+                      <button class="xw-btn" id="xwCheck">Check answers</button>
+                      <button class="xw-btn" id="xwReveal">Reveal selected</button>
+                      <button class="xw-btn" id="xwClear">Clear all</button>
+                    </div>
+                    <p class="xw-status" id="xwStatus"></p>
+                    <div class="xw-clue-col">
+                      <h3 class="xw-clue-heading">DOWN</h3>
+                      <ol class="xw-clue-list" id="xwDownClues"></ol>
+                    </div>
+                  </div>
+                  <div class="xw-clues">
+                    <div class="xw-clue-col">
+                      <h3 class="xw-clue-heading">ACROSS</h3>
+                      <ol class="xw-clue-list" id="xwAcrossClues"></ol>
+                    </div>
+                    
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right decorative column -->
+              <aside class="xw-aside xw-aside-right">
+                <div class="xw-weather">
+                  <h4 class="xw-article-hed">WEATHER</h4>
+                  <div class="xw-col-rule"></div>
+                  <div class="xw-weather-icon">☀️</div>
+                  <div class="xw-weather-temp">77°</div>
+                  <div class="xw-weather-desc">A particularly special day. Happy feelings expected throughout. No chance of rain. Perfect thrifting conditions.</div>
+                </div>
+                <article class="xw-article">
+                  <h4 class="xw-article-hed">HOROSCOPE</h4>
+                  <div class="xw-col-rule"></div>
+                  <p>The seven sisters are in perfect alignment throughout this week. This indicates that a long-distance connection is thinking of you. Take some time for relaxation. Think positive thoughts (text me) and perhaps $20 for a poke bowl will appear in the near future (Zelle account).</p>
+                </article>
+                <article class="xw-article">
+                  <h4 class="xw-article-hed">SPORTS BRIEFS</h4>
+                  <div class="xw-col-rule"></div>
+                  <p>Local discus athlete continues to dominate the field. Rivals tremble at the sight of her prowess. The sport remains, objectively, the coolest.</p>
+                </article>
+              </aside>
+
+            </div><!-- /xw-paper-body -->
+
+            <!-- Bottom newspaper footer rule -->
+            <div class="xw-footer-rule"></div>
+            <div class="xw-footer-text">© The Zor Gazette · All rights reserved · Reproduction without permission strictly forbidden</div>
+
+          </div><!-- /xw-outer -->
+          <button class="continue-button hidden" id="continueButton4">Keep going →</button>
+        </div><!-- /crossword-step -->
+
         <div class="step digicam-step" data-bg="#1a1f2e" data-transition="drift">
           <div class="digicam-wrap">
             <div class="digicam-png-frame">
               <img class="digicam-png" src="images/digicam.png" alt="Sony digicam" />
               <div class="digicam-screen-overlay">
                 <video class="digi-video" controls playsinline>
-                  <source src="videos/2019-05-11-c-Easan-double.mp4" type="video/mp4" />
+                  <source src="videos/bday.mp4" type="video/mp4" />
                 </video>
-                <div class="digi-scanlines" aria-hidden="true"></div>
-                <div class="digi-vignette"  aria-hidden="true"></div>
+                <!-- <div class="digi-scanlines" aria-hidden="true"></div>
+                <div class="digi-vignette"  aria-hidden="true"></div> -->
               </div>
             </div>
           </div>
-          <button class="continue-button hidden" id="continueButton4">Keep going →</button>
+
+          <!-- Polaroid memory section -->
+          <div class="polaroid-section">
+            <p class="polaroid-prompt">Click to see some of your friends' favorite memories together</p>
+            <button class="polaroid-btn" id="polaroidBtn">📸 Show me one</button>
+            <div class="polaroid-frame hidden" id="polaroidFrame">
+              <img class="polaroid-img" id="polaroidImg" src="photos/5269462785449040391.jpg" alt="" />
+              <p class="polaroid-caption" id="polaroidCaption"></p>
+            </div>
+          </div>
+
+          <button class="continue-button hidden" id="continueButton5">Keep going →</button>
         </div>
 
         <div class="step" data-bg="#ffeff6" data-transition="fade">
