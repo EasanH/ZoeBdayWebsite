@@ -36,51 +36,19 @@ let lastTypingSoundAt = 0;
 let isChangingStep = false;
 let activationRunId = 0;
 
-// Turn the keyboard typing sound up or down — 1 is the current volume,
-// 0.5 is half as loud, 2 is twice as loud, 0 mutes it entirely.
-const TYPING_SOUND_VOLUME = 1;
+const TYPING_SOUND_VOLUME = 0.3;
 
-// Powers the "time since birth" counter under the headline. Exact moment
-// she was born — used to build a live, to-the-second age readout.
 const BIRTH_DATE = '2006-10-11';
 const BIRTH_TIME = '00:24:00'; // 12:24 AM
 
-// The song that plays the moment she taps to open the page. No Spotify
-// login required for this one — it's just the public embed widget, so it
-// works instantly for anyone, unlike the Premium-gated playback on the
-// soundtrack page later.
 const HERO_SONG_TRACK_ID = '4NpDZPwSXmL0cCTaJuVrCw';
 
-// Minimum time the "loading something good…" preloader stays up on a fresh
-// visit, so it doesn't flash by instantly if everything loads fast.
 const HERO_PRELOADER_MIN_MS = 1800;
 
 const AUTH_RESUME_STEP_KEY = 'sp_auth_resume_step';
 const AUTH_RESUME_PLAYLIST_KEY = 'sp_auth_resume_playlist';
 
-// =====================================================================
-// SPOTIFY SETUP CHECKLIST — read this before testing
-// =====================================================================
-// 1. Host this over http(s). Spotify login does not work on file://.
-//    (GitHub Pages, Netlify, Vercel, or `npx serve` locally all work.)
-// 2. In the Spotify Developer Dashboard (developer.spotify.com/dashboard):
-//    a. App Settings → Redirect URIs → add the EXACT URL this page is
-//       served from (must match window.location.origin + pathname).
-//    b. Settings → Users Management → Add new user → enter her name and
-//       the email on her Spotify account. Apps in Development Mode are
-//       capped at 5 allowlisted users, and logins from anyone NOT on that
-//       list will fail with a 403 even though the login screen succeeds.
-//    c. The Spotify account that owns this app (the dashboard account —
-//       presumably yours) must have an active Premium subscription, or
-//       the app stops working entirely. This is separate from her needing
-//       Premium to actually stream.
-// 3. User needs Spotify Premium to use the Web Playback SDK.
-// 5. Note: track info is fetched one song at a time (GET /tracks/{id}),
-//    not via the batch endpoint or the playlist endpoint — Spotify removed/
-//    restricted both of those for Development Mode apps in Feb 2026.
-// =====================================================================
-
-const SPOTIFY_CLIENT_ID = 'cca417449a7c41a9a24a2ee6eeb1cbd5'; // set from user input
+const SPOTIFY_CLIENT_ID = 'cca417449a7c41a9a24a2ee6eeb1cbd5'; 
 const SPOTIFY_REDIRECT_URI = window.location.origin + window.location.pathname;
 const SPOTIFY_SCOPES = 'streaming user-read-email user-read-private user-modify-playback-state';
 
@@ -99,7 +67,6 @@ const TRACK_LINKS = [
   'https://open.spotify.com/track/4LrGrY6IyJUlkFu6Ms4myU?si=e11e6133f38c481e', //The Sweetest Taboo 
 ];
 
-// in the SAME ORDER as TRACK_LINKS above.
 const SONG_NOTES = [
   'It\'s the first song on the list so I gotta start it off with a bang. This is the ultimate you song. Now don\'t get me wrong, I have always loved Fleetwood Mac, but prior to meeting you, I hadn\'t listened to them in a hot minute. They were mainly reserved for family events and long road trips. Once you told me they were your favorite band though I knew I had to shape up and get back on the grind. This song was your favorite FLeetwood Mac song and soon became mine.', //Say You Love Me
   'I was going to get super sappy with this one, but I think you know exactly what this song means to me/us. It was one of the first songs I recommended you and was also the music for our hard launch. Don\'t ever tell Lev though...can\'t give him the satisfaction of knowing I like a Hozier song this much', //In a week
@@ -115,16 +82,6 @@ const SONG_NOTES = [
   'Of course I can\'t complete this list without including a Sade song. I was debating which one to include and ultimately landed on The Sweetest Taboo. Not only is it one of your favorites but it\'s themes are also quite apt. And not to be tooo dramatic or cringey but I couldn\'t express my love for you in better terms. The song talks about the complexity and intensity of relationships. About passionate, dangerous feelings that foster both devotion and sacrifice. It acknowledges a love that is too good for them, and disbelief that they have found someone who brings out the best in them. And that\'s exactly what you do, Zoe, you bring out the best in the ones you love', //The Sweetest Taboo 
 ];
 
-// ── Digicam page photos ──────────────────────────────────────────────────
-//
-// GALLERY_PHOTOS — fills the blurred mosaic background behind the camera.
-// List every photo path here. They should live in a photos/ subfolder next
-// to index.html. For best performance resize to ~400px wide before adding.
-//
-// POLAROID_PHOTOS — the random polaroid pool. caption is optional; leave
-// '' if you don't want text in the white strip below the photo.
-//
-// Both arrays can use the same photos or different subsets.
 const GALLERY_PHOTOS = [
   'photos/_DSC7146.jpeg',
   'photos/_DSC7503.jpg',
@@ -406,8 +363,6 @@ async function refreshAccessToken(refreshToken) {
   return storeTokenResponse(data);
 }
 
-// Returns a valid access token, refreshing or exchanging a code if needed.
-// Returns null if the person still needs to go through the Spotify login.
 async function getAccessToken() {
   const stored = localStorage.getItem('sp_token');
   const exp = Number(localStorage.getItem('sp_token_expires') || 0);
@@ -438,18 +393,6 @@ async function getAccessToken() {
   return null;
 }
 
-// --- Track metadata, fetched ONE AT A TIME by ID ---
-//
-// NOT via the playlist endpoint — Spotify's Feb 2026 changes mean playlist
-// contents only come back for playlists the logged-in account owns or
-// collaborates on, which her account won't for a playlist you made.
-//
-// ALSO not via the batch "Get Several Tracks" endpoint (GET /tracks?ids=...)
-// — Spotify removed that for Development Mode apps in the same Feb 2026
-// update (their migration guide: "Replace batch endpoints with individual
-// fetch calls"). So we call GET /tracks/{id} once per song instead. If one
-// song's fetch fails, the rest still load — that track's card is just
-// skipped instead of breaking the whole grid.
 async function fetchTracksWithNotes(token, ids, notes) {
   const settled = await Promise.allSettled(
     ids.map((id) =>
@@ -473,7 +416,6 @@ async function fetchTracksWithNotes(token, ids, notes) {
   return pairs;
 }
 
-// --- Web Playback SDK ---
 
 let spotifyPlayer = null;
 let spotifyDeviceId = null;
@@ -561,8 +503,6 @@ async function pausePlayback() {
   }
 }
 
-// --- Flip-card grid ---
-
 let currentlyFlippedCard = null;
 const songFocusBackdrop = document.createElement('div');
 songFocusBackdrop.className = 'song-focus-backdrop';
@@ -603,7 +543,7 @@ function closeFlippedCard() {
 function handleCardClick(card, uri) {
   const wasOpen = card.classList.contains('flipped');
   closeFlippedCard();
-  if (wasOpen) return; // clicking an open card just closes it
+  if (wasOpen) return; 
 
   card.classList.add('flipped', 'expanded');
   currentlyFlippedCard = card;
@@ -728,7 +668,6 @@ function showFallbackEmbed(message) {
   showElement(continueButtons[2]);
 }
 
-// --- Page flow (unrelated to Spotify) ---
 
 function setStep(stepIndex) {
   steps.forEach((step, index) => {
@@ -741,6 +680,8 @@ function setStep(stepIndex) {
   document.body.classList.toggle('music-page',   steps[stepIndex]?.classList.contains('music-step'));
   document.body.classList.toggle('letter-page',  steps[stepIndex]?.classList.contains('letter-step'));
   document.body.classList.toggle('hero-page',    steps[stepIndex]?.classList.contains('hero-step'));
+  document.body.classList.toggle('code-page', steps[stepIndex]?.classList.contains('code-step'));
+  document.body.classList.toggle('invite-page', steps[stepIndex]?.classList.contains('invite-step'));
   document.body.classList.toggle('digicam-page', steps[stepIndex]?.classList.contains('digicam-step'));
   if (nextButton) nextButton.classList.toggle('hidden', stepIndex >= steps.length - 1);
 }
@@ -773,7 +714,6 @@ function resetInteractiveState() {
   _lastPolaroidIdx = -1;
 }
 
-// ── Chart helpers ─────────────────────────────────────────────────────
 
 function renderBarChart(svgEl, points, color) {
   if (!svgEl) return;
@@ -788,7 +728,6 @@ function renderBarChart(svgEl, points, color) {
   const barW = (chartW - gap * (points.length - 1)) / points.length;
   const svgNS = 'http://www.w3.org/2000/svg';
 
-  // ── Y-axis gridlines + labels ──────────────────────────────────────
   const gridSteps = 4;
   for (let g = 0; g <= gridSteps; g++) {
     const frac = g / gridSteps;
@@ -801,7 +740,7 @@ function renderBarChart(svgEl, points, color) {
     gridLine.setAttribute('x2', (padL + chartW).toFixed(1));
     gridLine.setAttribute('y1', gy.toFixed(1));
     gridLine.setAttribute('y2', gy.toFixed(1));
-    gridLine.setAttribute('class', 'ios-grid-line');
+    gridLine.setAttribute('class', 'st-grid-line');
     svgEl.appendChild(gridLine);
 
     // Y-axis label
@@ -809,12 +748,11 @@ function renderBarChart(svgEl, points, color) {
     yLbl.setAttribute('x', (padL - 4).toFixed(1));
     yLbl.setAttribute('y', (gy + 3).toFixed(1));
     yLbl.setAttribute('text-anchor', 'end');
-    yLbl.setAttribute('class', 'ios-axis-label');
+    yLbl.setAttribute('class', 'st-axis-label');
     yLbl.textContent = gridVal >= 1000 ? `${(gridVal / 1000).toFixed(gridVal >= 10000 ? 0 : 1)}k` : gridVal;
     svgEl.appendChild(yLbl);
   }
 
-  // ── Bars + value labels ────────────────────────────────────────────
   points.forEach((pt, i) => {
     const bh = Math.max((pt.value / maxVal) * chartH, 2);
     const x  = padL + i * (barW + gap);
@@ -825,18 +763,18 @@ function renderBarChart(svgEl, points, color) {
     rect.setAttribute('y', y.toFixed(1));
     rect.setAttribute('width', barW.toFixed(1));
     rect.setAttribute('height', bh.toFixed(1));
-    rect.setAttribute('rx', Math.min(3, barW / 3).toFixed(1));
-    rect.setAttribute('fill', pt.highlight ? '#ff9f0a' : (color || '#0a84ff'));
+    rect.setAttribute('rx', Math.min(1.5, barW / 3).toFixed(1));
+    rect.setAttribute('fill', pt.highlight ? '#f5b94a' : (color || '#8f8a80'));
     rect.setAttribute('opacity', pt.highlight ? '1' : '0.7');
     svgEl.appendChild(rect);
 
-    // Value label above bar (only if bar is tall enough to not crowd)
-    if (bh > 12 || pt.highlight) {
+
+    if (pt.highlight) {
       const valLbl = document.createElementNS(svgNS, 'text');
       valLbl.setAttribute('x', (x + barW / 2).toFixed(1));
       valLbl.setAttribute('y', (y - 3).toFixed(1));
       valLbl.setAttribute('text-anchor', 'middle');
-      valLbl.setAttribute('class', pt.highlight ? 'ios-bar-val-highlight' : 'ios-bar-val');
+      valLbl.setAttribute('class', pt.highlight ? 'st-bar-val-highlight' : 'st-bar-val');
       const display = pt.value >= 1000
         ? `${(pt.value / 1000).toFixed(pt.value >= 10000 ? 0 : 1)}k`
         : pt.value;
@@ -850,7 +788,7 @@ function renderBarChart(svgEl, points, color) {
       lbl.setAttribute('x', (x + barW / 2).toFixed(1));
       lbl.setAttribute('y', (H - 6).toFixed(1));
       lbl.setAttribute('text-anchor', 'middle');
-      lbl.setAttribute('class', pt.highlight ? 'ios-bar-label-highlight' : 'ios-bar-label');
+      lbl.setAttribute('class', pt.highlight ? 'st-bar-label-highlight' : 'st-bar-label');
       lbl.textContent = pt.label;
       svgEl.appendChild(lbl);
     }
@@ -869,16 +807,16 @@ function renderLineChart(svgEl, points) {
   const stepX = points.length > 1 ? chartW / (points.length - 1) : 0;
   const svgNS = 'http://www.w3.org/2000/svg';
 
-  // ── Gradient fill ──────────────────────────────────────────────────
+
   const defs = document.createElementNS(svgNS, 'defs');
   const gid = `g${Math.random().toString(36).slice(2, 7)}`;
   defs.innerHTML = `<linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0%" stop-color="#0a84ff" stop-opacity="0.35"/>
-    <stop offset="100%" stop-color="#0a84ff" stop-opacity="0"/>
+    <stop offset="0%" stop-color="#efeae2" stop-opacity="0.16"/>
+    <stop offset="100%" stop-color="#efeae2" stop-opacity="0"/>
   </linearGradient>`;
   svgEl.appendChild(defs);
 
-  // ── Y-axis gridlines + labels ──────────────────────────────────────
+
   const gridSteps = 4;
   for (let g = 0; g <= gridSteps; g++) {
     const frac = g / gridSteps;
@@ -890,19 +828,19 @@ function renderLineChart(svgEl, points) {
     gridLine.setAttribute('x2', (padL + chartW).toFixed(1));
     gridLine.setAttribute('y1', gy.toFixed(1));
     gridLine.setAttribute('y2', gy.toFixed(1));
-    gridLine.setAttribute('class', 'ios-grid-line');
+    gridLine.setAttribute('class', 'st-grid-line');
     svgEl.appendChild(gridLine);
 
     const yLbl = document.createElementNS(svgNS, 'text');
     yLbl.setAttribute('x', (padL - 4).toFixed(1));
     yLbl.setAttribute('y', (gy + 3).toFixed(1));
     yLbl.setAttribute('text-anchor', 'end');
-    yLbl.setAttribute('class', 'ios-axis-label');
+    yLbl.setAttribute('class', 'st-axis-label');
     yLbl.textContent = gridVal >= 1000 ? `${(gridVal / 1000).toFixed(gridVal >= 10000 ? 0 : 1)}k` : gridVal;
     svgEl.appendChild(yLbl);
   }
 
-  // ── Coords ────────────────────────────────────────────────────────
+
   const coords = points.map((pt, i) => ({
     x: padL + i * stepX,
     y: padT + chartH - (pt.value / maxVal) * chartH,
@@ -913,7 +851,7 @@ function renderLineChart(svgEl, points) {
   // Find the peak point
   const peakIdx = coords.reduce((best, c, i) => c.value > coords[best].value ? i : best, 0);
 
-  // ── Area fill ─────────────────────────────────────────────────────
+  
   const linePts  = coords.map((c, i) => `${i === 0 ? 'M' : 'L'}${c.x.toFixed(1)},${c.y.toFixed(1)}`).join(' ');
   const baseY    = (padT + chartH).toFixed(1);
   const areaPts  = `${linePts} L${coords.at(-1).x.toFixed(1)},${baseY} L${coords[0].x.toFixed(1)},${baseY} Z`;
@@ -925,10 +863,10 @@ function renderLineChart(svgEl, points) {
 
   const line = document.createElementNS(svgNS, 'path');
   line.setAttribute('d', linePts);
-  line.setAttribute('class', 'ios-line-path');
+  line.setAttribute('class', 'st-line-path');
   svgEl.appendChild(line);
 
-  // ── Dots + value labels at every point ───────────────────────────
+ 
   coords.forEach((c, i) => {
     const isPeak = i === peakIdx;
 
@@ -937,17 +875,17 @@ function renderLineChart(svgEl, points) {
     dot.setAttribute('cx', c.x.toFixed(1));
     dot.setAttribute('cy', c.y.toFixed(1));
     dot.setAttribute('r',  isPeak ? '4.5' : '2.5');
-    dot.setAttribute('class', isPeak ? 'ios-line-dot-peak' : 'ios-line-dot');
+    dot.setAttribute('class', isPeak ? 'st-line-dot-peak' : 'st-line-dot');
     svgEl.appendChild(dot);
 
     // Value callout — show on peak, and every Nth point to avoid crowding
-    const showVal = isPeak || (points.length <= 12) || (i % Math.ceil(points.length / 8) === 0);
+    const showVal = isPeak;
     if (showVal) {
       const vLbl = document.createElementNS(svgNS, 'text');
       vLbl.setAttribute('x', c.x.toFixed(1));
       vLbl.setAttribute('y', (c.y - 7).toFixed(1));
       vLbl.setAttribute('text-anchor', 'middle');
-      vLbl.setAttribute('class', isPeak ? 'ios-bar-val-highlight' : 'ios-bar-val');
+      vLbl.setAttribute('class', isPeak ? 'st-bar-val-highlight' : 'st-bar-val');
       const display = c.value >= 1000
         ? `${(c.value / 1000).toFixed(c.value >= 10000 ? 0 : 1)}k`
         : c.value;
@@ -961,20 +899,20 @@ function renderLineChart(svgEl, points) {
       lbl.setAttribute('x', c.x.toFixed(1));
       lbl.setAttribute('y', (H - 7).toFixed(1));
       lbl.setAttribute('text-anchor', 'middle');
-      lbl.setAttribute('class', 'ios-bar-label');
+      lbl.setAttribute('class', 'st-bar-label');
       lbl.textContent = c.label;
       svgEl.appendChild(lbl);
     }
   });
 }
 
-// ── Label helpers ─────────────────────────────────────────────────────
+
 
 const ME_KEY = 'Me';
 const HER_KEY = 'Her';
 
 function n(val) {
-  // Format a number with locale commas, or return the value as-is (strings like "5m")
+
   if (typeof val === 'number') return val.toLocaleString('en-US');
   return val ?? '—';
 }
@@ -990,10 +928,10 @@ function senderLabel(sender) {
 }
 
 function senderClass(sender) {
-  return sender === ME_KEY ? 'ios-me' : 'ios-her';
+  return sender === ME_KEY ? 'st-me' : 'st-her';
 }
 
-// ── Award definitions ──────────────────────────────────────────────────
+
 
 const AWARD_META = {
   speed_texter:  { emoji: '⚡', title: 'Speed Texter' },
@@ -1005,10 +943,9 @@ const AWARD_META = {
   dot_dot_dot:   { emoji: '…', title: 'Dot Dot Dot' },
 };
 
-// ── Main render ───────────────────────────────────────────────────────
 
 async function loadAndRenderStats() {
-  // Set every id-ed element to a loading placeholder first
+  
   const ids = ['s-total','s-total-sub','s-streak','s-best-day-count','s-best-day-date',
                's-reply-me','s-reply-her','s-hour-note'];
   ids.forEach(id => { const el = document.getElementById(id); if (el) el.textContent = '…'; });
@@ -1033,13 +970,12 @@ async function loadAndRenderStats() {
   const her = data.per_person?.[HER_KEY] ?? {};
   const rt  = data.response_times       ?? {};
 
-  // ── Hero total ────────────────────────────────────────────────────
+ 
   set('s-total', n(data.total_messages));
   const firstDate = data.milestones?.['1']?.timestamp
     ? fmtDate(data.milestones['1'].timestamp) : '';
   set('s-total-sub', firstDate ? `messages since ${firstDate}` : 'messages');
 
-  // ── Who sent more ─────────────────────────────────────────────────
   const meSent  = me.messages_sent  ?? 0;
   const herSent = her.messages_sent ?? 0;
   const total   = meSent + herSent || 1;
@@ -1049,7 +985,7 @@ async function loadAndRenderStats() {
   set('s-sent-me',  `<strong>${n(meSent)}</strong> Me`);
   set('s-sent-her', `<strong>${n(herSent)}</strong> You`);
 
-  // ── Quick stat cards ──────────────────────────────────────────────
+  
   set('s-streak', `${n(data.longest_daily_texting_streak_days)} days`);
 
   const bestDay = data.most_messages_in_one_day ?? {};
@@ -1059,7 +995,7 @@ async function loadAndRenderStats() {
   set('s-reply-me',  rt[ME_KEY]?.average_response_time_human  ?? '—');
   set('s-reply-her', rt[HER_KEY]?.average_response_time_human ?? '—');
 
-  // ── Charts ────────────────────────────────────────────────────────
+  
   // Over time
   const otRaw = data.messages_over_time_by_year_month ?? {};
   const otPoints = Object.entries(otRaw).map(([ym, v]) => {
@@ -1079,13 +1015,13 @@ async function loadAndRenderStats() {
       : '';
     return { label, value: v, highlight: v === maxHour };
   });
-  renderBarChart(byHourChartEl, hourPoints, '#0a84ff');
+  renderBarChart(byHourChartEl, hourPoints, '#8f8a80');
   // Peak hour note
   const peakHour = +Object.entries(hourRaw).sort((a, b) => b[1] - a[1])[0]?.[0];
   const peakLabel = peakHour !== undefined
     ? (peakHour === 0 ? 'midnight' : peakHour < 12 ? `${peakHour}am` : peakHour === 12 ? 'noon' : `${peakHour - 12}pm`)
     : '';
-  set('s-hour-note', peakLabel ? `peak: ${peakLabel} 🌙` : '');
+  set('s-hour-note', peakLabel ? `Busiest around ${peakLabel}.` : '');
 
   // By weekday
   const wdRaw = data.messages_by_weekday ?? {};
@@ -1095,9 +1031,9 @@ async function loadAndRenderStats() {
     value: v,
     highlight: v === maxWd,
   }));
-  renderBarChart(byWeekdayChartEl, wdPoints, '#34c759');
+  renderBarChart(byWeekdayChartEl, wdPoints, '#8f8a80');
 
-  // ── Who texts first ───────────────────────────────────────────────
+  
   const convos = data.conversations_started ?? {};
   const meConvos  = convos[ME_KEY]  ?? 0;
   const herConvos = convos[HER_KEY] ?? 0;
@@ -1108,7 +1044,7 @@ async function loadAndRenderStats() {
   set('s-first-me',  `<strong>${meCPct.toFixed(1)}%</strong> Me (${n(meConvos)})`);
   set('s-first-her', `<strong>${(100 - meCPct).toFixed(1)}%</strong> You (${n(herConvos)})`);
 
-  // ── Awards ────────────────────────────────────────────────────────
+  
   const awardsEl = document.getElementById('s-awards');
   if (awardsEl) {
     awardsEl.innerHTML = '';
@@ -1117,18 +1053,17 @@ async function loadAndRenderStats() {
       const meta = AWARD_META[key] ?? { emoji: '🏆', title: key };
       const winner = senderLabel(award.winner);
       const card = document.createElement('div');
-      card.className = 'ios-award-card';
+      card.className = 'st-award';
       card.innerHTML = `
-        <span class="ios-award-emoji">${meta.emoji}</span>
-        <span class="ios-award-title">${meta.title}</span>
-        <span class="ios-award-winner">${winner}</span>
-        <span class="ios-award-detail">${award.detail}</span>
+        <span class="st-award-title">${meta.title}</span>
+        <span class="st-award-winner ${award.winner === ME_KEY ? 'st-me' : 'st-her'}">${winner}</span>
+        <span class="st-award-detail">${award.detail}</span>
       `;
       awardsEl.appendChild(card);
     });
   }
 
-  // ── Milestones ────────────────────────────────────────────────────
+ 
   const msEl = document.getElementById('s-milestones');
   if (msEl) {
     msEl.innerHTML = '';
@@ -1137,20 +1072,16 @@ async function loadAndRenderStats() {
       const cls = senderClass(ms.sender);
       const label = senderLabel(ms.sender);
       const row = document.createElement('div');
-      row.className = 'ios-milestone';
+      row.className = 'st-msg ' + (ms.sender === ME_KEY ? 'st-msg-me' : 'st-msg-her');
       row.innerHTML = `
-        <span class="ios-milestone-num">#${Number(num).toLocaleString()}</span>
-        <div class="ios-milestone-body">
-          <span class="ios-milestone-sender ${cls}">${label}</span>
-          <span class="ios-milestone-text">"${ms.text.replace(/"/g, '&quot;').slice(0, 80)}"</span>
-          <span class="ios-milestone-date">${fmtDate(ms.timestamp)}</span>
-        </div>
+        <span class="st-bubble">${esc(String(ms.text).slice(0, 90))}</span>
+        <span class="st-msg-meta">#${Number(num).toLocaleString()} · ${fmtDate(ms.timestamp)}</span>
       `;
       msEl.appendChild(row);
     });
   }
 
-  // ── Firsts ────────────────────────────────────────────────────────
+  
   const firstsEl = document.getElementById('s-firsts');
   if (firstsEl) {
     firstsEl.innerHTML = '';
@@ -1162,49 +1093,46 @@ async function loadAndRenderStats() {
     };
     Object.entries(data.first_to_say ?? {}).forEach(([key, val]) => {
       if (!val || !firstsMap[key]) return;
-      const cls = val.sender === ME_KEY ? 'ios-me-text' : 'ios-her-text';
+      const cls = val.sender === ME_KEY ? 'st-me' : 'st-her';
       const who = senderLabel(val.sender);
       const row = document.createElement('div');
-      row.className = 'ios-first-row';
+      row.className = 'st-first-row';
       row.innerHTML = `
-        <span class="ios-first-label">${firstsMap[key]}</span>
-        <span class="ios-first-val ${cls}">${who} — ${fmtDate(val.timestamp)}</span>
+        <span class="st-first-label">${firstsMap[key]}</span>
+        <span class="st-first-val ${cls}">${who} — ${fmtDate(val.timestamp)}</span>
       `;
       firstsEl.appendChild(row);
     });
   }
 
-  // ── Top words ─────────────────────────────────────────────────────
   function renderWordCol(elId, words, headerClass, headerLabel) {
     const el = document.getElementById(elId);
     if (!el) return;
-    el.innerHTML = `<div class="ios-words-header ${headerClass}">${headerLabel}</div>`;
+    el.innerHTML = `<div class="st-col-head ${headerClass}">${headerLabel}</div>`;
     (words ?? []).slice(0, 10).forEach(([word, count], i) => {
       const row = document.createElement('div');
-      row.className = 'ios-word-row';
-      row.innerHTML = `<span class="ios-word-rank">${i + 1}</span><span class="ios-word">${word}</span><span class="ios-word-count">${n(count)}</span>`;
+      row.className = 'st-word-row';
+      row.innerHTML = `<span class="st-word-rank">${i + 1}</span><span class="st-word">${word}</span><span class="st-word-count">${n(count)}</span>`;
       el.appendChild(row);
     });
   }
-  renderWordCol('s-words-me',  me.top_50_words,  'ios-me-text',  'Me');
-  renderWordCol('s-words-her', her.top_50_words, 'ios-her-text', 'You');
+  renderWordCol('s-words-me',  me.top_50_words,  'st-me',  'Me');
+  renderWordCol('s-words-her', her.top_50_words, 'st-her', 'You');
 
-  // ── Top emojis ────────────────────────────────────────────────────
   function renderEmojiCol(elId, emojis, headerClass, headerLabel) {
     const el = document.getElementById(elId);
     if (!el) return;
-    el.innerHTML = `<div class="ios-words-header ${headerClass}">${headerLabel}</div>`;
+    el.innerHTML = `<div class="st-col-head ${headerClass}">${headerLabel}</div>`;
     (emojis ?? []).slice(0, 7).forEach(([glyph, count]) => {
       const row = document.createElement('div');
-      row.className = 'ios-emoji-row';
-      row.innerHTML = `<span class="ios-emoji-glyph">${glyph}</span><span class="ios-emoji-count">${n(count)}</span>`;
+      row.className = 'st-emoji-row';
+      row.innerHTML = `<span class="st-emoji-glyph">${glyph}</span><span class="st-emoji-count">${n(count)}</span>`;
       el.appendChild(row);
     });
   }
-  renderEmojiCol('s-emoji-me',  me.top_emojis,  'ios-me-text',  'Me');
-  renderEmojiCol('s-emoji-her', her.top_emojis, 'ios-her-text', 'You');
+  renderEmojiCol('s-emoji-me',  me.top_emojis,  'st-me',  'Me');
+  renderEmojiCol('s-emoji-her', her.top_emojis, 'st-her', 'You');
 
-  // ── Fun facts ─────────────────────────────────────────────────────
   const factsEl = document.getElementById('s-facts');
   if (factsEl) {
     const ilyMe  = me.phrase_counts?.['i love you']  ?? 0;
@@ -1214,15 +1142,15 @@ async function loadAndRenderStats() {
     const msOne  = data.milestones?.['1'];
 
     const facts = [
-      `📚 You have a vocabulary of <strong>${n(her.vocabulary_size)} unique words</strong>. I use ${n(me.vocabulary_size)}.`,
-      `📏 Your average message is <strong>${her.average_message_length_chars} chars</strong>. Mine is ${me.average_message_length_chars}.`,
-      `❤️ You've said "I love you" <strong>${n(ilyHer)} times</strong>. I've said it ${n(ilyMe)} times.`,
-      `😈 You said sorry <strong>${n(sryHer)} times</strong>. I said sorry ${n(sryMe)} times.`,
-      msOne ? `💛 Message #1 was ${senderLabel(msOne.sender) === 'You' ? 'you' : 'me'} asking <strong>"${msOne.text.slice(0, 60)}"</strong>` : null,
-      `💬 We've sent an average of <strong>${Math.round(data.total_messages / Math.max(1, Object.keys(data.messages_over_time_by_year_month ?? {}).length))} messages per month</strong>.`,
+      `You have a vocabulary of <strong>${n(her.vocabulary_size)} unique words</strong>. I use ${n(me.vocabulary_size)}.`,
+      `Your average message is <strong>${her.average_message_length_chars} chars</strong>. Mine is ${me.average_message_length_chars}.`,
+      `You've said "I love you" <strong>${n(ilyHer)} times</strong>. I've said it ${n(ilyMe)} times.`,
+      `You said sorry <strong>${n(sryHer)} times</strong>. I said sorry ${n(sryMe)} times.`,
+      msOne ? `Message #1 was ${senderLabel(msOne.sender) === 'You' ? 'you' : 'me'} asking <strong>"${msOne.text.slice(0, 60)}"</strong>` : null,
+      `We've sent an average of <strong>${Math.round(data.total_messages / Math.max(1, Object.keys(data.messages_over_time_by_year_month ?? {}).length))} messages per month</strong>.`,
     ].filter(Boolean);
 
-    factsEl.innerHTML = facts.map(f => `<div class="ios-fact">${f}</div>`).join('');
+    factsEl.innerHTML = facts.map(f => `<div class="st-fact">${f}</div>`).join('');
   }
 }
 
@@ -1299,7 +1227,6 @@ function stopDayCounter() {
   }
 }
 
-// --- Hero background ambiance: falling confetti + drifting balloons ---
 
 const HERO_CONFETTI_COLORS = ['#ff3d7f', '#ffb703', '#06d6a0', '#4cc9f0', '#9b5de5', '#ff8fab', '#ffffff'];
 const HERO_BALLOON_COLORS = ['#ff3d7f', '#ffb703', '#06d6a0', '#4cc9f0', '#9b5de5'];
@@ -1358,15 +1285,7 @@ function buildHeroAmbiance() {
   }
 }
 
-// --- Hero song player, via Spotify's iFrame API ---
-//
-// The player widget is created as soon as the API is ready (paused, not
-// autoplaying) so it already exists by the time she taps "CLICK ME PLS".
-// The tap just calls .play() on the already-loaded controller — no src
-// swap, no race with autoplay-blocking, since the gesture itself is what
-// triggers play().
 
-// How far into the song playback should begin once she taps, in seconds.
 const HERO_SONG_START_SECONDS = 15;
 
 let heroSongController = null;
@@ -1395,11 +1314,10 @@ function setupHeroSongController() {
     };
 
     if (window.Spotify && window.Spotify.Iframe) {
-      // API script already loaded (e.g. fast connection / cached).
+     
       onApiReady(window.Spotify.Iframe);
     } else {
-      // Spotify calls this global once its iframe-api script finishes
-      // loading. Don't clobber it if something else already set it.
+      
       const previous = window.onSpotifyIframeApiReady;
       window.onSpotifyIframeApiReady = (IFrameAPI) => {
         if (typeof previous === 'function') previous(IFrameAPI);
@@ -1429,7 +1347,7 @@ function stopHeroSongEmbed() {
     try {
       heroSongController.pause();
     } catch (e) {
-      // ignore — controller may not be ready yet
+      
     }
   }
   if (heroSongEmbed) hideElement(heroSongEmbed);
@@ -1439,16 +1357,10 @@ function hidePreloader() {
   if (preloaderEl) preloaderEl.classList.add('preloader-hidden');
 }
 
-// Resolves once she taps the "tap to open" prompt. The hero content behind
-// it is already visible but blurred (via the hero-pending-reveal body
-// class), so this is just waiting for the gesture before un-blurring it —
-// that same gesture is also what lets the song embed autoplay with sound.
+
 const confettiBurstLayer = document.getElementById('confettiBurstLayer');
 const BURST_CONFETTI_COLORS = ['#ff3d7f', '#ffb703', '#06d6a0', '#4cc9f0', '#9b5de5', '#ff8fab', '#ffffff'];
 
-// Fires a big burst of confetti from a screen point (the steak's center)
-// that flies outward to cover the whole viewport. Returns a promise that
-// resolves once the burst has had time to read as "the reveal moment."
 function fireConfettiBurst(originX, originY) {
   return new Promise((resolve) => {
     if (!confettiBurstLayer || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -1522,10 +1434,7 @@ function waitForHeroTap() {
   });
 }
 
-// Cursor confetti trail — spawns little paper bits at the cursor that fall
-// and drift down the screen, the same way the background confetti does,
-// only while she's on the hero step. Capped and throttled since each piece
-// now lives several seconds instead of fading out almost instantly.
+
 const CONFETTI_COLORS = ['#ff3d7f', '#ffb703', '#06d6a0', '#4cc9f0', '#9b5de5', '#ff8fab'];
 const CURSOR_CONFETTI_MAX_ON_SCREEN = 300;
 let lastConfettiAt = 0;
@@ -1701,8 +1610,8 @@ function typeText(element, text, options = {}) {
 function getTypingOptions(step) {
   if (step?.classList.contains('letter-step')) {
     return {
-      speedMultiplier: 0.48,
-      soundMinInterval: 92,
+      speedMultiplier: 0.00001,
+      soundMinInterval: 50,
     };
   }
 
@@ -1748,12 +1657,17 @@ async function activateStep(stepIndex) {
       startCamTimecode();
       showElement(continueButtons[5]);
       break;
+    case 6:
+      initInvite();
+      break;
+    case 7:
+      initCode();
+      break;
     default:
       break;
   }
 }
 
-// ── Gallery background ────────────────────────────────────────────────────
 function buildGalleryBg() {
   const grid = document.getElementById('galleryGrid');
   if (!grid) return;
@@ -1785,7 +1699,6 @@ function clearGalleryBg() {
   if (grid) grid.innerHTML = '';
 }
 
-// ── Digicam timecode ──────────────────────────────────────────────────────
 let _camTimecodeInterval = null;
 
 function startCamTimecode() {
@@ -1809,7 +1722,6 @@ function stopCamTimecode() {
   if (el) el.textContent = '00:00:00';
 }
 
-// ── Polaroid handler ──────────────────────────────────────────────────────
 const polaroidBtn     = document.getElementById('polaroidBtn');
 const polaroidFrame   = document.getElementById('polaroidFrame');
 const polaroidImg     = document.getElementById('polaroidImg');
@@ -1821,7 +1733,6 @@ if (polaroidBtn) {
   polaroidBtn.addEventListener('click', () => {
     if (!POLAROID_PHOTOS.length) return;
 
-    // Pick a different photo than last time
     let idx;
     do {
       idx = Math.floor(Math.random() * POLAROID_PHOTOS.length);
@@ -1981,8 +1892,6 @@ if (showPlaylistButton) {
       showElement(playlistHint);
       showElement(continueButtons[2]);
 
-      // Status stays visible (e.g. "Connecting to Spotify…") until the
-      // Web Playback SDK reports its device is ready, then it hides itself.
       if (sdkReady) {
         initializePlayer(token);
       } else {
@@ -2001,12 +1910,7 @@ async function bootstrapBirthdayPage() {
   const token = await getAccessToken();
 
   if (!token) {
-    // No usable token at all (first-ever visit, or storage was cleared) —
-    // send her to Spotify login right now, before she's seen or clicked
-    // anything, so this never has to interrupt her once she's actually
-    // reading the page. A short pause first so the preloader doesn't just
-    // flash and vanish — it reads as "getting things ready" rather than a
-    // glitch.
+    
     sessionStorage.setItem(AUTH_RESUME_STEP_KEY, '0');
     sessionStorage.setItem(AUTH_RESUME_PLAYLIST_KEY, '0');
     const elapsedBeforeRedirect = performance.now() - bootStartedAt;
@@ -2026,10 +1930,6 @@ async function bootstrapBirthdayPage() {
   sessionStorage.removeItem(AUTH_RESUME_STEP_KEY);
   sessionStorage.removeItem(AUTH_RESUME_PLAYLIST_KEY);
 
-  // A fresh visit (no saved resume step) gets the full preloader + tap-to-
-  // reveal intro moment. Bouncing back from the Spotify login redirect mid-
-  // flow does not — she's already past that moment, so just get her back
-  // to where she was as quickly as possible.
   const isFreshLanding = resumeStep === 0;
   const minDelay = isFreshLanding ? HERO_PRELOADER_MIN_MS : 400;
   const elapsed = performance.now() - bootStartedAt;
@@ -2053,10 +1953,6 @@ async function bootstrapBirthdayPage() {
 }
 
 bootstrapBirthdayPage();
-
-// ═══════════════════════════════════════════════════════════════════════
-// CROSSWORD ENGINE
-// ═══════════════════════════════════════════════════════════════════════
 
 const XW_GRID = [
 //  0     1     2     3     4     5     6     7     8     9    10    11    12    13    14    15    16    17    18
@@ -2096,7 +1992,6 @@ const XW_CLUES = {
   },
 };
 
-// ── Layout computation ────────────────────────────────────────────────
 function computeXwLayout() {
   const ROWS = XW_GRID.length;
   const COLS = XW_GRID[0].length;
@@ -2140,7 +2035,6 @@ function computeXwLayout() {
   return { cellNum, cellAcross, cellDown, ROWS, COLS };
 }
 
-// ── State ─────────────────────────────────────────────────────────────
 let xwLayout   = null;
 let xwSelected = null;
 let xwDir      = 'across';
@@ -2361,4 +2255,269 @@ function xwBuildClueLists() {
 
   Object.entries(XW_CLUES.across).sort((a,b)=>+a[0]-+b[0]).forEach(([n,d]) => acrossList.appendChild(makeItem(n, d, 'across')));
   Object.entries(XW_CLUES.down).sort((a,b)=>+a[0]-+b[0]).forEach(([n,d]) => downList.appendChild(makeItem(n, d, 'down')));
+}
+
+const INVITE = {
+  guest: 'Zoe Roberts',
+  host: 'Chef Easan',
+  hostEmail: 'easanhamkins@gmail.com',   
+  formEndpoint: 'https://formspree.io/f/xgaoyvzg',               // OPTIONAL: paste a Formspree URL (https://formspree.io/f/xxxx) so it emails you automatically
+  details: [
+    ['When', 'Saturday, October 17th, 2026'],
+    ['Arrival', '7:30 PM · Dinner served at 8:00 PM'],
+    ['Attire', 'Cocktail attire — dress fancy'],
+    ['Where', '3407 Markridge Rd., La Crescenta, CA 91214'],
+  ],
+  rsvpBy: 'October 12th',
+  courses: [
+    { key: 'starter', title: 'Hors d\'Oeuvres', items: [
+      { id: 'Tuna', name: 'Tuna on Crispy Rice', desc: 'Blue fin tuna, avocado, citrus vinaigrette.', icon: '🐟', img: 'images/menu/crispy-tuna.png' },
+      { id: 'Balls', name: 'Mac and Cheese Balls', desc: 'Creamy mac and cheese, rolled and fried in panko breadcrumbs.', icon: '🧀', img: 'images/menu/mac-and-cheese-balls.png' },
+      { id: 'Brie', name: 'Baked Brie with Charcoochie Board', desc: 'Baked brie wheel served with a charcoochie board.', icon: '🥬', img: 'images/menu/brie.jpg' },
+    ]},
+    { key: 'main', title: 'Entrées', items: [
+      { id: 'Ribeye', name: '12oz. Ribeye', desc: 'Classic steak, garlic-herb butter, crispy potatoes.', icon: '🥩', img: 'images/menu/ribeye.jpg' },
+      { id: 'Short-rib', name: 'Braised Beef Short Rib', desc: 'Slow-braised beef short rib, red wine reduction, creamy mashed potatoes.', icon: '🍗', img: 'images/menu/short-rib.jpg' },
+      { id: 'Ragu', name: 'Pappardelle White-Sausage Ragu', desc: 'Fresh pasta topped with a rich white-sausage cream sauce and fried breadcrumbs.', icon: '🍝', img: 'images/menu/pappardelle.jpg' },
+      { id: 'Duck', name: 'Fig and Port Duck Breast', desc: 'Pan-seared duck breast with fig and port reduction.', icon: '🍝', img: 'images/menu/duck.jpg' },
+    ]},
+    { key: 'dessert', title: 'Desserté', items: [
+      { id: 'Lemon', name: 'Lemon Brulée', desc: 'Sweet, tangy lemon custard with a crackling caramel top.', icon: '🍫', img: 'images/menu/lemon.jpg' },
+      { id: 'Blackberry', name: 'Blackberry Crumble with Custard', desc: 'Tender blackberries baked with a spiced crumble topping and a creamy vanilla custard.', icon: '☕', img: 'images/menu/blackberry.jpg' },
+      { id: 'Cake', name: 'Chocolate Cake', desc: 'Rich, gooey chocolate cake with Tillamook Vanilla Bean ice cream.', icon: '🍮', img: 'images/menu/cake.jpg' },
+    ]},
+  ],
+};
+
+function esc(s) { return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+
+function initInvite() {
+  const root = document.getElementById('inviteRoot');
+  if (!root || root.dataset.built === '1') return;
+  root.dataset.built = '1';
+  const I = INVITE;
+
+  root.innerHTML = `
+    <div id="invMain">
+      <header class="inv-card">
+        <p class="inv-small">The pleasure of your company is requested</p>
+        <h2 class="inv-script">${esc(I.guest)}</h2>
+        <p class="inv-small">at a private dinner prepared by</p>
+        <p class="inv-host">${esc(I.host)}</p>
+        <div class="inv-rule"><span>✦</span></div>
+        <dl class="inv-details">${I.details.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>
+        <p class="inv-small">Kindly reply by end of day — choose your menu below</p>
+      </header>
+
+      <h3 class="inv-menu-title">Le Menu</h3>
+      ${I.courses.map((c, n) => `
+        <section class="inv-course">
+          <h4><em>${['First','Second','Third'][n]} Course</em> ${c.title}</h4>
+          <p class="inv-pick">Select one</p>
+          <div class="inv-dishes">${c.items.map((d) => `
+            <label class="inv-dish">
+              <input type="radio" name="${c.key}" value="${esc(d.id)}">
+              <span class="inv-photo"><b>${d.icon}</b><img src="${esc(d.img)}" alt="${esc(d.name)}" loading="lazy"></span>
+              <span class="inv-dish-name">${esc(d.name)}</span>
+              <span class="inv-dish-desc">${esc(d.desc)}</span>
+              <span class="inv-check">✓ Chosen</span>
+            </label>`).join('')}
+          </div>
+        </section>`).join('')}
+
+      <section class="inv-form">
+        <h4><em>Final Details</em> Reserve Your Table</h4>
+        <label>Name<input id="invName" type="text" value="${esc(I.guest)}"></label>
+        <label>Allergies, dislikes, or special requests<textarea id="invNotes" rows="3" placeholder="Anything I should know?"></textarea></label>
+        <p class="inv-error" id="invError" role="alert"></p>
+        <button type="button" class="inv-btn" id="invSubmit">Reserve My Table</button>
+      </section>
+    </div>
+
+    <div id="invConfirm" class="inv-card hidden">
+      <p class="inv-small">Reservation confirmed</p>
+      <h2 class="inv-script">À bientôt</h2>
+      <div class="inv-rule"><span>✦</span></div>
+      <div id="invSummary" class="inv-summary"></div>
+      <p class="inv-small" id="invConfirmNote"></p>
+      <button type="button" class="inv-btn inv-btn-ghost" id="invEdit">Change my selections</button>
+    </div>
+
+    <p class="inv-footer">Happy Birthday, Zor — I love you, near or far.</p>
+    <button type="button" class="inv-btn inv-btn-ghost inv-more" id="invMore">Easter Egg →</button>`;
+
+  root.querySelectorAll('.inv-photo img').forEach((img) => img.addEventListener('error', () => img.remove()));
+  root.querySelectorAll('.inv-dish input').forEach((inp) => inp.addEventListener('change', () => {
+    root.querySelectorAll(`input[name="${inp.name}"]`).forEach((o) => o.closest('.inv-dish').classList.toggle('selected', o.checked));
+    document.getElementById('invError').textContent = '';
+  }));
+  document.getElementById('invSubmit').addEventListener('click', submitInvite);
+  document.getElementById('invMore').addEventListener('click', () => navigateToStep(7));
+  document.getElementById('invEdit').addEventListener('click', () => {
+    document.getElementById('invConfirm').classList.add('hidden');
+    document.getElementById('invMain').classList.remove('hidden');
+    window.scrollTo({ top: 0 });
+  });
+}
+
+async function submitInvite() {
+  const I = INVITE, root = document.getElementById('inviteRoot');
+  const picks = I.courses.map((c) => {
+    const v = root.querySelector(`input[name="${c.key}"]:checked`);
+    return { course: c.title, dish: v ? c.items.find((d) => d.id === v.value).name : null };
+  });
+  const missing = picks.find((p) => !p.dish);
+  if (missing) { document.getElementById('invError').textContent = `Please choose a dish for "${missing.course}".`; return; }
+
+  const name = document.getElementById('invName').value.trim() || I.guest;
+  const notes = document.getElementById('invNotes').value.trim() || 'None';
+  const message = `${name} has reserved a table!\n\n` + picks.map((p) => `${p.course}: ${p.dish}`).join('\n') + `\n\nNotes: ${notes}`;
+  const btn = document.getElementById('invSubmit');
+  btn.disabled = true; btn.textContent = 'Sending…';
+
+  let sent = false;
+  if (I.formEndpoint) {
+    try {
+      const res = await fetch(I.formEndpoint, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ name, message, _subject: `Dinner reservation: ${name}` }) });
+      sent = res.ok;
+    } catch (e) { /* fall through to email */ }
+  }
+  const mailto = `mailto:${I.hostEmail}?subject=${encodeURIComponent('Dinner reservation: ' + name)}&body=${encodeURIComponent(message)}`;
+  if (!sent) window.location.href = mailto;
+
+  document.getElementById('invSummary').innerHTML = picks.map((p) => `<p><span>${esc(p.course)}</span>${esc(p.dish)}</p>`).join('') + `<p><span>Notes</span>${esc(notes)}</p>`;
+  document.getElementById('invConfirmNote').innerHTML = sent
+    ? `Your selections have been sent to ${esc(I.host)}. See you ${esc(I.details[0][1])}.`
+    : `Your email app should have opened — press send to confirm. <a href="${mailto}">Didn't open? Tap here.</a>`;
+  btn.disabled = false; btn.textContent = 'Reserve My Table';
+  document.getElementById('invMain').classList.add('hidden');
+  document.getElementById('invConfirm').classList.remove('hidden');
+  window.scrollTo({ top: 0 });
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// EASTER EGG: FAKE CODE EDITOR — shows the real source files
+// ═══════════════════════════════════════════════════════════════════════
+const CODE_FILES = { 'index.html': 'html', 'scripts.js': 'js', 'styles.css': 'css' };
+const CODE_LINE_H = 20;
+const CODE_HIGHLIGHTS = [
+  { label: 'Spotify login', file: 'scripts.js', find: 'const SPOTIFY_CLIENT_ID', note: 'I used a Spotify API that connects directly to your computer app. You can see all the tracks and my comments below.' },
+  { label: 'Keyboard sounds', file: 'scripts.js', find: 'function playTypingClick', note: 'Bro you don\'t understand how long it took me to generate the keyboard typing sound. There\'s a lot of cool Electrical Engineering behind it tho :)' },
+  { label: 'Text stats', file: 'scripts.js', find: 'async function loadAndRenderStats', note: 'For the stats page, I exported our entire message history across texts and insta and wrote a script that counts and catagorizes each message. ' },
+  { label: 'Crossword engine', file: 'scripts.js', find: 'const XW_GRID', note: 'Here you can see the layout for the crossword. Lowkey didn\'t realize how hard they are to make...' },
+  { label: 'Confetti', file: 'scripts.js', find: 'function fireConfettiBurst', note: 'confetti physics!' },
+  { label: 'The invitation', file: 'scripts.js', find: 'async function submitInvite', note: 'I\'m pretty proud of this invitation code, your selections are automatically emailed to me using a custom freeform url.' },
+  { label: 'Pure CSS pain', file: 'styles.css', find: 'body.invite-page', note: 'Bro idk what Ethan Lee is learning, this graphic design shit is easy.' },
+];
+const CODE_COMMITS = [
+  ['a1f3c9e', 'feat: added steak (it glows)'],
+  ['b72d0aa', 'fix: bro why is the confetti everywhere'],
+  ['c9e41b7', 'feat: hehehe cool ass crossword'],
+  ['d0a85f2', 'fix: spotify said no. spotify said no again.'],
+  ['e51c7d3', 'style: made the letter look like gmail '],
+  ['f8b2e60', 'feat: ahaha you have a reservation in my heart'],
+  ['9c3d1ab', 'chore: grahhhhhhhhh finally done'],
+];
+let codeBuilt = false, codeTermRun = 0, codeCache = {}, codeCurrent = 'index.html';
+
+function codeHighlight(src, lang) {
+  const L = {
+    js: { re: /(\/\/[^\n]*|\/\*[\s\S]*?\*\/)|('(?:\\.|[^'\\\n])*'|"(?:\\.|[^"\\\n])*"|`(?:\\[\s\S]|[^`\\])*`)|\b(const|let|var|function|async|await|return|if|else|for|while|new|class|switch|case|break|default|try|catch|throw|typeof|this|null|true|false)\b|(\b\d+(?:\.\d+)?\b)/g, cls: ['c', 's', 'k', 'n'] },
+    css: { re: /(\/\*[\s\S]*?\*\/)|("[^"\n]*"|'[^'\n]*')|(#[0-9a-fA-F]{3,8}\b|\b\d*\.?\d+(?:px|rem|em|vh|vw|%|s|ms|deg)?\b)|([\w-]+)(?=\s*:)/g, cls: ['c', 's', 'n', 'k'] },
+    html: { re: /(<!--[\s\S]*?-->)|("[^"\n]*")|(<\/?[\w-]+)/g, cls: ['c', 's', 'k'] },
+  }[lang];
+  let out = '', last = 0, m;
+  L.re.lastIndex = 0;
+  while ((m = L.re.exec(src))) {
+    out += esc(src.slice(last, m.index));
+    const g = m.slice(1).findIndex((x) => x !== undefined);
+    out += `<span class="t-${L.cls[g]}">${esc(m[0])}</span>`;
+    last = m.index + m[0].length;
+    if (m[0].length === 0) L.re.lastIndex++;
+  }
+  return out + esc(src.slice(last));
+}
+
+async function codeShow(file, line, note) {
+  codeCurrent = file;
+  document.querySelectorAll('.cd-tab, .cd-file').forEach((el) => el.classList.toggle('active', el.dataset.file === file));
+  const gutter = document.getElementById('cdGutter'), srcEl = document.getElementById('cdSrc'), hl = document.getElementById('cdLineHl'), code = document.getElementById('cdCode');
+  if (codeCache[file] === undefined) {
+    srcEl.textContent = 'Loading…';
+    try {
+      const res = await fetch(file + '?v=' + Date.now());
+      if (!res.ok) throw new Error(res.status);
+      codeCache[file] = (await res.text()).replace(/\r/g, '');
+    } catch (e) {
+      srcEl.textContent = '// Could not load ' + file + ' — this page needs to be served over http(s).';
+      return;
+    }
+  }
+  const text = codeCache[file];
+  if (srcEl.dataset.file !== file) {
+    srcEl.innerHTML = codeHighlight(text, CODE_FILES[file]);
+    srcEl.dataset.file = file;
+    gutter.textContent = Array.from({ length: text.split('\n').length }, (_, i) => i + 1).join('\n');
+  }
+  hl.style.display = 'none';
+  if (line) {
+    hl.style.top = 10 + (line - 1) * CODE_LINE_H + 'px';
+    hl.style.display = 'block';
+    code.scrollTo({ top: Math.max(0, (line - 4) * CODE_LINE_H), behavior: 'smooth' });
+  } else code.scrollTop = 0;
+  if (note) document.getElementById('cdNote').textContent = '💬 ' + note;
+}
+
+function codeJump(h) {
+  const text = codeCache[h.file];
+  const go = (t) => { const idx = t.indexOf(h.find); codeShow(h.file, idx < 0 ? 0 : t.slice(0, idx).split('\n').length, h.note); };
+  if (text !== undefined) return go(text);
+  codeShow(h.file, 0, h.note).then(() => codeCache[h.file] && go(codeCache[h.file]));
+}
+
+async function runCodeTerminal() {
+  const term = document.getElementById('cdTerm');
+  const run = ++codeTermRun;
+  term.textContent = '';
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  const type = async (s) => { for (const ch of s) { if (run !== codeTermRun) return false; term.textContent += ch; term.scrollTop = term.scrollHeight; await sleep(35); } return true; };
+  const print = async (s, ms = 140) => { if (run !== codeTermRun) return false; term.textContent += s + '\n'; term.scrollTop = term.scrollHeight; await sleep(ms); return true; };
+  const counts = {};
+  for (const f of Object.keys(CODE_FILES)) {
+    try { counts[f] = (await (await fetch(f)).text()).split('\n').length; } catch (e) { counts[f] = '?'; }
+  }
+  const total = Object.values(counts).reduce((a, b) => a + (typeof b === 'number' ? b : 0), 0);
+  if (!(await type('$ wc -l index.html scripts.js styles.css'))) return;
+  await print('', 300);
+  for (const f of Object.keys(counts)) await print(String(counts[f]).padStart(6) + ' ' + f, 120);
+  await print(String(total).padStart(6) + ' total', 500);
+  if (!(await type('$ git log --oneline'))) return;
+  await print('', 300);
+  for (const [hash, msg] of CODE_COMMITS) if (!(await print(hash + ' ' + msg, 260))) return;
+  if (!(await type('$ npm run love'))) return;
+  await print('', 600);
+  await print('✔ compiled with 0 errors, 1 very large heart');
+  await print('Happy Birthday, Zor. ♥ I love you, near or far.');
+}
+
+function initCode() {
+  if (!codeBuilt) {
+    codeBuilt = true;
+    const tabs = document.getElementById('cdTabs'), files = document.getElementById('cdFiles'), hls = document.getElementById('cdHighlights');
+    Object.keys(CODE_FILES).forEach((f) => {
+      const tab = Object.assign(document.createElement('button'), { className: 'cd-tab', textContent: f });
+      const item = Object.assign(document.createElement('button'), { className: 'cd-file', textContent: '📄 ' + f });
+      tab.dataset.file = item.dataset.file = f;
+      tab.addEventListener('click', () => codeShow(f));
+      item.addEventListener('click', () => codeShow(f));
+      tabs.appendChild(tab); files.appendChild(item);
+    });
+    CODE_HIGHLIGHTS.forEach((h) => {
+      const b = Object.assign(document.createElement('button'), { className: 'cd-hl', textContent: '★ ' + h.label });
+      b.addEventListener('click', () => codeJump(h));
+      hls.appendChild(b);
+    });
+    codeShow('index.html');
+  }
+  runCodeTerminal();
 }
